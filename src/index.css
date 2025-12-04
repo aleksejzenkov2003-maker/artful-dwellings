@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,24 +7,24 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 220 20% 10%;
+    --foreground: 220 25% 10%;
     
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 10%;
+    --card-foreground: 220 25% 10%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
+    --popover-foreground: 220 25% 10%;
     
-    --primary: 38 75% 55%;
+    --primary: 174 58% 50%;
     --primary-foreground: 0 0% 100%;
     
     --secondary: 220 15% 95%;
-    --secondary-foreground: 220 20% 10%;
+    --secondary-foreground: 220 25% 10%;
     
     --muted: 220 15% 96%;
     --muted-foreground: 220 10% 45%;
     
-    --accent: 38 75% 55%;
+    --accent: 174 58% 50%;
     --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84% 60%;
@@ -32,16 +32,17 @@
     
     --border: 220 15% 90%;
     --input: 220 15% 90%;
-    --ring: 38 75% 55%;
+    --ring: 174 58% 50%;
     
-    --radius: 0.5rem;
+    --radius: 0px;
     
     /* Custom tokens */
-    --gold: 38 75% 55%;
-    --gold-light: 38 75% 70%;
-    --gold-dark: 38 75% 40%;
-    --navy: 220 40% 13%;
-    --navy-light: 220 30% 20%;
+    --teal: 174 58% 50%;
+    --teal-light: 174 58% 60%;
+    --teal-dark: 174 58% 40%;
+    --navy: 220 30% 15%;
+    --navy-dark: 220 35% 10%;
+    --navy-light: 220 25% 20%;
     
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
@@ -51,46 +52,46 @@
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 174 58% 50%;
   }
 
   .dark {
-    --background: 220 40% 8%;
+    --background: 220 35% 10%;
     --foreground: 0 0% 98%;
     
-    --card: 220 40% 10%;
+    --card: 220 30% 12%;
     --card-foreground: 0 0% 98%;
     
-    --popover: 220 40% 10%;
+    --popover: 220 30% 12%;
     --popover-foreground: 0 0% 98%;
     
-    --primary: 38 75% 55%;
-    --primary-foreground: 220 40% 8%;
+    --primary: 174 58% 50%;
+    --primary-foreground: 220 35% 10%;
     
-    --secondary: 220 30% 15%;
+    --secondary: 220 25% 18%;
     --secondary-foreground: 0 0% 98%;
     
-    --muted: 220 30% 15%;
+    --muted: 220 25% 18%;
     --muted-foreground: 220 10% 60%;
     
-    --accent: 38 75% 55%;
-    --accent-foreground: 220 40% 8%;
+    --accent: 174 58% 50%;
+    --accent-foreground: 220 35% 10%;
     
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 220 30% 18%;
-    --input: 220 30% 18%;
-    --ring: 38 75% 55%;
+    --border: 220 25% 20%;
+    --input: 220 25% 20%;
+    --ring: 174 58% 50%;
     
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 220 35% 10%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 174 58% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 220 25% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 220 25% 18%;
+    --sidebar-ring: 174 58% 50%;
   }
 }
 
@@ -101,40 +102,41 @@
   
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Montserrat', system-ui, sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
-    @apply font-semibold tracking-tight;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    @apply font-medium tracking-tight;
   }
 }
 
 @layer utilities {
   .font-serif {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
   }
   
   .font-sans {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Montserrat', system-ui, sans-serif;
   }
   
-  .text-gradient-gold {
-    background: linear-gradient(135deg, hsl(38 75% 55%), hsl(38 75% 70%));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .bg-navy {
+    background-color: hsl(var(--navy));
   }
   
-  .bg-gradient-gold {
-    background: linear-gradient(135deg, hsl(38 75% 55%), hsl(38 75% 70%));
+  .bg-navy-dark {
+    background-color: hsl(var(--navy-dark));
   }
   
-  .bg-gradient-dark {
-    background: linear-gradient(180deg, hsl(220 40% 13%), hsl(220 40% 8%));
+  .text-teal {
+    color: hsl(var(--teal));
   }
   
-  .shadow-gold {
-    box-shadow: 0 4px 14px -3px hsl(38 75% 55% / 0.3);
+  .border-teal {
+    border-color: hsl(var(--teal));
+  }
+  
+  .bg-teal {
+    background-color: hsl(var(--teal));
   }
 }
