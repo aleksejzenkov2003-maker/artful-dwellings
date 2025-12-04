@@ -1,40 +1,39 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-
-const testimonials = [
-  {
-    id: 1,
-    name: "Мария",
-    role: "Клиент Art Estate",
-    text: "Благодаря команде Art Estate мы нашли квартиру нашей мечты! Профессиональный подход и внимание к деталям — это то, что отличает эту компанию от других.",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400",
-  },
-  {
-    id: 2,
-    name: "Николай",
-    role: "Клиент Art Estate",
-    text: "Отличный сервис! Менеджеры помогли разобраться во всех нюансах ипотеки и подобрали оптимальные условия. Рекомендую всем, кто ищет надежного партнера.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
-  },
-  {
-    id: 3,
-    name: "Елена",
-    role: "Клиент Art Estate",
-    text: "Работать с Art Estate — одно удовольствие. Команда профессионалов, которые действительно заботятся о клиенте и его интересах.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400",
-  },
-];
+import { useReviews } from "@/hooks/useReviews";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function TestimonialsSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { data: reviews, isLoading } = useReviews();
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    if (reviews) {
+      setCurrentIndex((prev) => (prev + 1) % reviews.length);
+    }
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    if (reviews) {
+      setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="text-center">
+        <Skeleton className="h-4 w-48 mx-auto mb-8" />
+        <div className="flex gap-6 justify-center">
+          <Skeleton className="w-64 aspect-[3/4]" />
+          <Skeleton className="w-64 aspect-[3/4]" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!reviews || reviews.length === 0) {
+    return null;
+  }
 
   return (
     <div className="relative">
@@ -45,10 +44,10 @@ export function TestimonialsSlider() {
       </div>
 
       <div className="relative max-w-4xl mx-auto">
-        <div className="flex gap-6 overflow-hidden">
-          {testimonials.map((testimonial, index) => (
+        <div className="flex gap-6 justify-center overflow-hidden">
+          {reviews.map((review, index) => (
             <div
-              key={testimonial.id}
+              key={review.id}
               className={`flex-shrink-0 w-full md:w-1/2 transition-all duration-500 ${
                 index === currentIndex ? "opacity-100" : "opacity-0 absolute"
               }`}
@@ -59,15 +58,15 @@ export function TestimonialsSlider() {
               <div className="relative">
                 <div className="aspect-[3/4] overflow-hidden">
                   <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
+                    src={review.author_photo || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400"}
+                    alt={review.author_name}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur p-4">
-                  <h4 className="font-medium">{testimonial.name}</h4>
+                  <h4 className="font-medium">{review.author_name}</h4>
                   <p className="text-xs text-primary uppercase tracking-wider">
-                    {testimonial.role}
+                    {review.author_role}
                   </p>
                 </div>
               </div>
@@ -79,7 +78,7 @@ export function TestimonialsSlider() {
         <div className="mt-8 text-center">
           <Quote className="h-8 w-8 text-primary/20 mx-auto mb-4" />
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            {testimonials[currentIndex].text}
+            {reviews[currentIndex]?.content}
           </p>
         </div>
 
@@ -92,7 +91,7 @@ export function TestimonialsSlider() {
             <ChevronLeft className="h-5 w-5" />
           </button>
           <div className="flex gap-2">
-            {testimonials.map((_, index) => (
+            {reviews.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
