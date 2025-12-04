@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronRight, ChevronLeft, Check } from "lucide-react";
+import { ChevronLeft, Check } from "lucide-react";
+import { useSubmitLead } from "@/hooks/useSubmitLead";
 
 interface QuizStep {
   question: string;
@@ -36,7 +37,7 @@ export function Quiz() {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const submitLead = useSubmitLead();
 
   const isLastStep = currentStep === quizSteps.length;
   const progress = ((currentStep) / (quizSteps.length + 1)) * 100;
@@ -50,9 +51,13 @@ export function Quiz() {
 
   const handleSubmit = () => {
     if (phone && name) {
-      setIsSubmitted(true);
-      // Here you would send data to backend
-      console.log({ answers, phone, name });
+      submitLead.mutate({
+        name,
+        phone,
+        form_type: "quiz",
+        form_source: window.location.pathname,
+        quiz_answers: answers,
+      });
     }
   };
 
@@ -72,7 +77,7 @@ export function Quiz() {
     setPhone(value);
   };
 
-  if (isSubmitted) {
+  if (submitLead.isSuccess) {
     return (
       <div className="bg-navy text-white p-8 lg:p-12">
         <div className="text-center">
@@ -172,10 +177,10 @@ export function Quiz() {
               />
               <Button
                 onClick={handleSubmit}
-                disabled={!phone || !name}
+                disabled={!phone || !name || submitLead.isPending}
                 className="w-full bg-primary hover:bg-primary/90 text-white h-12"
               >
-                Получить подборку
+                {submitLead.isPending ? "Отправка..." : "Получить подборку"}
               </Button>
               <p className="text-xs text-white/40">
                 Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных
