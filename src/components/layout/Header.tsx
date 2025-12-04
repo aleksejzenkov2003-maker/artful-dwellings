@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, Search, ChevronDown } from "lucide-react";
+import { Menu, Phone, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -9,16 +9,9 @@ const mainNavigation = [
   { name: "Ипотека", href: "/ipoteka" },
   { name: "Новости", href: "/blog" },
   { name: "О компании", href: "/o-kompanii" },
-  { name: "Статьи", href: "/blog" },
+  { name: "Статьи", href: "/stati" },
   { name: "Акции", href: "/akcii" },
   { name: "Контакты", href: "/kontakty" },
-];
-
-const categoryNavigation = [
-  { name: "Новостройки", href: "/novostroyki" },
-  { name: "Вторичная недвижимость", href: "/vtorichnaya" },
-  { name: "Переуступка", href: "/pereustupka" },
-  { name: "Эксклюзив", href: "/exclusive" },
 ];
 
 // Geometric logo component
@@ -29,19 +22,27 @@ const Logo = () => (
         <path
           d="M20 2L36 11V29L20 38L4 29V11L20 2Z"
           stroke="currentColor"
-          strokeWidth="1.5"
-          className="text-primary"
+          strokeWidth="1"
+          className="text-foreground/30"
         />
         <path
           d="M20 8L30 14V26L20 32L10 26V14L20 8Z"
           stroke="currentColor"
-          strokeWidth="1"
-          className="text-primary/60"
+          strokeWidth="0.75"
+          className="text-foreground/20"
         />
-        <circle cx="20" cy="20" r="3" fill="currentColor" className="text-primary" />
+        <text
+          x="20"
+          y="24"
+          textAnchor="middle"
+          className="text-foreground fill-current"
+          style={{ fontSize: '12px', fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          A
+        </text>
       </svg>
     </div>
-    <span className="text-lg font-sans font-medium tracking-widest uppercase">
+    <span className="text-sm font-sans font-medium tracking-[0.2em] uppercase">
       Art Estate
     </span>
   </Link>
@@ -67,11 +68,11 @@ export function Header() {
 
             {/* Right side */}
             <div className="hidden lg:flex items-center gap-6">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1 text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
                 <span>RU</span>
                 <ChevronDown className="h-3 w-3" />
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1 text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
                 <span>Санкт-Петербург</span>
                 <ChevronDown className="h-3 w-3" />
               </div>
@@ -83,7 +84,7 @@ export function Header() {
               </a>
               <Button 
                 variant="outline" 
-                className="border-foreground/20 hover:border-primary hover:text-primary"
+                className="border-foreground text-foreground hover:bg-foreground hover:text-background uppercase text-xs tracking-wider px-6"
               >
                 Заказать звонок
               </Button>
@@ -139,27 +140,27 @@ export function Header() {
       {/* Secondary navigation */}
       <div className="hidden lg:block bg-navy text-white">
         <div className="container mx-auto">
-          <div className="flex items-center h-12">
+          <div className="flex items-center h-11">
             {/* Category dropdown */}
-            <div className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground cursor-pointer hover:bg-primary/90 transition-colors">
+            <div className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors">
               <Menu className="h-4 w-4" />
-              <span className="text-sm font-medium uppercase tracking-wider">Вся недвижимость</span>
+              <span className="text-xs font-medium uppercase tracking-wider">Вся недвижимость</span>
             </div>
 
             {/* Search */}
-            <div className="flex items-center gap-2 px-4 text-white/60">
+            <div className="flex items-center gap-2 px-4 text-white/50 cursor-pointer hover:text-white/80 transition-colors">
               <Search className="h-4 w-4" />
-              <span className="text-sm">Поиск</span>
+              <span className="text-xs uppercase tracking-wider">Поиск</span>
             </div>
 
             {/* Main navigation */}
-            <nav className="flex items-center ml-auto gap-1">
+            <nav className="flex items-center ml-auto">
               {mainNavigation.map((item) => (
                 <Link
                   key={item.href + item.name}
                   to={item.href}
-                  className={`px-4 py-3 text-sm font-medium transition-colors hover:text-primary ${
-                    isActive(item.href) ? "text-primary" : "text-white/80"
+                  className={`px-4 h-11 flex items-center text-xs font-medium uppercase tracking-wider transition-colors hover:text-primary ${
+                    isActive(item.href) ? "text-primary" : "text-white/70"
                   }`}
                 >
                   {item.name}
