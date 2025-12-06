@@ -5,89 +5,107 @@ const categories = [
   {
     title: "Квартиры",
     subtitle: "от застройщиков",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop",
     link: "/novostroyki",
   },
   {
     title: "Квартиры",
     subtitle: "по переуступке",
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",
     link: "/novostroyki",
   },
   {
     title: "Квартиры",
     subtitle: "на вторичном рынке",
-    image: "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=800&h=500&fit=crop",
     link: "/novostroyki",
   },
 ];
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col -mt-[108px] pt-[108px]">
-      {/* Background Image - SPb classical architecture */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1556610961-2fecc5927173?w=1920&h=1080&fit=crop')",
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
+    <section className="relative -mt-[108px]">
+      {/* Main Hero Area */}
+      <div className="relative min-h-[70vh] flex flex-col justify-center">
+        {/* Background Image - SPb classical architecture */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1556610961-2fecc5927173?w=1920&h=1080&fit=crop')",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--navy-dark))]/60 via-[hsl(var(--navy-dark))]/40 to-[hsl(var(--navy-dark))]/70" />
+        </div>
+
+        {/* Content - centered */}
+        <div className="relative z-10 pt-[108px] pb-20">
+          <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
+            <div className="max-w-3xl mx-auto text-center">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-[1.1] mb-6">
+                Мы продаем квартиры<br />и апартаменты
+              </h1>
+              <p className="text-white/60 text-lg md:text-xl lg:text-2xl font-light tracking-wide mb-10 italic font-serif">
+                комфорт и бизнес-класса
+              </p>
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase tracking-[0.15em] text-xs font-medium px-8 py-6 h-auto"
+              >
+                Заказать бесплатную консультацию
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center w-full max-w-[1800px] mx-auto px-6 lg:px-12">
-        <div className="max-w-4xl text-center mx-auto">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-tight mb-4">
-            Мы продаем квартиры<br />и апартаменты
-          </h1>
-          <p className="text-white/70 text-xl md:text-2xl font-light tracking-wide mb-10 italic font-serif">
-            комфорт и бизнес-класса
-          </p>
-          <Button 
-            size="lg" 
-            className="bg-navy/80 backdrop-blur-sm border border-primary text-white hover:bg-navy uppercase tracking-wider text-xs px-10 py-6"
+      {/* Category Cards - Full width, edge-to-edge */}
+      <div className="relative z-10 flex flex-col md:flex-row">
+        {categories.map((category, index) => (
+          <Link
+            key={index}
+            to={category.link}
+            className="group relative flex-1 h-[200px] md:h-[240px] lg:h-[280px] overflow-hidden"
           >
-            Заказать бесплатную консультацию
-          </Button>
-        </div>
-      </div>
-
-      {/* Category Cards - full width with turquoise corner accents */}
-      <div className="relative z-10 w-full">
-        <div className="flex flex-col md:flex-row">
-          {categories.map((category, index) => (
-            <Link
-              key={index}
-              to={category.link}
-              className="group relative flex-1 h-48 md:h-56 overflow-hidden"
-            >
-              <img
-                src={category.image}
-                alt={category.title}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            {/* Card Image */}
+            <img
+              src={category.image}
+              alt={`${category.title} ${category.subtitle}`}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[hsl(var(--navy-dark))]/90 via-[hsl(var(--navy-dark))]/50 to-[hsl(var(--navy-dark))]/20" />
+            
+            {/* Diagonal separator - left side (not for first card) */}
+            {index > 0 && (
+              <div 
+                className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-[hsl(var(--navy-dark))]/60 to-transparent hidden md:block"
+                style={{
+                  clipPath: 'polygon(0 0, 100% 0, 0 100%)',
+                }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-              
-              {/* Turquoise corner accent - top left */}
-              <div className="absolute top-0 left-0 w-12 h-12">
-                <div className="absolute top-4 left-4 w-6 h-[2px] bg-primary" />
-                <div className="absolute top-4 left-4 w-[2px] h-6 bg-primary" />
+            )}
+            
+            {/* Turquoise corner accent - top left */}
+            <div className="absolute top-5 left-5 z-10">
+              <div className="w-8 h-8 relative">
+                <div className="absolute top-0 left-0 w-6 h-[2px] bg-primary" />
+                <div className="absolute top-0 left-0 w-[2px] h-6 bg-primary" />
               </div>
-              
-              {/* Turquoise corner accent - bottom right */}
-              <div className="absolute bottom-0 right-0 w-12 h-12">
-                <div className="absolute bottom-4 right-4 w-6 h-[2px] bg-primary" />
-                <div className="absolute bottom-4 right-4 w-[2px] h-6 bg-primary" />
-              </div>
-              
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <p className="text-white/60 text-sm mb-1 uppercase tracking-wider">{category.title}</p>
-                <p className="text-white text-xl font-serif">{category.subtitle}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+            </div>
+            
+            {/* Text Content */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
+              <p className="text-white text-xl md:text-2xl lg:text-3xl font-serif leading-snug">
+                <span className="block">{category.title}</span>
+                <span className="block">{category.subtitle}</span>
+              </p>
+            </div>
+            
+            {/* Hover overlay */}
+            <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500" />
+          </Link>
+        ))}
       </div>
     </section>
   );
