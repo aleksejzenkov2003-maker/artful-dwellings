@@ -9,6 +9,7 @@ import { TestimonialsSlider } from "@/components/home/TestimonialsSlider";
 import { TeamSection } from "@/components/home/TeamSection";
 import { FeaturesGrid } from "@/components/home/FeaturesGrid";
 import { HexagonPattern } from "@/components/ui/HexagonPattern";
+import { StatsSection } from "@/components/home/StatsSection";
 import { useCity } from "@/contexts/CityContext";
 
 // Helper function to get genitive case for city names
@@ -142,41 +143,7 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 lg:py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { 
-                year: "2009", 
-                title: "Большой опыт работы", 
-                desc: "С нами работают покупатели и партнеры с 2009 года, мы выстроили отношения на доверии и честности" 
-              },
-              { 
-                icon: "◇", 
-                title: "Амбициозность компании", 
-                desc: "Занимаемся недвижимостью — владеем информацией: каждый день получаем информацию о новых предложениях" 
-              },
-              { 
-                icon: "↗", 
-                title: "Постоянный рост", 
-                desc: "Развиваем отношения с клиентами и партнерами для совместного долгосрочного развития" 
-              },
-            ].map((stat, index) => (
-              <div key={index} className="text-center p-8 border border-border">
-                <div className="mb-4">
-                  {stat.year ? (
-                    <span className="text-4xl md:text-5xl font-serif text-primary">{stat.year}</span>
-                  ) : (
-                    <span className="text-3xl md:text-4xl">{stat.icon}</span>
-                  )}
-                </div>
-                <h3 className="text-sm font-medium uppercase tracking-wider mb-3">{stat.title}</h3>
-                <p className="text-sm text-muted-foreground">{stat.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <StatsSection variant="secondary" />
 
       {/* CTA Section */}
       <section className="py-12 bg-secondary">
