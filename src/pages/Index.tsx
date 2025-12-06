@@ -10,6 +10,8 @@ import { TeamSection } from "@/components/home/TeamSection";
 import { FeaturesGrid } from "@/components/home/FeaturesGrid";
 import { HexagonPattern } from "@/components/ui/HexagonPattern";
 import { StatsSection } from "@/components/home/StatsSection";
+import { ServicesSection } from "@/components/home/ServicesSection";
+import { ConsultationForm } from "@/components/home/ConsultationForm";
 import { useCity } from "@/contexts/CityContext";
 
 // Helper function to get genitive case for city names
@@ -98,37 +100,7 @@ const Index = () => {
       {/* Services Section */}
       <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif mb-12">Услуги</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
-            {[
-              { num: "01", title: "Подбор недвижимости", desc: "Комфортный подбор квартир под ваши параметры" },
-              { num: "02", title: "Проверка объектов", desc: "Юридическая проверка и сопровождение" },
-              { num: "03", title: "HELP Система Бухгалтерии", desc: "Налоговое планирование" },
-              { num: "04", title: "Услуги по приобретению", desc: "Полное сопровождение сделки" },
-              { num: "05", title: "Trade In", desc: "Обмен старой недвижимости на новую" },
-              { num: "06", title: "Страхование объектов", desc: "Защита вашей недвижимости" },
-              { num: "07", title: "Курс инвестора", desc: "Обучение инвестированию" },
-              { num: "08", title: "Авторские туры", desc: "Экскурсии по объектам" },
-            ].map((service) => (
-              <Link to={`/uslugi/${service.num}`} key={service.num} className="group cursor-pointer">
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-2xl md:text-3xl font-serif text-primary">{service.num}</span>
-                  <span className="text-2xl md:text-3xl font-serif text-primary">/</span>
-                </div>
-                <h3 className="text-sm font-medium text-primary mb-1 group-hover:underline underline-offset-4">
-                  {service.title}
-                </h3>
-                <p className="text-xs text-muted-foreground">{service.desc}</p>
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <Button variant="outline" className="border-foreground/20 uppercase text-xs tracking-wider">
-              Все услуги
-            </Button>
-          </div>
+          <ServicesSection />
         </div>
       </section>
 
@@ -186,9 +158,11 @@ const Index = () => {
       <section className="py-12 bg-secondary">
         <div className="container mx-auto px-4 text-center">
           <p className="text-muted-foreground mb-4">Заинтересовались? Свяжитесь с нами.</p>
-          <Button variant="outline" className="border-foreground/20 uppercase text-xs tracking-wider">
-            Связаться
-          </Button>
+          <Link to="/kontakty">
+            <Button variant="outline" className="border-foreground/20 uppercase text-xs tracking-wider">
+              Связаться
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -229,36 +203,7 @@ const Index = () => {
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <p className="text-xs text-white/50 uppercase tracking-[0.2em] mb-4">
-            Свободная консультация
-          </p>
-          
-          <div className="max-w-2xl">
-            <h2 className="text-2xl md:text-3xl font-serif mb-8 leading-relaxed">
-              Здравствуйте, меня зовут{" "}
-              <span className="border-b border-primary text-primary">ваше имя</span>,<br />
-              хочу получить консультацию по теме<br />
-              в премиальной недвижимости, свяжитесь со мной<br />
-              по номеру телефона —{" "}
-              <span className="border-b border-primary text-primary">+7-987-654-32-10</span>
-            </h2>
-            
-            <div className="flex items-start gap-2 mb-6">
-              <input 
-                type="checkbox" 
-                id="consent" 
-                className="w-4 h-4 mt-0.5 accent-primary"
-              />
-              <label htmlFor="consent" className="text-xs text-white/60 leading-relaxed">
-                Я согласен на обработку персональных данных.<br />
-                <span className="underline">(В соответствии с требованиями ст. 9 Федерального закона от 27.07.2006 г. № 152-ФЗ «О защите персональных данных»)</span>
-              </label>
-            </div>
-            
-            <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 uppercase text-xs tracking-wider">
-              Отправить заявку
-            </Button>
-          </div>
+          <ConsultationForm />
         </div>
       </section>
     </Layout>
