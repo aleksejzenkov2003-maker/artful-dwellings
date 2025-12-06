@@ -283,6 +283,8 @@ export type Database = {
           is_published: boolean | null
           order_position: number | null
           rating: number | null
+          source: string | null
+          source_url: string | null
         }
         Insert: {
           author_name: string
@@ -294,6 +296,8 @@ export type Database = {
           is_published?: boolean | null
           order_position?: number | null
           rating?: number | null
+          source?: string | null
+          source_url?: string | null
         }
         Update: {
           author_name?: string
@@ -305,6 +309,8 @@ export type Database = {
           is_published?: boolean | null
           order_position?: number | null
           rating?: number | null
+          source?: string | null
+          source_url?: string | null
         }
         Relationships: []
       }
