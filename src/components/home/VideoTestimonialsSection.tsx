@@ -9,12 +9,12 @@ export function VideoTestimonialsSection() {
 
   return (
     <section className="py-16 lg:py-24 bg-secondary">
-      <div className="container mx-auto px-4">
+      <div className="container-wide">
         <h2 className="text-3xl md:text-4xl font-serif text-center mb-12">
           Слово нашим клиентам
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {displayReviews.length > 0 ? (
             displayReviews.map((review) => (
               <div key={review.id} className="relative group cursor-pointer">

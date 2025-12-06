@@ -36,7 +36,7 @@ export function Footer() {
   return (
     <footer className="bg-navy text-white">
       {/* Main footer */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="container-wide py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Phone and CTA */}
           <div className="lg:col-span-2">
@@ -184,7 +184,7 @@ export function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container-wide py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-white/40 text-xs">
             <p>
               © «Арт Истейт». Экспертное агентство по продаже недвижимости. Не является офертой.

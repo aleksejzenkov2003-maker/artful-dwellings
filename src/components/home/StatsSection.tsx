@@ -28,7 +28,7 @@ export const StatsSection = ({ variant = "primary", className = "" }: StatsSecti
   if (isLoading) {
     return (
       <section className={`py-12 ${bgClass} ${className}`}>
-        <div className="container mx-auto px-4">
+        <div className="container-wide">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="text-center">
@@ -49,7 +49,7 @@ export const StatsSection = ({ variant = "primary", className = "" }: StatsSecti
 
   return (
     <section className={`py-12 ${bgClass} ${className}`}>
-      <div className="container mx-auto px-4">
+      <div className="container-wide">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat) => {
             const IconComponent = stat.icon ? iconMap[stat.icon] : null;

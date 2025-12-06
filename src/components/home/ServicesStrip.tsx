@@ -57,7 +57,7 @@ export function ServicesStrip() {
     <>
       {/* Quick Consultation Strip - Turquoise background */}
       <section className="py-5 bg-primary">
-        <div className="container mx-auto px-4">
+        <div className="container-wide">
           <div className="flex flex-wrap items-center justify-center gap-6">
             <h3 className="text-xl font-serif text-primary-foreground">
               Получите консультацию
@@ -84,7 +84,7 @@ export function ServicesStrip() {
 
       {/* Services After Sale */}
       <section className="py-16 lg:py-24 bg-background">
-        <div className="container mx-auto px-4">
+        <div className="container-wide">
           <div className="flex items-center gap-4 mb-12">
             <h2 className="text-2xl md:text-3xl font-serif">
               Поможем и после продажи

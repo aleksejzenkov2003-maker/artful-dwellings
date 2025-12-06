@@ -149,4 +149,9 @@
   .bg-coral {
     background-color: hsl(var(--coral));
   }
+  
+  /* Wide container utility */
+  .container-wide {
+    @apply w-full max-w-[1800px] mx-auto px-6 lg:px-12;
+  }
 }

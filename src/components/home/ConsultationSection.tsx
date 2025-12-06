@@ -48,7 +48,7 @@ export function ConsultationSection() {
   if (isSubmitted) {
     return (
       <section className="py-20 lg:py-28 bg-zinc-900 text-white relative overflow-hidden">
-        <div className="container mx-auto px-4 text-center">
+        <div className="container-wide text-center">
           <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
           <h3 className="text-2xl font-serif mb-2">Заявка отправлена!</h3>
           <p className="text-white/60">Мы свяжемся с вами в ближайшее время</p>
@@ -64,7 +64,7 @@ export function ConsultationSection() {
         <HexagonPattern className="w-full h-full text-primary" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container-wide relative z-10">
         <p className="text-xs text-white/40 uppercase tracking-[0.2em] mb-6">
           Консультация по объекту
         </p>
