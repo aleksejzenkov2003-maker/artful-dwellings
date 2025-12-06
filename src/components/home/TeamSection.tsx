@@ -1,13 +1,15 @@
 import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCity } from "@/contexts/CityContext";
 
 export function TeamSection() {
   const { data: teamMembers, isLoading } = useTeamMembers();
+  const { currentCity } = useCity();
 
   return (
     <div>
       <h2 className="text-3xl md:text-4xl font-serif text-center mb-4">
-        Команда экспертов
+        Команда экспертов {currentCity?.name && `в г. ${currentCity.name}`}
       </h2>
       <div className="w-16 h-0.5 bg-primary mx-auto mb-6" />
       <p className="text-center text-muted-foreground max-w-xl mx-auto mb-12">
@@ -25,7 +27,7 @@ export function TeamSection() {
             </div>
           ))}
         </div>
-      ) : (
+      ) : teamMembers && teamMembers.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {teamMembers?.map((member) => (
             <div key={member.id} className="text-center group">
@@ -43,6 +45,12 @@ export function TeamSection() {
               </p>
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 bg-muted/30 rounded-lg">
+          <p className="text-muted-foreground">
+            В городе {currentCity?.name || "—"} команда пока формируется.
+          </p>
         </div>
       )}
     </div>

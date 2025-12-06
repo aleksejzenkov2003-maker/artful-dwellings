@@ -9,8 +9,22 @@ import { TestimonialsSlider } from "@/components/home/TestimonialsSlider";
 import { TeamSection } from "@/components/home/TeamSection";
 import { FeaturesGrid } from "@/components/home/FeaturesGrid";
 import { HexagonPattern } from "@/components/ui/HexagonPattern";
+import { useCity } from "@/contexts/CityContext";
+
+// Helper function to get genitive case for city names
+function getCityGenitive(cityName: string): string {
+  const genitiveMap: Record<string, string> = {
+    "Санкт-Петербург": "северной столицы",
+    "Москва": "столицы",
+    "Дубай": "Дубая",
+  };
+  return genitiveMap[cityName] || cityName;
+}
 
 const Index = () => {
+  const { currentCity } = useCity();
+  const cityGenitive = getCityGenitive(currentCity?.name || "Санкт-Петербург");
+
   return (
     <Layout>
       {/* Hero Section - Light background */}
@@ -74,7 +88,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <p className="text-muted-foreground max-w-2xl text-lg leading-relaxed">
             Уникальные партнёрские взаимоотношения компании с ведущими застройщиками 
-            северной столицы позволяют предлагать клиентам выгодные условия сотрудничества 
+            {cityGenitive} позволяют предлагать клиентам выгодные условия сотрудничества 
             и возможность приобрести квартиру в новостройке по ценам ниже, чем у застройщика.
           </p>
         </div>
