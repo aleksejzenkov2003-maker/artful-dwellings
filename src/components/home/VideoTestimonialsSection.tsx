@@ -27,10 +27,10 @@ export function VideoTestimonialsSection() {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent rounded-lg" />
                 
-                {/* Play Button */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-primary/80 transition-colors">
-                    <Play className="w-6 h-6 text-white ml-1" fill="white" />
+                {/* Play Button - bottom right */}
+                <div className="absolute bottom-4 right-4 z-10">
+                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center group-hover:bg-primary/80 transition-colors">
+                    <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
                   </div>
                 </div>
 
@@ -42,11 +42,6 @@ export function VideoTestimonialsSection() {
                   <p className="text-white/60 text-sm">
                     {review.author_role || "Покупка квартиры в новостройке"}
                   </p>
-                </div>
-
-                {/* Decorative circles */}
-                <div className="absolute bottom-4 right-4">
-                  <div className="w-12 h-12 rounded-full border border-primary/50" />
                 </div>
               </div>
             ))
@@ -68,9 +63,10 @@ export function VideoTestimonialsSection() {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent rounded-lg" />
                 
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-primary/80 transition-colors">
-                    <Play className="w-6 h-6 text-white ml-1" fill="white" />
+                {/* Play Button - bottom right */}
+                <div className="absolute bottom-4 right-4 z-10">
+                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center group-hover:bg-primary/80 transition-colors">
+                    <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
                   </div>
                 </div>
 
@@ -80,17 +76,13 @@ export function VideoTestimonialsSection() {
                   </h3>
                   <p className="text-white/60 text-sm">{testimonial.role}</p>
                 </div>
-
-                <div className="absolute bottom-4 right-4">
-                  <div className="w-12 h-12 rounded-full border border-primary/50" />
-                </div>
               </div>
             ))
           )}
         </div>
 
         <div className="text-center mt-12">
-          <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white uppercase text-xs tracking-wider">
+          <Button variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-background uppercase text-xs tracking-wider">
             Все отзывы
           </Button>
         </div>
