@@ -21,6 +21,7 @@ interface ComplexFiltersProps {
   filters: FiltersState;
   onFiltersChange: (filters: FiltersState) => void;
   districts: string[];
+  hideStatusFilter?: boolean;
 }
 
 const statusOptions = [
@@ -34,6 +35,7 @@ export function ComplexFilters({
   filters,
   onFiltersChange,
   districts,
+  hideStatusFilter = false,
 }: ComplexFiltersProps) {
   const handleChange = (key: keyof FiltersState, value: string) => {
     onFiltersChange({ ...filters, [key]: value });
@@ -42,7 +44,7 @@ export function ComplexFilters({
   const handleReset = () => {
     onFiltersChange({
       district: "all",
-      status: "all",
+      status: hideStatusFilter ? filters.status : "all",
       priceFrom: "",
       priceTo: "",
     });
@@ -50,7 +52,7 @@ export function ComplexFilters({
 
   const hasActiveFilters =
     filters.district !== "all" ||
-    filters.status !== "all" ||
+    (!hideStatusFilter && filters.status !== "all") ||
     filters.priceFrom !== "" ||
     filters.priceTo !== "";
 
@@ -71,7 +73,7 @@ export function ComplexFilters({
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 ${hideStatusFilter ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
         <div className="space-y-2">
           <Label htmlFor="district">Район</Label>
           <Select
@@ -92,24 +94,26 @@ export function ComplexFilters({
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="status">Статус</Label>
-          <Select
-            value={filters.status}
-            onValueChange={(v) => handleChange("status", v)}
-          >
-            <SelectTrigger id="status">
-              <SelectValue placeholder="Все статусы" />
-            </SelectTrigger>
-            <SelectContent>
-              {statusOptions.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {!hideStatusFilter && (
+          <div className="space-y-2">
+            <Label htmlFor="status">Статус</Label>
+            <Select
+              value={filters.status}
+              onValueChange={(v) => handleChange("status", v)}
+            >
+              <SelectTrigger id="status">
+                <SelectValue placeholder="Все статусы" />
+              </SelectTrigger>
+              <SelectContent>
+                {statusOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <div className="space-y-2">
           <Label htmlFor="priceFrom">Цена от, ₽</Label>
