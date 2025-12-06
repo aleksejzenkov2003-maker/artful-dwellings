@@ -32,7 +32,7 @@ export function HeroSection() {
           backgroundImage: "url('https://images.unsplash.com/photo-1556610961-2fecc5927173?w=1920&h=1080&fit=crop')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50" />
       </div>
 
       {/* Content */}
@@ -54,21 +54,14 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Category Cards with skewed effect and gaps */}
-      <div className="relative z-10 container mx-auto px-4 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+      {/* Category Cards - full width, no gaps, skewed borders between cards */}
+      <div className="relative z-10 w-full">
+        <div className="flex flex-col md:flex-row">
           {categories.map((category, index) => (
             <Link
               key={index}
               to={category.link}
-              className="group relative h-48 md:h-56 overflow-hidden border border-white/20"
-              style={{
-                clipPath: index === 0 
-                  ? "polygon(0 0, 100% 0, 92% 100%, 0 100%)"
-                  : index === 1
-                  ? "polygon(8% 0, 92% 0, 84% 100%, 16% 100%)"
-                  : "polygon(8% 0, 100% 0, 100% 100%, 16% 100%)",
-              }}
+              className="group relative flex-1 h-48 md:h-56 overflow-hidden"
             >
               <img
                 src={category.image}
@@ -76,6 +69,27 @@ export function HeroSection() {
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              
+              {/* Skewed border overlay - right side */}
+              {index < categories.length - 1 && (
+                <div 
+                  className="hidden md:block absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-black/60 to-transparent"
+                  style={{
+                    clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
+                  }}
+                />
+              )}
+              
+              {/* Skewed border overlay - left side */}
+              {index > 0 && (
+                <div 
+                  className="hidden md:block absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-black/60 to-transparent"
+                  style={{
+                    clipPath: "polygon(0 0, 100% 0, 0 100%)",
+                  }}
+                />
+              )}
+              
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <p className="text-white/70 text-sm mb-1 uppercase tracking-wider">{category.title}</p>
                 <p className="text-white text-xl font-serif">{category.subtitle}</p>
