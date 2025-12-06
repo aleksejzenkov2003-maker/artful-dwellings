@@ -1,1 +1,4 @@
 project_id = "izotwpvkxdcojdcryjbh"
+
+[functions.import-complexes]
+verify_jwt = true
