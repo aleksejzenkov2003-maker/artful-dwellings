@@ -65,8 +65,8 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Top bar - transparent dark */}
-      <div className="bg-black/50 backdrop-blur-sm border-b border-white/10">
+      {/* Top bar - fully transparent, no border */}
+      <div className="bg-transparent">
         <div className="container mx-auto">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -87,7 +87,7 @@ export function Header() {
               </a>
               <Button 
                 variant="outline" 
-                className="border-white/50 text-white bg-transparent hover:bg-white hover:text-black uppercase text-xs tracking-wider px-6"
+                className="border-white text-white bg-transparent hover:bg-white hover:text-black uppercase text-xs tracking-wider px-6"
               >
                 Заказать звонок
               </Button>
@@ -143,8 +143,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* Secondary navigation */}
-      <div className="hidden lg:block bg-navy/90 backdrop-blur-sm text-white">
+      {/* Secondary navigation - no gap with top bar */}
+      <div className="hidden lg:block bg-navy/80 backdrop-blur-sm text-white">
         <div className="container mx-auto">
           <div className="flex items-center h-11">
             {/* Category dropdown */}
