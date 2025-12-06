@@ -82,7 +82,7 @@ export function ComplexCatalog() {
       </div>
 
       <div className="mt-8 text-center">
-        <Button variant="outline" asChild>
+        <Button variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-background" asChild>
           <Link to="/novostroyki">Показать все объекты</Link>
         </Button>
       </div>

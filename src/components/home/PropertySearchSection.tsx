@@ -116,7 +116,7 @@ export function PropertySearchSection() {
             <Button 
               onClick={handleSubmit}
               disabled={mutation.isPending}
-              className="bg-primary hover:bg-primary/90 uppercase text-xs tracking-wider"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-xs tracking-wider"
             >
               {mutation.isPending ? "..." : "Отправить заявку"}
             </Button>
@@ -226,7 +226,7 @@ export function PropertySearchSection() {
         {/* Show More Button */}
         <div className="text-center mt-12">
           <Link to="/novostroyki">
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase text-xs tracking-wider px-8">
+            <Button variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-background uppercase text-xs tracking-wider px-8">
               Показать ещё
             </Button>
           </Link>
