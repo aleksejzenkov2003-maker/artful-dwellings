@@ -57,9 +57,9 @@ export function ComplexFilters({
     filters.priceTo !== "";
 
   return (
-    <div className="bg-card rounded-xl border border-border/50 p-6">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="font-semibold text-lg">Фильтры</h3>
+    <div className="bg-muted/30 rounded-2xl p-8">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="font-semibold text-xl">Фильтры</h3>
         {hasActiveFilters && (
           <Button
             variant="ghost"
@@ -67,20 +67,20 @@ export function ComplexFilters({
             onClick={handleReset}
             className="text-muted-foreground hover:text-foreground"
           >
-            <X className="w-4 h-4 mr-1" />
+            <X className="w-4 h-4 mr-2" />
             Сбросить
           </Button>
         )}
       </div>
 
-      <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 ${hideStatusFilter ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
-        <div className="space-y-2">
-          <Label htmlFor="district">Район</Label>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 ${hideStatusFilter ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
+        <div className="space-y-3">
+          <Label htmlFor="district" className="text-base">Район</Label>
           <Select
             value={filters.district}
             onValueChange={(v) => handleChange("district", v)}
           >
-            <SelectTrigger id="district">
+            <SelectTrigger id="district" className="h-12">
               <SelectValue placeholder="Все районы" />
             </SelectTrigger>
             <SelectContent>
@@ -95,13 +95,13 @@ export function ComplexFilters({
         </div>
 
         {!hideStatusFilter && (
-          <div className="space-y-2">
-            <Label htmlFor="status">Статус</Label>
+          <div className="space-y-3">
+            <Label htmlFor="status" className="text-base">Статус</Label>
             <Select
               value={filters.status}
               onValueChange={(v) => handleChange("status", v)}
             >
-              <SelectTrigger id="status">
+              <SelectTrigger id="status" className="h-12">
                 <SelectValue placeholder="Все статусы" />
               </SelectTrigger>
               <SelectContent>
@@ -115,25 +115,27 @@ export function ComplexFilters({
           </div>
         )}
 
-        <div className="space-y-2">
-          <Label htmlFor="priceFrom">Цена от, ₽</Label>
+        <div className="space-y-3">
+          <Label htmlFor="priceFrom" className="text-base">Цена от, ₽</Label>
           <Input
             id="priceFrom"
             type="number"
             placeholder="1 000 000"
             value={filters.priceFrom}
             onChange={(e) => handleChange("priceFrom", e.target.value)}
+            className="h-12"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="priceTo">Цена до, ₽</Label>
+        <div className="space-y-3">
+          <Label htmlFor="priceTo" className="text-base">Цена до, ₽</Label>
           <Input
             id="priceTo"
             type="number"
             placeholder="50 000 000"
             value={filters.priceTo}
             onChange={(e) => handleChange("priceTo", e.target.value)}
+            className="h-12"
           />
         </div>
       </div>
