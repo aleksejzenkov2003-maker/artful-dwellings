@@ -1,7 +1,7 @@
 import { Layout } from "@/components/layout/Layout";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Play, Award, Users, Building2, TrendingUp } from "lucide-react";
+import { Play } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
@@ -9,13 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-const stats = [
-  { icon: Building2, value: "500+", label: "Объектов продано" },
-  { icon: Users, value: "1200+", label: "Довольных клиентов" },
-  { icon: Award, value: "9", label: "Лет на рынке" },
-  { icon: TrendingUp, value: "98%", label: "Рекомендуют нас" },
-];
+import { StatsSection } from "@/components/home/StatsSection";
 
 const timeline = [
   { year: "2015", title: "Основание компании", description: "Открытие первого офиса в Санкт-Петербурге" },
@@ -45,19 +39,7 @@ const OKompanii = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-12 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <stat.icon className="h-8 w-8 mx-auto mb-3 opacity-80" />
-                <div className="text-3xl md:text-4xl font-serif font-bold mb-1">{stat.value}</div>
-                <div className="text-sm opacity-80">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <StatsSection variant="primary" />
 
       {/* Mission + Video */}
       <section className="py-16 lg:py-24">
