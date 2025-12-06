@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { ComplexCard } from "@/components/novostroyki/ComplexCard";
 import { ComplexFilters, FiltersState } from "@/components/novostroyki/ComplexFilters";
@@ -15,18 +16,62 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Building2 } from "lucide-react";
+import { Building2, Hammer, CheckCircle2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const Novostroyki = () => {
+interface NovostroykiProps {
+  initialStatus?: string;
+}
+
+type TabType = "all" | "building" | "completed";
+
+const tabs: { value: TabType; label: string; icon: React.ElementType; description: string }[] = [
+  { value: "all", label: "Все объекты", icon: Building2, description: "Полный каталог" },
+  { value: "building", label: "Строящиеся", icon: Hammer, description: "В процессе строительства" },
+  { value: "completed", label: "Готовые", icon: CheckCircle2, description: "Сданы в эксплуатацию" },
+];
+
+const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Determine active tab based on route or initialStatus
+  const getInitialTab = (): TabType => {
+    if (location.pathname === "/gotovaya-nedvizhimost" || initialStatus === "completed") {
+      return "completed";
+    }
+    return "all";
+  };
+
+  const [activeTab, setActiveTab] = useState<TabType>(getInitialTab);
   const [filters, setFilters] = useState<FiltersState>({
     district: "all",
-    status: "all",
+    status: initialStatus || "all",
     priceFrom: "",
     priceTo: "",
   });
   const [page, setPage] = useState(1);
 
   const { data: districts = [] } = useDistrictsList();
+
+  // Sync status filter with active tab
+  useEffect(() => {
+    if (activeTab === "all") {
+      setFilters(prev => ({ ...prev, status: "all" }));
+    } else {
+      setFilters(prev => ({ ...prev, status: activeTab }));
+    }
+    setPage(1);
+  }, [activeTab]);
+
+  // Sync tab with route
+  useEffect(() => {
+    if (location.pathname === "/gotovaya-nedvizhimost") {
+      setActiveTab("completed");
+    } else if (location.pathname === "/novostroyki" && activeTab !== "all" && activeTab !== "building") {
+      // Reset to all when navigating to /novostroyki
+    }
+  }, [location.pathname]);
 
   const { data, isLoading, error } = useResidentialComplexesFiltered({
     district: filters.district,
@@ -36,6 +81,16 @@ const Novostroyki = () => {
     page,
     limit: 9,
   });
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    // Update URL based on tab
+    if (tab === "completed") {
+      navigate("/gotovaya-nedvizhimost");
+    } else {
+      navigate("/novostroyki");
+    }
+  };
 
   const handleFiltersChange = (newFilters: FiltersState) => {
     setFilters(newFilters);
@@ -47,23 +102,65 @@ const Novostroyki = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const pageTitle = activeTab === "completed" 
+    ? "Готовая недвижимость" 
+    : activeTab === "building"
+      ? "Строящиеся новостройки"
+      : "Новостройки Санкт-Петербурга";
+
+  const pageDescription = activeTab === "completed"
+    ? "Квартиры в сданных домах с ключами — заселяйтесь сразу"
+    : activeTab === "building"
+      ? "Квартиры в строящихся домах по выгодным ценам от застройщиков"
+      : "Каталог новостроек от проверенных застройщиков с актуальными ценами и планировками";
+
   return (
     <Layout>
       <section className="py-12 lg:py-20">
         <div className="container mx-auto px-4">
           <div className="mb-10">
             <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
-              Новостройки Санкт-Петербурга
+              {pageTitle}
             </h1>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              Каталог новостроек от проверенных застройщиков с актуальными ценами и планировками
+              {pageDescription}
             </p>
+          </div>
+
+          {/* Status Tabs */}
+          <div className="mb-8">
+            <div className="inline-flex bg-muted/50 rounded-xl p-1.5 gap-1">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.value;
+                return (
+                  <button
+                    key={tab.value}
+                    onClick={() => handleTabChange(tab.value)}
+                    className={cn(
+                      "relative flex items-center gap-2 px-5 py-3 rounded-lg font-medium transition-all duration-200",
+                      isActive
+                        ? "bg-background text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                    )}
+                  >
+                    <Icon className={cn(
+                      "w-4 h-4 transition-colors",
+                      isActive ? "text-primary" : ""
+                    )} />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                    <span className="sm:hidden">{tab.label.split(" ")[0]}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <ComplexFilters
             filters={filters}
             onFiltersChange={handleFiltersChange}
             districts={districts}
+            hideStatusFilter={activeTab !== "all"}
           />
 
           <div className="mt-8">
