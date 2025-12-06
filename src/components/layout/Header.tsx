@@ -65,8 +65,8 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Top bar - fully transparent, no border */}
-      <div className="bg-transparent">
+      {/* Top bar - transparent with subtle backdrop */}
+      <div className="bg-black/40 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}

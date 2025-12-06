@@ -24,7 +24,7 @@ const categories = [
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[90vh] flex flex-col">
+    <section className="relative min-h-screen flex flex-col -mt-[108px] pt-[108px]">
       {/* Background Image - SPb classical architecture with light fog */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
