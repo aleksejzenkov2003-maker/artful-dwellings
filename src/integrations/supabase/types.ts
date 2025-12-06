@@ -71,6 +71,92 @@ export type Database = {
         }
         Relationships: []
       }
+      cities: {
+        Row: {
+          country: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          name: string
+          order_position: number | null
+          slug: string
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name: string
+          order_position?: number | null
+          slug: string
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name?: string
+          order_position?: number | null
+          slug?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          address: string | null
+          city_id: string
+          coordinates: Json | null
+          created_at: string
+          email: string | null
+          id: string
+          phone: string
+          phone_secondary: string | null
+          telegram: string | null
+          updated_at: string
+          whatsapp: string | null
+          working_hours: string | null
+        }
+        Insert: {
+          address?: string | null
+          city_id: string
+          coordinates?: Json | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          phone: string
+          phone_secondary?: string | null
+          telegram?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+          working_hours?: string | null
+        }
+        Update: {
+          address?: string | null
+          city_id?: string
+          coordinates?: Json | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          phone?: string
+          phone_secondary?: string | null
+          telegram?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+          working_hours?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           created_at: string
@@ -186,6 +272,7 @@ export type Database = {
           area_from: number | null
           area_to: number | null
           city: string | null
+          city_id: string | null
           completion_date: string | null
           coordinates: Json | null
           created_at: string
@@ -216,6 +303,7 @@ export type Database = {
           area_from?: number | null
           area_to?: number | null
           city?: string | null
+          city_id?: string | null
           completion_date?: string | null
           coordinates?: Json | null
           created_at?: string
@@ -246,6 +334,7 @@ export type Database = {
           area_from?: number | null
           area_to?: number | null
           city?: string | null
+          city_id?: string | null
           completion_date?: string | null
           coordinates?: Json | null
           created_at?: string
@@ -270,7 +359,15 @@ export type Database = {
           status?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "residential_complexes_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
@@ -368,6 +465,7 @@ export type Database = {
       team_members: {
         Row: {
           bio: string | null
+          city_id: string | null
           created_at: string
           id: string
           is_published: boolean | null
@@ -379,6 +477,7 @@ export type Database = {
         }
         Insert: {
           bio?: string | null
+          city_id?: string | null
           created_at?: string
           id?: string
           is_published?: boolean | null
@@ -390,6 +489,7 @@ export type Database = {
         }
         Update: {
           bio?: string | null
+          city_id?: string | null
           created_at?: string
           id?: string
           is_published?: boolean | null
@@ -399,7 +499,15 @@ export type Database = {
           role?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "team_members_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
