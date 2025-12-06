@@ -25,14 +25,14 @@ const categories = [
 export function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex flex-col">
-      {/* Background Image - SPb classical architecture */}
+      {/* Background Image - SPb classical architecture with light fog */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1548834925-e48f8a27ae34?w=1920&h=1080&fit=crop')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1556610961-2fecc5927173?w=1920&h=1080&fit=crop')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
       </div>
 
       {/* Content */}
@@ -45,28 +45,29 @@ export function HeroSection() {
             комфорт и бизнес-класса
           </p>
           <Button 
+            variant="outline"
             size="lg" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase tracking-wider text-sm px-8 py-6"
+            className="border-white/40 bg-black/30 text-white hover:bg-white/10 backdrop-blur-sm uppercase tracking-wider text-sm px-8 py-6"
           >
             Заказать бесплатную консультацию
           </Button>
         </div>
       </div>
 
-      {/* Category Cards with skewed effect */}
+      {/* Category Cards with skewed effect and gaps */}
       <div className="relative z-10 container mx-auto px-4 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {categories.map((category, index) => (
             <Link
               key={index}
               to={category.link}
-              className="group relative h-48 md:h-56 overflow-hidden"
+              className="group relative h-48 md:h-56 overflow-hidden border border-white/20"
               style={{
                 clipPath: index === 0 
-                  ? "polygon(0 0, 100% 0, 95% 100%, 0 100%)"
+                  ? "polygon(0 0, 100% 0, 92% 100%, 0 100%)"
                   : index === 1
-                  ? "polygon(5% 0, 95% 0, 90% 100%, 10% 100%)"
-                  : "polygon(5% 0, 100% 0, 100% 100%, 10% 100%)",
+                  ? "polygon(8% 0, 92% 0, 84% 100%, 16% 100%)"
+                  : "polygon(8% 0, 100% 0, 100% 100%, 16% 100%)",
               }}
             >
               <img

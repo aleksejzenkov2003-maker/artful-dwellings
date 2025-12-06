@@ -9,13 +9,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
-export function CitySelector() {
+interface CitySelectorProps {
+  variant?: "default" | "light";
+}
+
+export function CitySelector({ variant = "default" }: CitySelectorProps) {
   const { cities, currentCity, setCurrentCity, isLoading } = useCity();
   const [open, setOpen] = useState(false);
 
+  const isLight = variant === "light";
+
   if (isLoading || !currentCity) {
     return (
-      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+      <div className={cn(
+        "flex items-center gap-1.5 text-sm",
+        isLight ? "text-white/70" : "text-muted-foreground"
+      )}>
         <MapPin className="w-4 h-4" />
         <span>Загрузка...</span>
       </div>
@@ -24,8 +33,16 @@ export function CitySelector() {
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm hover:text-primary transition-colors focus:outline-none">
-        <MapPin className="w-4 h-4 text-primary" />
+      <DropdownMenuTrigger className={cn(
+        "flex items-center gap-1.5 text-sm transition-colors focus:outline-none",
+        isLight 
+          ? "text-white/80 hover:text-white" 
+          : "hover:text-primary"
+      )}>
+        <MapPin className={cn(
+          "w-4 h-4",
+          isLight ? "text-white/70" : "text-primary"
+        )} />
         <span className="font-medium">{currentCity.name}</span>
         <ChevronDown className={cn(
           "w-3.5 h-3.5 transition-transform duration-200",
