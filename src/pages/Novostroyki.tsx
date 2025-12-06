@@ -131,20 +131,21 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
 
   return (
     <Layout>
-      <section className="py-12 lg:py-20">
-        <div className="container mx-auto px-4">
-          <div className="mb-10">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
+      <section className="py-16 lg:py-24">
+        <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
+          {/* Page Header */}
+          <div className="mb-16">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold mb-6">
               {pageTitle}
             </h1>
-            <p className="text-muted-foreground text-lg max-w-2xl">
+            <p className="text-muted-foreground text-xl max-w-3xl">
               {pageDescription}
             </p>
           </div>
 
-          {/* Status Tabs */}
-          <div className="mb-8">
-            <div className="inline-flex bg-muted/50 rounded-xl p-1.5 gap-1">
+          {/* Status Tabs - Minimalistic */}
+          <div className="mb-12">
+            <div className="flex gap-2">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.value;
@@ -153,18 +154,17 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
                     key={tab.value}
                     onClick={() => handleTabChange(tab.value)}
                     className={cn(
-                      "relative flex items-center gap-2 px-5 py-3 rounded-lg font-medium transition-all duration-200",
+                      "relative flex items-center gap-3 px-6 py-4 font-medium transition-all duration-200 border-b-2",
                       isActive
-                        ? "bg-background text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                        ? "border-primary text-foreground"
+                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
                     )}
                   >
                     <Icon className={cn(
-                      "w-4 h-4 transition-colors",
+                      "w-5 h-5 transition-colors",
                       isActive ? "text-primary" : ""
                     )} />
-                    <span className="hidden sm:inline">{tab.label}</span>
-                    <span className="sm:hidden">{tab.label.split(" ")[0]}</span>
+                    <span>{tab.label}</span>
                   </button>
                 );
               })}
@@ -178,36 +178,36 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
             hideStatusFilter={activeTab !== "all"}
           />
 
-          <div className="mt-8">
+          <div className="mt-12">
             {isLoading || districtsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="rounded-xl overflow-hidden">
                     <Skeleton className="aspect-[4/3] w-full" />
-                    <div className="p-5 space-y-3">
-                      <Skeleton className="h-6 w-3/4" />
-                      <Skeleton className="h-4 w-1/2" />
-                      <Skeleton className="h-4 w-2/3" />
+                    <div className="p-6 space-y-4">
+                      <Skeleton className="h-7 w-3/4" />
+                      <Skeleton className="h-5 w-1/2" />
+                      <Skeleton className="h-5 w-2/3" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : error ? (
-              <div className="text-center py-12">
+              <div className="text-center py-16">
                 <p className="text-destructive">Ошибка загрузки данных</p>
               </div>
             ) : data?.data.length === 0 ? (
-              <div className="text-center py-16">
-                <Building2 className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Объектов пока нет</h3>
-                <p className="text-muted-foreground">
+              <div className="text-center py-20">
+                <Building2 className="w-20 h-20 mx-auto text-muted-foreground/50 mb-6" />
+                <h3 className="text-2xl font-semibold mb-3">Объектов пока нет</h3>
+                <p className="text-muted-foreground text-lg">
                   В городе {cityName} пока нет объектов. Выберите другой город или измените фильтры.
                 </p>
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between mb-6">
-                  <p className="text-muted-foreground">
+                <div className="flex items-center justify-between mb-8">
+                  <p className="text-muted-foreground text-lg">
                     Найдено: <span className="font-medium text-foreground">{data?.total}</span>{" "}
                     {data?.total === 1
                       ? "объект"
@@ -217,14 +217,14 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {data?.data.map((complex) => (
                     <ComplexCard key={complex.id} complex={complex} />
                   ))}
                 </div>
 
                 {data && data.totalPages > 1 && (
-                  <Pagination className="mt-10">
+                  <Pagination className="mt-16">
                     <PaginationContent>
                       <PaginationItem>
                         <PaginationPrevious
