@@ -25,14 +25,14 @@ const categories = [
 export function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex flex-col">
-      {/* Background Image */}
+      {/* Background Image - SPb classical architecture */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1920&h=1080&fit=crop')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1548834925-e48f8a27ae34?w=1920&h=1080&fit=crop')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
       </div>
 
       {/* Content */}
@@ -41,7 +41,7 @@ export function HeroSection() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white leading-tight mb-4">
             Мы продаем квартиры<br />и апартаменты
           </h1>
-          <p className="text-white/80 text-lg md:text-xl font-light tracking-wide mb-8">
+          <p className="text-white/80 text-lg md:text-xl font-light tracking-wide mb-8 italic">
             комфорт и бизнес-класса
           </p>
           <Button 
@@ -53,14 +53,21 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Category Cards */}
+      {/* Category Cards with skewed effect */}
       <div className="relative z-10 container mx-auto px-4 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
           {categories.map((category, index) => (
             <Link
               key={index}
               to={category.link}
               className="group relative h-48 md:h-56 overflow-hidden"
+              style={{
+                clipPath: index === 0 
+                  ? "polygon(0 0, 100% 0, 95% 100%, 0 100%)"
+                  : index === 1
+                  ? "polygon(5% 0, 95% 0, 90% 100%, 10% 100%)"
+                  : "polygon(5% 0, 100% 0, 100% 100%, 10% 100%)",
+              }}
             >
               <img
                 src={category.image}
@@ -69,7 +76,7 @@ export function HeroSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <p className="text-white/80 text-sm mb-1">{category.title}</p>
+                <p className="text-white/70 text-sm mb-1 uppercase tracking-wider">{category.title}</p>
                 <p className="text-white text-xl font-serif">{category.subtitle}</p>
               </div>
             </Link>
