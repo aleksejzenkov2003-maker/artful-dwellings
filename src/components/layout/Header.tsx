@@ -3,13 +3,15 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, Phone, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { CitySelector } from "./CitySelector";
+import { useCityContacts } from "@/hooks/useCityContacts";
 
 const mainNavigation = [
   { name: "Услуги", href: "/uslugi" },
   { name: "Ипотека", href: "/ipoteka" },
   { name: "Новости", href: "/blog" },
   { name: "О компании", href: "/o-kompanii" },
-  { name: "Статьи", href: "/stati" },
+  { name: "Партнёрам", href: "/partneram" },
   { name: "Акции", href: "/akcii" },
   { name: "Контакты", href: "/kontakty" },
 ];
@@ -51,11 +53,15 @@ const Logo = () => (
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { data: contacts } = useCityContacts();
 
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";
     return location.pathname.startsWith(href);
   };
+
+  const phoneNumber = contacts?.phone || "8 (812) 389-33-56";
+  const phoneHref = `tel:${phoneNumber.replace(/[^\d+]/g, "")}`;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -72,15 +78,12 @@ export function Header() {
                 <span>RU</span>
                 <ChevronDown className="h-3 w-3" />
               </div>
-              <div className="flex items-center gap-1 text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
-                <span>Санкт-Петербург</span>
-                <ChevronDown className="h-3 w-3" />
-              </div>
+              <CitySelector />
               <a
-                href="tel:+78123893356"
+                href={phoneHref}
                 className="text-sm font-medium hover:text-primary transition-colors"
               >
-                8 (812) 389-33-56
+                {phoneNumber}
               </a>
               <Button 
                 variant="outline" 
@@ -99,6 +102,9 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[350px] bg-navy text-white">
                 <nav className="flex flex-col gap-4 mt-8">
+                  <div className="mb-4">
+                    <CitySelector />
+                  </div>
                   <Link
                     to="/"
                     onClick={() => setIsOpen(false)}
@@ -120,11 +126,11 @@ export function Header() {
                   ))}
                   <div className="mt-6 pt-6 border-t border-white/20">
                     <a
-                      href="tel:+78123893356"
+                      href={phoneHref}
                       className="flex items-center gap-2 text-lg font-medium mb-4"
                     >
                       <Phone className="h-5 w-5" />
-                      8 (812) 389-33-56
+                      {phoneNumber}
                     </a>
                     <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
                       Заказать звонок

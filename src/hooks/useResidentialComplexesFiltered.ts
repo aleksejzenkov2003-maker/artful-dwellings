@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { ResidentialComplex } from "./useResidentialComplexes";
+import { useCity } from "@/contexts/CityContext";
 
 export interface FilterOptions {
   district?: string;
@@ -12,10 +13,11 @@ export interface FilterOptions {
 }
 
 export function useResidentialComplexesFiltered(options: FilterOptions = {}) {
+  const { currentCity } = useCity();
   const { page = 1, limit = 9 } = options;
 
   return useQuery({
-    queryKey: ["residential_complexes_filtered", options],
+    queryKey: ["residential_complexes_filtered", options, currentCity?.id],
     queryFn: async () => {
       let query = supabase
         .from("residential_complexes")
@@ -23,6 +25,11 @@ export function useResidentialComplexesFiltered(options: FilterOptions = {}) {
         .eq("is_published", true)
         .order("is_featured", { ascending: false })
         .order("created_at", { ascending: false });
+
+      // Filter by city if available
+      if (currentCity?.id) {
+        query = query.eq("city_id", currentCity.id);
+      }
 
       if (options.district && options.district !== "all") {
         query = query.eq("district", options.district);
@@ -54,18 +61,27 @@ export function useResidentialComplexesFiltered(options: FilterOptions = {}) {
         currentPage: page,
       };
     },
+    enabled: !!currentCity,
   });
 }
 
 export function useDistrictsList() {
+  const { currentCity } = useCity();
+
   return useQuery({
-    queryKey: ["districts_list"],
+    queryKey: ["districts_list", currentCity?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("residential_complexes")
         .select("district")
         .eq("is_published", true)
         .not("district", "is", null);
+
+      if (currentCity?.id) {
+        query = query.eq("city_id", currentCity.id);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
 
@@ -75,5 +91,6 @@ export function useDistrictsList() {
 
       return uniqueDistricts.sort();
     },
+    enabled: !!currentCity,
   });
 }
