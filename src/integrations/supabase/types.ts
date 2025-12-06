@@ -104,6 +104,42 @@ export type Database = {
         }
         Relationships: []
       }
+      company_stats: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          is_published: boolean | null
+          label: string
+          order_position: number | null
+          suffix: string | null
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_published?: boolean | null
+          label: string
+          order_position?: number | null
+          suffix?: string | null
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_published?: boolean | null
+          label?: string
+          order_position?: number | null
+          suffix?: string | null
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       contacts: {
         Row: {
           address: string | null
