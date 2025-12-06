@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useResidentialComplexes } from "@/hooks/useResidentialComplexes";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCity } from "@/contexts/CityContext";
 
 function formatPrice(price: number | null): string {
   if (!price) return "";
@@ -13,6 +14,7 @@ function formatPrice(price: number | null): string {
 
 export function ComplexCatalog() {
   const { data: complexes, isLoading } = useResidentialComplexes({ limit: 6 });
+  const { currentCity } = useCity();
 
   if (isLoading) {
     return (
@@ -28,6 +30,16 @@ export function ComplexCatalog() {
             </div>
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (!complexes || complexes.length === 0) {
+    return (
+      <div className="text-center py-12 bg-muted/30 rounded-lg">
+        <p className="text-muted-foreground">
+          В городе {currentCity?.name || "—"} пока нет объектов в каталоге.
+        </p>
       </div>
     );
   }

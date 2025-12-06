@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
-import { Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCityContacts } from "@/hooks/useCityContacts";
+import { useCity } from "@/contexts/CityContext";
 
 const footerNavigation = {
   col1: [
     { name: "Новостройки", href: "/novostroyki" },
-    { name: "Вторичная недвижимость", href: "/vtorichnaya" },
+    { name: "Готовая недвижимость", href: "/gotovaya-nedvizhimost" },
   ],
   col2: [
-    { name: "Переуступка", href: "/pereustupka" },
-    { name: "Эксклюзив", href: "/exclusive" },
+    { name: "О компании", href: "/o-kompanii" },
+    { name: "Партнёрам", href: "/partneram" },
   ],
   col3: [
     { name: "Услуги", href: "/uslugi" },
@@ -18,7 +19,6 @@ const footerNavigation = {
   ],
   col4: [
     { name: "Акции", href: "/akcii" },
-    { name: "Помощь", href: "/help" },
     { name: "Контакты", href: "/kontakty" },
   ],
 };
@@ -30,6 +30,13 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const { data: contacts } = useCityContacts();
+  const { currentCity } = useCity();
+
+  const phoneNumber = contacts?.phone || "8 (812) 337-17-07";
+  const phoneHref = `tel:${phoneNumber.replace(/[^\d+]/g, "")}`;
+  const address = contacts?.address || "г. Санкт-Петербург, ул. Пионерская, д. 34";
+
   return (
     <footer className="bg-navy text-white">
       {/* Main footer */}
@@ -38,14 +45,19 @@ export function Footer() {
           {/* Phone and CTA */}
           <div className="lg:col-span-2">
             <a
-              href="tel:+78123371707"
+              href={phoneHref}
               className="text-2xl font-medium mb-2 block hover:text-primary transition-colors"
             >
-              8 (812) 337-17-07
+              {phoneNumber}
             </a>
-            <p className="text-white/50 text-sm mb-6">
-              Работаем без выходных и праздников
+            <p className="text-white/50 text-sm mb-2">
+              {contacts?.working_hours || "Работаем без выходных и праздников"}
             </p>
+            {currentCity && (
+              <p className="text-primary text-sm mb-6">
+                {currentCity.name}, {currentCity.country}
+              </p>
+            )}
             <Button 
               variant="outline" 
               className="border-white/30 text-white hover:bg-white/10 hover:border-primary hover:text-primary"
@@ -134,7 +146,7 @@ export function Footer() {
 
           <div className="text-right text-white/50 text-sm">
             <p>ООО «Арт Истейт»</p>
-            <p>г. Санкт-Петербург, ул. Пионерская, д. 34</p>
+            <p>{address}</p>
             <p>ИНН 7814539250 ОГРН 11 27847316024</p>
           </div>
         </div>
