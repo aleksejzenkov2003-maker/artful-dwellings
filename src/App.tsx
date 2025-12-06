@@ -13,6 +13,8 @@ import OKompanii from "./pages/OKompanii";
 import Partneram from "./pages/Partneram";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import Akcii from "./pages/Akcii";
+import AkciiDetail from "./pages/AkciiDetail";
 import Kontakty from "./pages/Kontakty";
 import NotFound from "./pages/NotFound";
 
@@ -35,6 +37,8 @@ const App = () => (
           <Route path="/partneram" element={<Partneram />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/akcii" element={<Akcii />} />
+          <Route path="/akcii/:slug" element={<AkciiDetail />} />
           <Route path="/kontakty" element={<Kontakty />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
