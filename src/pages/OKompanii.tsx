@@ -1,6 +1,35 @@
 import { Layout } from "@/components/layout/Layout";
+import { useTeamMembers } from "@/hooks/useTeamMembers";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Play, Award, Users, Building2, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+const stats = [
+  { icon: Building2, value: "500+", label: "Объектов продано" },
+  { icon: Users, value: "1200+", label: "Довольных клиентов" },
+  { icon: Award, value: "9", label: "Лет на рынке" },
+  { icon: TrendingUp, value: "98%", label: "Рекомендуют нас" },
+];
+
+const timeline = [
+  { year: "2015", title: "Основание компании", description: "Открытие первого офиса в Санкт-Петербурге" },
+  { year: "2017", title: "Расширение услуг", description: "Запуск ипотечного брокериджа и юридического сопровождения" },
+  { year: "2019", title: "Выход на новые рынки", description: "Начало работы с зарубежной недвижимостью" },
+  { year: "2022", title: "Лидерство", description: "Вошли в ТОП-10 агентств Санкт-Петербурга" },
+  { year: "2024", title: "Новый этап", description: "Открытие представительств в Москве и Дубае" },
+];
 
 const OKompanii = () => {
+  const { data: teamMembers, isLoading: teamLoading } = useTeamMembers();
+  const [videoOpen, setVideoOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<typeof teamMembers extends (infer T)[] ? T : never | null>(null);
+
   return (
     <Layout>
       {/* Hero */}
@@ -15,50 +44,203 @@ const OKompanii = () => {
         </div>
       </section>
 
-      {/* Mission */}
+      {/* Stats */}
+      <section className="py-12 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center">
+                <stat.icon className="h-8 w-8 mx-auto mb-3 opacity-80" />
+                <div className="text-3xl md:text-4xl font-serif font-bold mb-1">{stat.value}</div>
+                <div className="text-sm opacity-80">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mission + Video */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-serif font-bold mb-6">Наша миссия</h2>
-              <p className="text-muted-foreground text-lg leading-relaxed">
+              <p className="text-muted-foreground text-lg leading-relaxed mb-6">
                 Мы верим, что выбор дома — это искусство. Наша задача — помочь вам найти не просто квартиру, а место, где вы будете счастливы.
               </p>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                За годы работы мы накопили уникальный опыт и создали команду профессионалов, которые знают рынок недвижимости изнутри. Мы не просто продаём квартиры — мы строим долгосрочные отношения с каждым клиентом.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3">
+                  <div className="h-2 w-2 bg-primary rounded-full" />
+                  <span>Индивидуальный подход к каждому</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="h-2 w-2 bg-primary rounded-full" />
+                  <span>Полное юридическое сопровождение</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="h-2 w-2 bg-primary rounded-full" />
+                  <span>Эксклюзивные предложения от застройщиков</span>
+                </li>
+              </ul>
             </div>
-            <div className="bg-secondary rounded-lg aspect-video flex items-center justify-center">
-              <p className="text-muted-foreground">Фото команды</p>
+            <div 
+              className="bg-navy rounded-lg aspect-video flex items-center justify-center cursor-pointer group relative overflow-hidden"
+              onClick={() => setVideoOpen(true)}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
+              <div className="relative z-10 flex flex-col items-center">
+                <div className="h-20 w-20 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform border border-white/20">
+                  <Play className="h-8 w-8 text-white fill-white ml-1" />
+                </div>
+                <p className="text-white mt-4 font-medium">Смотреть видео о компании</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Team placeholder */}
+      {/* Team */}
       <section id="team" className="py-16 lg:py-24 bg-secondary">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-serif font-bold mb-12 text-center">
-            Команда экспертов
-          </h2>
-          <div className="bg-card rounded-lg p-8 text-center">
-            <p className="text-muted-foreground">
-              Здесь будут карточки членов команды
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-serif font-bold mb-4">
+              Команда экспертов
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Наша команда — это профессионалы с многолетним опытом в сфере недвижимости
             </p>
           </div>
+          
+          {teamLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-card rounded-lg overflow-hidden">
+                  <Skeleton className="aspect-[4/5]" />
+                  <div className="p-6 space-y-2">
+                    <Skeleton className="h-6 w-32" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : teamMembers && teamMembers.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {teamMembers.map((member) => (
+                <div 
+                  key={member.id} 
+                  className="bg-card rounded-lg overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => setSelectedMember(member)}
+                >
+                  <div className="aspect-[4/5] bg-muted overflow-hidden">
+                    {member.photo_url ? (
+                      <img 
+                        src={member.photo_url} 
+                        alt={member.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+                        <span className="text-6xl font-serif text-primary/30">
+                          {member.name.charAt(0)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-serif font-semibold mb-1">{member.name}</h3>
+                    <p className="text-primary text-sm font-medium mb-3">{member.role}</p>
+                    {member.bio && (
+                      <p className="text-muted-foreground text-sm line-clamp-2">{member.bio}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-card rounded-lg p-8 text-center">
+              <p className="text-muted-foreground">Информация о команде скоро появится</p>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Timeline placeholder */}
+      {/* Timeline */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-serif font-bold mb-12 text-center">
             История компании
           </h2>
-          <div className="bg-secondary rounded-lg p-8 text-center">
-            <p className="text-muted-foreground">
-              Здесь будет таймлайн истории компании
-            </p>
+          <div className="max-w-3xl mx-auto">
+            <div className="relative">
+              {/* Vertical line */}
+              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-1/2" />
+              
+              {timeline.map((item, index) => (
+                <div 
+                  key={item.year}
+                  className={`relative flex items-start gap-8 mb-12 last:mb-0 ${
+                    index % 2 === 0 ? 'md:flex-row-reverse' : ''
+                  }`}
+                >
+                  {/* Dot */}
+                  <div className="absolute left-0 md:left-1/2 w-4 h-4 rounded-full bg-primary border-4 border-background md:-translate-x-1/2 -translate-x-1/2" />
+                  
+                  {/* Content */}
+                  <div className={`pl-8 md:pl-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'}`}>
+                    <span className="text-primary font-serif font-bold text-2xl">{item.year}</span>
+                    <h3 className="text-lg font-semibold mt-1 mb-2">{item.title}</h3>
+                    <p className="text-muted-foreground text-sm">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Video Dialog */}
+      <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+          <div className="aspect-video bg-black flex items-center justify-center">
+            <p className="text-white/50">Видео будет добавлено позже</p>
+            {/* When you have a real video URL, replace with:
+            <iframe 
+              src="https://www.youtube.com/embed/VIDEO_ID" 
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+            */}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Member Bio Dialog */}
+      <Dialog open={!!selectedMember} onOpenChange={() => setSelectedMember(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-2xl">{selectedMember?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            {selectedMember?.photo_url && (
+              <div className="aspect-square w-32 rounded-lg overflow-hidden mb-4">
+                <img 
+                  src={selectedMember.photo_url} 
+                  alt={selectedMember.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <p className="text-primary font-medium mb-4">{selectedMember?.role}</p>
+            {selectedMember?.bio && (
+              <p className="text-muted-foreground leading-relaxed">{selectedMember.bio}</p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
