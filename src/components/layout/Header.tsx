@@ -9,14 +9,14 @@ import { useCityContacts } from "@/hooks/useCityContacts";
 const mainNavigation = [
   { name: "Услуги", href: "/uslugi" },
   { name: "Ипотека", href: "/ipoteka" },
-  { name: "Новости", href: "/blog" },
+  { name: "Статьи", href: "/blog" },
   { name: "О компании", href: "/o-kompanii" },
   { name: "Партнёрам", href: "/partneram" },
   { name: "Акции", href: "/akcii" },
   { name: "Контакты", href: "/kontakty" },
 ];
 
-// Geometric logo component
+// Geometric logo component - white version for transparent header
 const Logo = () => (
   <Link to="/" className="flex items-center gap-3">
     <div className="relative w-10 h-10">
@@ -25,26 +25,26 @@ const Logo = () => (
           d="M20 2L36 11V29L20 38L4 29V11L20 2Z"
           stroke="currentColor"
           strokeWidth="1"
-          className="text-foreground/30"
+          className="text-white/40"
         />
         <path
           d="M20 8L30 14V26L20 32L10 26V14L20 8Z"
           stroke="currentColor"
           strokeWidth="0.75"
-          className="text-foreground/20"
+          className="text-white/30"
         />
         <text
           x="20"
           y="24"
           textAnchor="middle"
-          className="text-foreground fill-current"
+          className="text-white fill-current"
           style={{ fontSize: '12px', fontFamily: 'Cormorant Garamond, serif' }}
         >
           A
         </text>
       </svg>
     </div>
-    <span className="text-sm font-sans font-medium tracking-[0.2em] uppercase">
+    <span className="text-sm font-sans font-medium tracking-[0.2em] uppercase text-white">
       Art Estate
     </span>
   </Link>
@@ -65,8 +65,8 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Top bar */}
-      <div className="bg-background border-b border-border">
+      {/* Top bar - transparent dark */}
+      <div className="bg-black/50 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -74,20 +74,20 @@ export function Header() {
 
             {/* Right side */}
             <div className="hidden lg:flex items-center gap-6">
-              <div className="flex items-center gap-1 text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+              <div className="flex items-center gap-1 text-sm text-white/70 cursor-pointer hover:text-white transition-colors">
                 <span>RU</span>
                 <ChevronDown className="h-3 w-3" />
               </div>
-              <CitySelector />
+              <CitySelector variant="light" />
               <a
                 href={phoneHref}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-sm font-medium text-white/90 hover:text-white transition-colors"
               >
                 {phoneNumber}
               </a>
               <Button 
                 variant="outline" 
-                className="border-foreground text-foreground hover:bg-foreground hover:text-background uppercase text-xs tracking-wider px-6"
+                className="border-white/50 text-white bg-transparent hover:bg-white hover:text-black uppercase text-xs tracking-wider px-6"
               >
                 Заказать звонок
               </Button>
@@ -96,7 +96,7 @@ export function Header() {
             {/* Mobile menu button */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
@@ -144,7 +144,7 @@ export function Header() {
       </div>
 
       {/* Secondary navigation */}
-      <div className="hidden lg:block bg-navy text-white">
+      <div className="hidden lg:block bg-navy/90 backdrop-blur-sm text-white">
         <div className="container mx-auto">
           <div className="flex items-center h-11">
             {/* Category dropdown */}
