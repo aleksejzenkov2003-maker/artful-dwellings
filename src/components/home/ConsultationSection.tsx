@@ -101,9 +101,8 @@ export function ConsultationSection() {
 
           <Button
             type="submit"
-            variant="outline"
             disabled={mutation.isPending}
-            className="border-white/30 text-white hover:bg-white/10 uppercase text-xs tracking-wider"
+            className="bg-white text-navy hover:bg-white/90 uppercase text-xs tracking-wider px-8"
           >
             {mutation.isPending ? "Отправка..." : "Отправить запрос"}
           </Button>

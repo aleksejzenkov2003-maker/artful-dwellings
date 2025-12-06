@@ -68,13 +68,12 @@ export function ServicesStrip() {
                 placeholder="Ваш телефон"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-48 bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30"
+                className="w-56 bg-white/20 border-white/30 text-white placeholder:text-white/70 focus:bg-white/30"
               />
               <Button 
                 onClick={handleSubmit}
                 disabled={mutation.isPending}
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-primary uppercase text-xs tracking-wider"
+                className="bg-white text-primary hover:bg-white/90 uppercase text-xs tracking-wider px-6"
               >
                 {mutation.isPending ? "..." : "Заказать"}
               </Button>
