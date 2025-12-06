@@ -57,7 +57,7 @@ export function PropertySearchSection() {
     <section className="py-16 lg:py-24 bg-background relative overflow-hidden">
       <HexagonPattern className="right-0 top-0 w-96 h-full opacity-30" />
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container-wide relative z-10">
         {/* Title */}
         <h2 className="text-3xl md:text-4xl font-serif text-center mb-12">
           Подберем идеальное предложение от 300 застройщиков

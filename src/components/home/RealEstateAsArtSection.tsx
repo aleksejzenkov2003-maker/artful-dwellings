@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 export function RealEstateAsArtSection() {
   return (
     <section className="py-16 lg:py-24 bg-background relative overflow-hidden">
-      <div className="container mx-auto px-4">
+      <div className="container-wide">
         <div className="flex">
           {/* Vertical text on the left */}
           <div className="hidden lg:flex items-center pr-8">
@@ -16,7 +16,7 @@ export function RealEstateAsArtSection() {
           </div>
           
           {/* Content grid */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl">
             {/* Дешевле чем у застройщиков */}
             <div className="relative h-52 overflow-hidden group">
               <img 

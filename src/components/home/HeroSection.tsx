@@ -36,17 +36,17 @@ export function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center container mx-auto px-4">
-        <div className="max-w-3xl text-center mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white leading-tight mb-4">
+      <div className="relative z-10 flex-1 flex flex-col justify-center w-full max-w-[1800px] mx-auto px-6 lg:px-12">
+        <div className="max-w-4xl text-center mx-auto">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-tight mb-4">
             Мы продаем квартиры<br />и апартаменты
           </h1>
-          <p className="text-white/70 text-lg md:text-xl font-light tracking-wide mb-10 italic font-serif">
+          <p className="text-white/70 text-xl md:text-2xl font-light tracking-wide mb-10 italic font-serif">
             комфорт и бизнес-класса
           </p>
           <Button 
             size="lg" 
-            className="bg-navy/80 backdrop-blur-sm border border-primary text-white hover:bg-navy uppercase tracking-wider text-xs px-8 py-6"
+            className="bg-navy/80 backdrop-blur-sm border border-primary text-white hover:bg-navy uppercase tracking-wider text-xs px-10 py-6"
           >
             Заказать бесплатную консультацию
           </Button>
@@ -70,15 +70,15 @@ export function HeroSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               
               {/* Turquoise corner accent - top left */}
-              <div className="absolute top-0 left-0 w-8 h-8">
-                <div className="absolute top-3 left-3 w-4 h-[2px] bg-primary" />
-                <div className="absolute top-3 left-3 w-[2px] h-4 bg-primary" />
+              <div className="absolute top-0 left-0 w-12 h-12">
+                <div className="absolute top-4 left-4 w-6 h-[2px] bg-primary" />
+                <div className="absolute top-4 left-4 w-[2px] h-6 bg-primary" />
               </div>
               
               {/* Turquoise corner accent - bottom right */}
-              <div className="absolute bottom-0 right-0 w-8 h-8">
-                <div className="absolute bottom-3 right-3 w-4 h-[2px] bg-primary" />
-                <div className="absolute bottom-3 right-3 w-[2px] h-4 bg-primary" />
+              <div className="absolute bottom-0 right-0 w-12 h-12">
+                <div className="absolute bottom-4 right-4 w-6 h-[2px] bg-primary" />
+                <div className="absolute bottom-4 right-4 w-[2px] h-6 bg-primary" />
               </div>
               
               <div className="absolute bottom-0 left-0 right-0 p-6">

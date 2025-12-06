@@ -7,7 +7,7 @@ export function ExpertsSection() {
 
   return (
     <section className="py-16 lg:py-24 bg-background">
-      <div className="container mx-auto px-4">
+      <div className="container-wide">
         <h2 className="text-3xl md:text-4xl font-serif text-center mb-4">
           Команда экспертов
         </h2>

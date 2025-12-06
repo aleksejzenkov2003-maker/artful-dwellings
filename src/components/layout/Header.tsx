@@ -67,7 +67,7 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50">
       {/* Top bar - transparent with subtle backdrop */}
       <div className="bg-black/40 backdrop-blur-sm border-b border-white/10">
-        <div className="container mx-auto">
+        <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Logo />
@@ -145,7 +145,7 @@ export function Header() {
 
       {/* Secondary navigation - no gap with top bar */}
       <div className="hidden lg:block bg-navy/80 backdrop-blur-sm text-white">
-        <div className="container mx-auto">
+        <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
           <div className="flex items-center h-11">
             {/* Category dropdown */}
             <div className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors">
