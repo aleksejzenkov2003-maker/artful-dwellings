@@ -224,7 +224,7 @@ export default function AdminStats() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {stats?.map((stat) => (
+              {Array.isArray(stats) && stats.map((stat) => (
                 <TableRow key={stat.id}>
                   <TableCell className="font-medium">{stat.label}</TableCell>
                   <TableCell>{stat.value}</TableCell>
