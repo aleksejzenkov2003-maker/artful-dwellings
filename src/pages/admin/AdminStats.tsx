@@ -33,7 +33,7 @@ export default function AdminStats() {
   const [editingStat, setEditingStat] = useState<CompanyStat | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"company_stats">>>({});
 
-  const { data: stats, isLoading } = useQuery({
+  const { data: stats = [], isLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -41,7 +41,7 @@ export default function AdminStats() {
         .select("*")
         .order("order_position", { ascending: true });
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 
