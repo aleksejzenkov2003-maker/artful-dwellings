@@ -1,19 +1,31 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, Phone, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { CitySelector } from "./CitySelector";
 import { useCityContacts } from "@/hooks/useCityContacts";
 
 const mainNavigation = [
   { name: "Услуги", href: "/uslugi" },
   { name: "Ипотека", href: "/ipoteka" },
-  { name: "Статьи", href: "/blog" },
+  { name: "Новости", href: "/blog" },
   { name: "О компании", href: "/o-kompanii" },
-  { name: "Партнёрам", href: "/partneram" },
+  { name: "Статьи", href: "/blog" },
   { name: "Акции", href: "/akcii" },
   { name: "Контакты", href: "/kontakty" },
+];
+
+const propertyDropdownItems = [
+  { name: "Новостройки", href: "/novostroyki" },
+  { name: "Вторичная недвижимость", href: "/vtorichnaya-nedvizhimost" },
+  { name: "Эксклюзив", href: "/ekskluziv" },
 ];
 
 // Geometric logo component - white version for transparent header
@@ -53,6 +65,7 @@ const Logo = () => (
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { data: contacts } = useCityContacts();
 
   const isActive = (href: string) => {
@@ -112,6 +125,22 @@ export function Header() {
                   >
                     Главная
                   </Link>
+                  
+                  {/* Property section in mobile */}
+                  <div className="space-y-2">
+                    <span className="text-sm text-white/50 uppercase tracking-wider">Недвижимость</span>
+                    {propertyDropdownItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="block text-lg font-medium py-2 pl-4 transition-colors hover:text-primary"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                  
                   {mainNavigation.map((item) => (
                     <Link
                       key={item.href + item.name}
@@ -148,16 +177,45 @@ export function Header() {
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
           <div className="flex items-center h-11">
             {/* Category dropdown */}
-            <div className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors">
-              <Menu className="h-4 w-4" />
-              <span className="text-xs font-medium uppercase tracking-wider">Вся недвижимость</span>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors outline-none">
+                  <Menu className="h-4 w-4" />
+                  <span className="text-xs font-medium uppercase tracking-wider">Вся недвижимость</span>
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="start" 
+                className="w-56 bg-white border-border shadow-lg z-[100]"
+                sideOffset={0}
+              >
+                <DropdownMenuItem 
+                  onClick={() => navigate("/nedvizhimost")}
+                  className="cursor-pointer"
+                >
+                  Вся недвижимость
+                </DropdownMenuItem>
+                {propertyDropdownItems.map((item) => (
+                  <DropdownMenuItem 
+                    key={item.href}
+                    onClick={() => navigate(item.href)}
+                    className="cursor-pointer"
+                  >
+                    {item.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Search */}
-            <div className="flex items-center gap-2 px-4 text-white/50 cursor-pointer hover:text-white/80 transition-colors">
+            <button 
+              onClick={() => navigate("/nedvizhimost")}
+              className="flex items-center gap-2 px-4 text-white/50 cursor-pointer hover:text-white/80 transition-colors"
+            >
               <Search className="h-4 w-4" />
               <span className="text-xs uppercase tracking-wider">Поиск</span>
-            </div>
+            </button>
 
             {/* Main navigation */}
             <nav className="flex items-center ml-auto">

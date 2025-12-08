@@ -9,7 +9,7 @@ import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 
 // Public pages
 import Index from "./pages/Index";
-import Novostroyki from "./pages/Novostroyki";
+import PropertyCatalog from "./pages/PropertyCatalog";
 import ResidentialComplex from "./pages/ResidentialComplex";
 import Uslugi from "./pages/Uslugi";
 import ServicePage from "./pages/ServicePage";
@@ -52,20 +52,33 @@ const App = () => (
             <Routes>
               {/* Public routes */}
               <Route path="/" element={<Index />} />
-              <Route path="/novostroyki" element={<Novostroyki />} />
-              <Route path="/gotovaya-nedvizhimost" element={<Novostroyki initialStatus="completed" />} />
+              
+              {/* Property Catalog Pages */}
+              <Route path="/nedvizhimost" element={<PropertyCatalog pageType="all" />} />
+              <Route path="/novostroyki" element={<PropertyCatalog pageType="novostroyki" />} />
+              <Route path="/vtorichnaya-nedvizhimost" element={<PropertyCatalog pageType="secondary" />} />
+              <Route path="/ekskluziv" element={<PropertyCatalog pageType="exclusive" />} />
+              <Route path="/gotovaya-nedvizhimost" element={<PropertyCatalog pageType="secondary" initialStatus="completed" />} />
+              
+              {/* Property Detail */}
               <Route path="/novostroyki/:slug" element={<ResidentialComplex />} />
+              
+              {/* Services */}
               <Route path="/uslugi" element={<Uslugi />} />
               <Route path="/uslugi/:slug" element={<ServicePage />} />
               <Route path="/ipoteka" element={<Ipoteka />} />
+              
+              {/* Company */}
               <Route path="/o-kompanii" element={<OKompanii />} />
               <Route path="/partneram" element={<Partneram />} />
+              
+              {/* Content */}
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/akcii" element={<Akcii />} />
               <Route path="/akcii/:slug" element={<AkciiDetail />} />
-              <Route path="/kontakty" element={<Kontakty />} />
               <Route path="/otzyvy" element={<Otzyvy />} />
+              <Route path="/kontakty" element={<Kontakty />} />
               
               {/* Auth */}
               <Route path="/auth" element={<Auth />} />
