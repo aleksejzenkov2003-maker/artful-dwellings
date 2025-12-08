@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useResidentialComplex } from "@/hooks/useResidentialComplexes";
 import { ComplexContactForm } from "@/components/complex/ComplexContactForm";
 import { ComplexPdfGenerator } from "@/components/complex/ComplexPdfGenerator";
+import { ComplexImageGallery } from "@/components/complex/ComplexImageGallery";
 import { 
   MapPin, 
   Building2, 
@@ -288,6 +289,18 @@ const ResidentialComplex = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-12">
+              {/* Gallery */}
+              {(complex.images || complex.main_image) && (
+                <div>
+                  <h2 className="text-2xl font-serif font-semibold mb-6">Галерея</h2>
+                  <ComplexImageGallery
+                    images={Array.isArray(complex.images) ? (complex.images as string[]) : []}
+                    mainImage={complex.main_image}
+                    complexName={complex.name}
+                  />
+                </div>
+              )}
+
               {/* Description */}
               {complex.description && (
                 <div>
