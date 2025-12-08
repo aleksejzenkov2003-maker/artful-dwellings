@@ -75,6 +75,7 @@ export type Database = {
         Row: {
           country: string | null
           created_at: string
+          hero_image: string | null
           id: string
           is_active: boolean | null
           is_default: boolean | null
@@ -85,6 +86,7 @@ export type Database = {
         Insert: {
           country?: string | null
           created_at?: string
+          hero_image?: string | null
           id?: string
           is_active?: boolean | null
           is_default?: boolean | null
@@ -95,6 +97,7 @@ export type Database = {
         Update: {
           country?: string | null
           created_at?: string
+          hero_image?: string | null
           id?: string
           is_active?: boolean | null
           is_default?: boolean | null

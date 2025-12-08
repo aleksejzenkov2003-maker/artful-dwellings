@@ -7,6 +7,7 @@ export interface City {
   slug: string;
   country: string;
   is_default: boolean;
+  hero_image: string | null;
 }
 
 interface CityContextType {
@@ -29,7 +30,7 @@ export function CityProvider({ children }: { children: ReactNode }) {
     async function fetchCities() {
       const { data, error } = await supabase
         .from("cities")
-        .select("id, name, slug, country, is_default")
+        .select("id, name, slug, country, is_default, hero_image")
         .eq("is_active", true)
         .order("order_position");
 
