@@ -26,12 +26,12 @@ export function HeroSection() {
   return (
     <section className="relative -mt-[108px]">
       {/* Main Hero Area */}
-      <div className="relative min-h-[70vh] flex flex-col justify-center">
+      <div className="relative min-h-[85vh] flex flex-col justify-center">
         {/* Background Image - SPb classical architecture */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1556610961-2fecc5927173?w=1920&h=1080&fit=crop')",
+            backgroundImage: "url('https://images.unsplash.com/photo-1548834925-e48f8a27ae6f?w=1920&h=1200&fit=crop')",
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--navy-dark))]/60 via-[hsl(var(--navy-dark))]/40 to-[hsl(var(--navy-dark))]/70" />
