@@ -83,17 +83,17 @@ const App = () => (
               {/* Auth */}
               <Route path="/auth" element={<Auth />} />
               
-              {/* Admin routes */}
-              <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-              <Route path="/admin/complexes" element={<ProtectedRoute><AdminComplexes /></ProtectedRoute>} />
-              <Route path="/admin/blog" element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
-              <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
-              <Route path="/admin/services" element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
-              <Route path="/admin/team" element={<ProtectedRoute><AdminTeam /></ProtectedRoute>} />
-              <Route path="/admin/reviews" element={<ProtectedRoute><AdminReviews /></ProtectedRoute>} />
-              <Route path="/admin/leads" element={<ProtectedRoute><AdminLeads /></ProtectedRoute>} />
-              <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
-              <Route path="/admin/cities" element={<ProtectedRoute><AdminCities /></ProtectedRoute>} />
+              {/* Admin routes - open access for development */}
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/complexes" element={<AdminComplexes />} />
+              <Route path="/admin/blog" element={<AdminBlog />} />
+              <Route path="/admin/promotions" element={<AdminPromotions />} />
+              <Route path="/admin/services" element={<AdminServices />} />
+              <Route path="/admin/team" element={<AdminTeam />} />
+              <Route path="/admin/reviews" element={<AdminReviews />} />
+              <Route path="/admin/leads" element={<AdminLeads />} />
+              <Route path="/admin/stats" element={<AdminStats />} />
+              <Route path="/admin/cities" element={<AdminCities />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
