@@ -41,11 +41,12 @@ export function PromotionsSection() {
           
           <div className="flex items-center gap-4 mb-8">
             <Button 
+              asChild
               variant="outline" 
               size="sm" 
               className="border-white text-white bg-transparent hover:bg-white hover:text-navy uppercase text-xs tracking-wider px-6"
             >
-              Подробнее
+              <Link to={activePromo?.slug ? `/akcii/${activePromo.slug}` : '/akcii'}>Подробнее</Link>
             </Button>
             
             <div className="flex gap-2 ml-4">

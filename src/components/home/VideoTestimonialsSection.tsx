@@ -82,8 +82,8 @@ export function VideoTestimonialsSection() {
         </div>
 
         <div className="text-center mt-12">
-          <Button variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-background uppercase text-xs tracking-wider">
-            Все отзывы
+          <Button asChild variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-background uppercase text-xs tracking-wider">
+            <Link to="/otzyvy">Все отзывы</Link>
           </Button>
         </div>
       </div>
