@@ -4,6 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CityProvider } from "@/contexts/CityContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
+
+// Public pages
 import Index from "./pages/Index";
 import Novostroyki from "./pages/Novostroyki";
 import ResidentialComplex from "./pages/ResidentialComplex";
@@ -17,37 +21,73 @@ import BlogPost from "./pages/BlogPost";
 import Akcii from "./pages/Akcii";
 import AkciiDetail from "./pages/AkciiDetail";
 import Kontakty from "./pages/Kontakty";
+import Otzyvy from "./pages/Otzyvy";
 import NotFound from "./pages/NotFound";
+
+// Auth
+import Auth from "./pages/Auth";
+
+// Admin pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminComplexes from "./pages/admin/AdminComplexes";
+import AdminBlog from "./pages/admin/AdminBlog";
+import AdminPromotions from "./pages/admin/AdminPromotions";
+import AdminServices from "./pages/admin/AdminServices";
+import AdminTeam from "./pages/admin/AdminTeam";
+import AdminReviews from "./pages/admin/AdminReviews";
+import AdminLeads from "./pages/admin/AdminLeads";
+import AdminStats from "./pages/admin/AdminStats";
+import AdminCities from "./pages/admin/AdminCities";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <CityProvider>
-      <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/novostroyki" element={<Novostroyki />} />
-          <Route path="/gotovaya-nedvizhimost" element={<Novostroyki initialStatus="completed" />} />
-          <Route path="/novostroyki/:slug" element={<ResidentialComplex />} />
-          <Route path="/uslugi" element={<Uslugi />} />
-          <Route path="/uslugi/:slug" element={<ServicePage />} />
-          <Route path="/ipoteka" element={<Ipoteka />} />
-          <Route path="/o-kompanii" element={<OKompanii />} />
-          <Route path="/partneram" element={<Partneram />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/akcii" element={<Akcii />} />
-          <Route path="/akcii/:slug" element={<AkciiDetail />} />
-          <Route path="/kontakty" element={<Kontakty />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-    </CityProvider>
+    <AuthProvider>
+      <CityProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/novostroyki" element={<Novostroyki />} />
+              <Route path="/gotovaya-nedvizhimost" element={<Novostroyki initialStatus="completed" />} />
+              <Route path="/novostroyki/:slug" element={<ResidentialComplex />} />
+              <Route path="/uslugi" element={<Uslugi />} />
+              <Route path="/uslugi/:slug" element={<ServicePage />} />
+              <Route path="/ipoteka" element={<Ipoteka />} />
+              <Route path="/o-kompanii" element={<OKompanii />} />
+              <Route path="/partneram" element={<Partneram />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/akcii" element={<Akcii />} />
+              <Route path="/akcii/:slug" element={<AkciiDetail />} />
+              <Route path="/kontakty" element={<Kontakty />} />
+              <Route path="/otzyvy" element={<Otzyvy />} />
+              
+              {/* Auth */}
+              <Route path="/auth" element={<Auth />} />
+              
+              {/* Admin routes */}
+              <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+              <Route path="/admin/complexes" element={<ProtectedRoute><AdminComplexes /></ProtectedRoute>} />
+              <Route path="/admin/blog" element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
+              <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
+              <Route path="/admin/services" element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
+              <Route path="/admin/team" element={<ProtectedRoute><AdminTeam /></ProtectedRoute>} />
+              <Route path="/admin/reviews" element={<ProtectedRoute><AdminReviews /></ProtectedRoute>} />
+              <Route path="/admin/leads" element={<ProtectedRoute><AdminLeads /></ProtectedRoute>} />
+              <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
+              <Route path="/admin/cities" element={<ProtectedRoute><AdminCities /></ProtectedRoute>} />
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </CityProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
