@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useCity } from "@/contexts/CityContext";
 
 const categories = [
   {
@@ -22,16 +23,22 @@ const categories = [
   },
 ];
 
+const DEFAULT_HERO_IMAGE = "https://images.unsplash.com/photo-1548834925-e48f8a27ae6f?w=1920&h=1200&fit=crop";
+
 export function HeroSection() {
+  const { currentCity } = useCity();
+  
+  const heroImage = currentCity?.hero_image || DEFAULT_HERO_IMAGE;
+
   return (
     <section className="relative -mt-[108px]">
       {/* Main Hero Area */}
       <div className="relative min-h-[85vh] flex flex-col justify-center">
-        {/* Background Image - SPb classical architecture */}
+        {/* Background Image - changes based on selected city */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1548834925-e48f8a27ae6f?w=1920&h=1200&fit=crop')",
+            backgroundImage: `url('${heroImage}')`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--navy-dark))]/60 via-[hsl(var(--navy-dark))]/40 to-[hsl(var(--navy-dark))]/70" />
