@@ -39,33 +39,12 @@ const navItems = [
 export function AdminLayout({ children }: AdminLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut, isAdmin } = useAuth();
+  const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/auth");
   };
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center space-y-4">
-          <h1 className="text-2xl font-display">Доступ запрещён</h1>
-          <p className="text-muted-foreground">
-            У вас нет прав администратора
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Button variant="outline" onClick={() => navigate("/")}>
-              На главную
-            </Button>
-            <Button variant="outline" onClick={handleSignOut}>
-              Выйти
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
