@@ -81,11 +81,18 @@ export function PromotionsSection() {
         
         {/* Right image */}
         <div className="flex-1 relative min-h-[300px] md:min-h-full">
-          <img 
-            src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=500&fit=crop"
-            alt="Автомобиль"
-            className="absolute inset-0 w-full h-full object-cover object-center"
-          />
+          {activePromo?.cover_image ? (
+            <img 
+              key={activePromo.id}
+              src={activePromo.cover_image}
+              alt={activePromo.title}
+              className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-300"
+            />
+          ) : (
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+              <span className="text-6xl">🎁</span>
+            </div>
+          )}
         </div>
 
         {/* All promotions link */}
