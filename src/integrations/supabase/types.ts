@@ -543,6 +543,7 @@ export type Database = {
           photo_url: string | null
           role: string
           updated_at: string
+          video_url: string | null
         }
         Insert: {
           bio?: string | null
@@ -555,6 +556,7 @@ export type Database = {
           photo_url?: string | null
           role: string
           updated_at?: string
+          video_url?: string | null
         }
         Update: {
           bio?: string | null
@@ -567,6 +569,7 @@ export type Database = {
           photo_url?: string | null
           role?: string
           updated_at?: string
+          video_url?: string | null
         }
         Relationships: [
           {
