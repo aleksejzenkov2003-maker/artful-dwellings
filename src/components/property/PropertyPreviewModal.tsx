@@ -20,9 +20,10 @@ export function PropertyPreviewModal({ property, open, onOpenChange }: PropertyP
   const [activeTab, setActiveTab] = useState<"photo" | "video" | "3d" | "plan" | "map">("photo");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Get gallery images
-  const images = Array.isArray(property.images) 
-    ? (property.images as string[])
+  // Get gallery images - check if images array has actual content
+  const imagesArray = Array.isArray(property.images) ? (property.images as string[]) : [];
+  const images = imagesArray.length > 0 
+    ? imagesArray 
     : property.main_image 
       ? [property.main_image] 
       : [];
@@ -89,7 +90,7 @@ export function PropertyPreviewModal({ property, open, onOpenChange }: PropertyP
               {property.address || `Санкт-Петербург, ${property.district || "Приморский район"}`}
             </h2>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-3 flex-shrink-0">
             <div className="text-right">
               <div className="text-base md:text-lg font-semibold text-primary whitespace-nowrap">
                 {formatPrice(property.price_from)}
@@ -98,6 +99,9 @@ export function PropertyPreviewModal({ property, open, onOpenChange }: PropertyP
                 / {formatPricePerSqm(property.price_from, property.area_from)}
               </div>
             </div>
+            <Button asChild variant="outline" size="sm" className="whitespace-nowrap">
+              <Link to={`/novostroyki/${property.slug}`}>Подробнее</Link>
+            </Button>
           </div>
         </div>
 

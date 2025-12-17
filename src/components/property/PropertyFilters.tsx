@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,6 +11,7 @@ import {
 import { Search, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PropertyFiltersState } from "@/pages/PropertyCatalog";
+import { useCity } from "@/contexts/CityContext";
 
 interface PropertyFiltersProps {
   filters: PropertyFiltersState;
@@ -20,24 +21,50 @@ interface PropertyFiltersProps {
 
 const roomOptions = ["СТ", "1", "2", "3", "4", "5+"];
 
-// Mock metro stations - would come from database
-const metroStations = [
-  "Автово",
-  "Балтийская",
-  "Будапештская",
-  "Владимирская",
-  "Выборгская",
-  "Горьковская",
-  "Гражданский проспект",
-];
+// Metro stations by city
+const metroByCity: Record<string, string[]> = {
+  "spb": [
+    "Автово",
+    "Балтийская",
+    "Василеостровская",
+    "Горьковская",
+    "Девяткино",
+    "Ладожская",
+    "Невский проспект",
+    "Площадь Восстания",
+  ],
+  "moscow": [
+    "Арбатская",
+    "Белорусская",
+    "Киевская",
+    "Комсомольская",
+    "Кузнецкий мост",
+    "Охотный ряд",
+    "Театральная",
+    "Тверская",
+  ],
+  "dubai": [], // Dubai doesn't have metro in the same sense
+};
 
 export function PropertyFilters({
   filters,
   onFiltersChange,
   districts,
 }: PropertyFiltersProps) {
+  const { currentCity } = useCity();
   const [activeTab, setActiveTab] = useState<"metro" | "districts">("metro");
   const [isMetroOpen, setIsMetroOpen] = useState(false);
+
+  // Get metro stations for current city
+  const citySlug = currentCity?.slug || "spb";
+  const metroStations = metroByCity[citySlug] || [];
+
+  // Switch to districts tab if no metro available
+  useEffect(() => {
+    if (metroStations.length === 0) {
+      setActiveTab("districts");
+    }
+  }, [citySlug, metroStations.length]);
 
   const handleChange = <K extends keyof PropertyFiltersState>(
     key: K,
@@ -97,23 +124,27 @@ export function PropertyFilters({
           <CollapsibleTrigger asChild>
             <button className="w-full flex items-center justify-between p-3 bg-card border border-border rounded-lg text-left">
               <span className="text-sm">
-                {filters.metro !== "all" ? filters.metro : "М. Автово"}
+                {filters.district !== "all" ? filters.district : 
+                 filters.metro !== "all" ? filters.metro : 
+                 metroStations.length > 0 ? "Выберите метро/район" : "Выберите район"}
               </span>
               <ChevronDown className={cn("h-4 w-4 transition-transform", isMetroOpen && "rotate-180")} />
             </button>
           </CollapsibleTrigger>
           <CollapsibleContent className="mt-2">
             <div className="bg-card border border-border rounded-lg p-4">
-              {/* Tabs */}
+              {/* Tabs - hide metro for cities without metro */}
               <div className="flex gap-2 mb-4">
-                <Button
-                  size="sm"
-                  variant={activeTab === "metro" ? "default" : "outline"}
-                  onClick={() => setActiveTab("metro")}
-                  className="flex-1"
-                >
-                  Метро
-                </Button>
+                {metroStations.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant={activeTab === "metro" ? "default" : "outline"}
+                    onClick={() => setActiveTab("metro")}
+                    className="flex-1"
+                  >
+                    Метро
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   variant={activeTab === "districts" ? "default" : "outline"}
@@ -126,7 +157,7 @@ export function PropertyFilters({
 
               <p className="text-xs text-muted-foreground mb-3">Начинайте вводить:</p>
 
-              {activeTab === "metro" ? (
+              {activeTab === "metro" && metroStations.length > 0 ? (
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {metroStations.map((station) => (
                     <label
