@@ -126,10 +126,26 @@ export function PropertyPreviewModal({ property, open, onOpenChange }: PropertyP
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto">
           <div className="flex flex-col md:flex-row">
-            {/* Left - Gallery */}
+            {/* Left - Gallery / Map */}
             <div className="md:w-1/2 flex-shrink-0">
               <div className="relative aspect-[4/3] bg-muted">
-                {images.length > 0 ? (
+                {activeTab === "map" ? (
+                  // Yandex Map
+                  property.coordinates && typeof property.coordinates === 'object' && 'lat' in property.coordinates && 'lng' in property.coordinates ? (
+                    <iframe
+                      src={`https://yandex.ru/map-widget/v1/?ll=${(property.coordinates as {lat: number, lng: number}).lng},${(property.coordinates as {lat: number, lng: number}).lat}&z=16&pt=${(property.coordinates as {lat: number, lng: number}).lng},${(property.coordinates as {lat: number, lng: number}).lat},pm2rdm`}
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      allowFullScreen
+                      className="absolute inset-0"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                      Координаты не указаны
+                    </div>
+                  )
+                ) : images.length > 0 ? (
                   <img
                     src={images[currentImageIndex]}
                     alt={property.name}
@@ -141,7 +157,7 @@ export function PropertyPreviewModal({ property, open, onOpenChange }: PropertyP
                   </div>
                 )}
                 
-                {images.length > 1 && (
+                {activeTab !== "map" && images.length > 1 && (
                   <>
                     <button
                       onClick={prevImage}
