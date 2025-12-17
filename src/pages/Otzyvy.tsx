@@ -3,7 +3,8 @@ import { Layout } from "@/components/layout/Layout";
 import { HexagonPattern } from "@/components/ui/HexagonPattern";
 import { Button } from "@/components/ui/button";
 import { useReviews } from "@/hooks/useReviews";
-import { Play, ChevronDown } from "lucide-react";
+import { Play, ChevronDown, Star } from "lucide-react";
+import { ReviewSourceBadge } from "@/components/reviews/ReviewSourceBadge";
 import {
   Select,
   SelectContent,
@@ -193,23 +194,53 @@ export default function Otzyvy() {
                       </div>
 
                       <div className="relative">
-                        <h3 className="text-2xl font-display mb-2">
-                          {review.author_name}
-                        </h3>
-                        <p className="text-xs text-primary uppercase tracking-wider mb-4">
-                          {review.author_role}
-                        </p>
-                        <p className="text-muted-foreground leading-relaxed mb-6 line-clamp-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h3 className="text-2xl font-display">
+                              {review.author_name}
+                            </h3>
+                            <p className="text-xs text-primary uppercase tracking-wider">
+                              {review.author_role}
+                            </p>
+                          </div>
+                          {/* Rating Stars */}
+                          {review.rating && (
+                            <div className="flex items-center gap-0.5">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < review.rating!
+                                      ? "text-amber-400 fill-amber-400"
+                                      : "text-muted-foreground/30"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        
+                        <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-4">
                           {review.content}
                         </p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-foreground/20 hover:border-primary hover:text-primary"
-                          onClick={() => setExpandedReview(review.id)}
-                        >
-                          Читать полностью
-                        </Button>
+                        
+                        {/* Source Badge */}
+                        <div className="flex items-center justify-between">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-foreground/20 hover:border-primary hover:text-primary"
+                            onClick={() => setExpandedReview(review.id)}
+                          >
+                            Читать полностью
+                          </Button>
+                          
+                          <ReviewSourceBadge 
+                            source={review.source} 
+                            sourceUrl={review.source_url}
+                            variant="compact"
+                          />
+                        </div>
                       </div>
                     </div>
                   );
@@ -306,17 +337,51 @@ export default function Otzyvy() {
       {/* Expanded Review Modal */}
       <Dialog open={!!expandedReview} onOpenChange={() => setExpandedReview(null)}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="font-display text-2xl">
-              {reviews?.find((r) => r.id === expandedReview)?.author_name}
-            </DialogTitle>
-          </DialogHeader>
-          <p className="text-xs text-primary uppercase tracking-wider mb-4">
-            {reviews?.find((r) => r.id === expandedReview)?.author_role}
-          </p>
-          <p className="text-muted-foreground leading-relaxed">
-            {reviews?.find((r) => r.id === expandedReview)?.content}
-          </p>
+          {(() => {
+            const review = reviews?.find((r) => r.id === expandedReview);
+            if (!review) return null;
+            return (
+              <>
+                <DialogHeader>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <DialogTitle className="font-display text-2xl">
+                        {review.author_name}
+                      </DialogTitle>
+                      <p className="text-xs text-primary uppercase tracking-wider mt-1">
+                        {review.author_role}
+                      </p>
+                    </div>
+                    {review.rating && (
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-5 h-5 ${
+                              i < review.rating!
+                                ? "text-amber-400 fill-amber-400"
+                                : "text-muted-foreground/30"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </DialogHeader>
+                <p className="text-muted-foreground leading-relaxed mt-4">
+                  {review.content}
+                </p>
+                {review.source && (
+                  <div className="mt-6 pt-4 border-t border-border">
+                    <ReviewSourceBadge 
+                      source={review.source} 
+                      sourceUrl={review.source_url}
+                    />
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </DialogContent>
       </Dialog>
     </Layout>
