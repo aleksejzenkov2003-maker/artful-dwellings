@@ -30,16 +30,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, MapPin, Loader2 } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
 type Complex = Tables<"residential_complexes">;
+type Coordinates = { lat: number; lng: number };
 
 export default function AdminComplexes() {
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingComplex, setEditingComplex] = useState<Complex | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"residential_complexes">>>({});
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
   const { data: complexes, isLoading } = useQuery({
     queryKey: ["admin-complexes"],
@@ -105,6 +107,41 @@ export default function AdminComplexes() {
     setIsDialogOpen(false);
   };
 
+  const geocodeAddress = async () => {
+    const fullAddress = formData.city 
+      ? `${formData.city}, ${formData.address}` 
+      : formData.address;
+    
+    if (!fullAddress) {
+      toast.error("Введите адрес для определения координат");
+      return;
+    }
+
+    setIsGeocoding(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('geocode', {
+        body: { address: fullAddress }
+      });
+
+      if (error) throw error;
+
+      if (data.coordinates) {
+        setFormData({ 
+          ...formData, 
+          coordinates: data.coordinates 
+        });
+        toast.success(`Координаты определены: ${data.coordinates.lat.toFixed(6)}, ${data.coordinates.lng.toFixed(6)}`);
+      } else {
+        toast.error("Адрес не найден");
+      }
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      toast.error("Ошибка определения координат");
+    } finally {
+      setIsGeocoding(false);
+    }
+  };
+
   const handleEdit = (complex: Complex) => {
     setEditingComplex(complex);
     setFormData({
@@ -126,6 +163,7 @@ export default function AdminComplexes() {
       main_image: complex.main_image,
       is_published: complex.is_published,
       is_featured: complex.is_featured,
+      coordinates: complex.coordinates as Coordinates | null,
     });
     setIsDialogOpen(true);
   };
@@ -228,10 +266,31 @@ export default function AdminComplexes() {
 
                 <div className="space-y-2">
                   <Label>Адрес</Label>
-                  <Input
-                    value={formData.address || ""}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      value={formData.address || ""}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      placeholder="ул. Примерная, 1"
+                      className="flex-1"
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={geocodeAddress}
+                      disabled={isGeocoding || !formData.address}
+                    >
+                      {isGeocoding ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <MapPin className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  {(formData.coordinates as Coordinates | null) && (
+                    <p className="text-xs text-muted-foreground">
+                      Координаты: {(formData.coordinates as Coordinates).lat.toFixed(6)}, {(formData.coordinates as Coordinates).lng.toFixed(6)}
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

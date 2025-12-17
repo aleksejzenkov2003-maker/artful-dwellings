@@ -2,3 +2,6 @@ project_id = "izotwpvkxdcojdcryjbh"
 
 [functions.import-complexes]
 verify_jwt = true
+
+[functions.geocode]
+verify_jwt = false
