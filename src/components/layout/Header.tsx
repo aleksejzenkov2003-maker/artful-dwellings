@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CitySelector } from "./CitySelector";
 import { useCityContacts } from "@/hooks/useCityContacts";
-
+import { CallbackDialog } from "./CallbackDialog";
 const mainNavigation = [
   { name: "Услуги", href: "/uslugi" },
   { name: "Ипотека", href: "/ipoteka" },
@@ -98,12 +98,14 @@ export function Header() {
               >
                 {phoneNumber}
               </a>
-              <Button 
-                variant="outline" 
-                className="border-white text-white bg-transparent hover:bg-white hover:text-black uppercase text-xs tracking-wider px-6"
-              >
-                Заказать звонок
-              </Button>
+              <CallbackDialog>
+                <Button 
+                  variant="outline" 
+                  className="border-white/80 text-white bg-white/10 hover:bg-white hover:text-navy uppercase text-xs tracking-wider px-6 font-medium"
+                >
+                  Заказать звонок
+                </Button>
+              </CallbackDialog>
             </div>
 
             {/* Mobile menu button */}
@@ -161,9 +163,11 @@ export function Header() {
                       <Phone className="h-5 w-5" />
                       {phoneNumber}
                     </a>
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                      Заказать звонок
-                    </Button>
+                    <CallbackDialog>
+                      <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                        Заказать звонок
+                      </Button>
+                    </CallbackDialog>
                   </div>
                 </nav>
               </SheetContent>
