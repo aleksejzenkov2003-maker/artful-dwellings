@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCityContacts } from "@/hooks/useCityContacts";
 import { useCity } from "@/contexts/CityContext";
+import { CallbackDialog } from "./CallbackDialog";
 
 const footerNavigation = {
   col1: [
@@ -55,12 +56,14 @@ export function Footer() {
                 {currentCity.name}, {currentCity.country}
               </p>
             )}
-            <Button 
-              variant="outline" 
-              className="border-white/30 text-white hover:bg-white/10 hover:border-primary hover:text-primary"
-            >
-              Заказать звонок
-            </Button>
+            <CallbackDialog>
+              <Button 
+                variant="outline" 
+                className="border-white/40 text-white bg-white/10 hover:bg-white hover:text-navy"
+              >
+                Заказать звонок
+              </Button>
+            </CallbackDialog>
           </div>
 
           {/* Navigation columns */}
