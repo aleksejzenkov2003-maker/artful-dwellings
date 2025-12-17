@@ -1,6 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, MapPin, List, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePromotion, usePromotions } from "@/hooks/usePromotions";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +14,7 @@ const AkciiDetail = () => {
   const { data: promo, isLoading, error } = usePromotion(slug || "");
   const { data: allPromotions } = usePromotions();
   const [visibleComplexes, setVisibleComplexes] = useState(3);
+  const [showMap, setShowMap] = useState(false);
 
   // Get other promotions for sidebar (excluding current)
   const otherPromotions = allPromotions?.filter(p => p.slug !== slug)?.slice(0, 3) || [];
@@ -30,11 +31,11 @@ const AkciiDetail = () => {
     return null;
   };
 
-  // Mock complexes data (in real app would come from promo.complexes)
+  // Mock complexes data with coordinates (in real app would come from promo.complexes)
   const complexes = [
-    { id: 1, name: "Полянка 44", address: "г. Санкт-Петербург, Фрунзенский район, Литовский проспект, 2/1", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=300&h=200&fit=crop" },
-    { id: 2, name: "Mistola Hills", address: "г. Санкт-Петербург, Фрунзенский район, Литовский проспект, 2/1", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=300&h=200&fit=crop" },
-    { id: 3, name: "Адамант", address: "г. Санкт-Петербург, Фрунзенский район, Литовский проспект, 2/1", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=300&h=200&fit=crop" },
+    { id: 1, name: "Полянка 44", address: "г. Санкт-Петербург, Фрунзенский район, Литовский проспект, 2/1", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=300&h=200&fit=crop", lat: 59.8684, lng: 30.3879 },
+    { id: 2, name: "Mistola Hills", address: "г. Санкт-Петербург, Фрунзенский район, Литовский проспект, 2/1", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=300&h=200&fit=crop", lat: 59.8750, lng: 30.3920 },
+    { id: 3, name: "Адамант", address: "г. Санкт-Петербург, Фрунзенский район, Литовский проспект, 2/1", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=300&h=200&fit=crop", lat: 59.8620, lng: 30.3800 },
   ];
 
   if (isLoading) {
@@ -218,52 +219,105 @@ const AkciiDetail = () => {
                   <h2 className="text-xl md:text-2xl font-serif">
                     Акция действует в {complexes.length} объектах
                   </h2>
-                  <Button variant="outline" size="sm">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    На карте
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setShowMap(!showMap)}
+                  >
+                    {showMap ? (
+                      <>
+                        <List className="h-4 w-4 mr-2" />
+                        Списком
+                      </>
+                    ) : (
+                      <>
+                        <MapPin className="h-4 w-4 mr-2" />
+                        На карте
+                      </>
+                    )}
                   </Button>
                 </div>
 
-                <div className="space-y-4">
-                  {complexes.slice(0, visibleComplexes).map((complex) => (
-                    <div 
-                      key={complex.id}
-                      className="flex flex-col sm:flex-row gap-4 items-start sm:items-center border border-border rounded-lg overflow-hidden"
-                    >
-                      <div className="w-full sm:w-48 h-32 flex-shrink-0">
-                        <img 
-                          src={complex.image} 
-                          alt={complex.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="flex-1 p-4 sm:p-0">
-                        <h3 className="text-lg font-serif font-medium mb-1">{complex.name}</h3>
-                        <p className="text-sm text-muted-foreground">{complex.address}</p>
-                      </div>
-                      <div className="p-4 sm:pr-4">
-                        <Button asChild>
-                          <Link to={`/novostroyki/${complex.name.toLowerCase().replace(/\s+/g, '-')}`}>
-                            В деталях
-                          </Link>
-                        </Button>
-                      </div>
+                {showMap ? (
+                  <div className="relative rounded-lg overflow-hidden border border-border">
+                    <div className="aspect-[16/9] bg-muted relative">
+                      {/* Map placeholder with markers */}
+                      <iframe 
+                        src={`https://yandex.ru/map-widget/v1/?ll=${complexes[0].lng}%2C${complexes[0].lat}&z=13&pt=${complexes.map(c => `${c.lng},${c.lat},pm2rdm`).join('~')}`}
+                        width="100%"
+                        height="100%"
+                        frameBorder="0"
+                        className="absolute inset-0"
+                        allowFullScreen
+                      />
                     </div>
-                  ))}
-                </div>
-
-                {complexes.length > visibleComplexes && (
-                  <div className="text-center mt-6">
-                    <Button 
-                      variant="outline"
-                      onClick={() => setVisibleComplexes(prev => prev + 3)}
-                    >
-                      Показать ещё
-                    </Button>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Показано {visibleComplexes} из {complexes.length}
-                    </p>
+                    {/* Complex cards overlay */}
+                    <div className="absolute bottom-4 left-4 right-4 flex gap-3 overflow-x-auto pb-2">
+                      {complexes.map((complex) => (
+                        <Link 
+                          key={complex.id}
+                          to={`/novostroyki/${complex.name.toLowerCase().replace(/\s+/g, '-')}`}
+                          className="flex-shrink-0 bg-background rounded-lg shadow-lg overflow-hidden w-64 hover:shadow-xl transition-shadow"
+                        >
+                          <div className="h-24">
+                            <img 
+                              src={complex.image} 
+                              alt={complex.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="p-3">
+                            <h3 className="font-serif font-medium text-sm mb-1">{complex.name}</h3>
+                            <p className="text-xs text-muted-foreground line-clamp-2">{complex.address}</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
+                ) : (
+                  <>
+                    <div className="space-y-4">
+                      {complexes.slice(0, visibleComplexes).map((complex) => (
+                        <div 
+                          key={complex.id}
+                          className="flex flex-col sm:flex-row gap-4 items-start sm:items-center border border-border rounded-lg overflow-hidden"
+                        >
+                          <div className="w-full sm:w-48 h-32 flex-shrink-0">
+                            <img 
+                              src={complex.image} 
+                              alt={complex.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 p-4 sm:p-0">
+                            <h3 className="text-lg font-serif font-medium mb-1">{complex.name}</h3>
+                            <p className="text-sm text-muted-foreground">{complex.address}</p>
+                          </div>
+                          <div className="p-4 sm:pr-4">
+                            <Button asChild>
+                              <Link to={`/novostroyki/${complex.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                В деталях
+                              </Link>
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {complexes.length > visibleComplexes && (
+                      <div className="text-center mt-6">
+                        <Button 
+                          variant="outline"
+                          onClick={() => setVisibleComplexes(prev => prev + 3)}
+                        >
+                          Показать ещё
+                        </Button>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Показано {visibleComplexes} из {complexes.length}
+                        </p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
