@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { StatsSection } from "@/components/home/StatsSection";
+import { Button } from "@/components/ui/button";
 
 const timeline = [
   { year: "2015", title: "Основание компании", description: "Открытие первого офиса в Санкт-Петербурге" },
@@ -19,10 +20,43 @@ const timeline = [
   { year: "2024", title: "Новый этап", description: "Открытие представительств в Москве и Дубае" },
 ];
 
+// Helper to detect video type and get embed URL
+const getVideoEmbed = (url: string) => {
+  if (!url) return null;
+  
+  // YouTube
+  const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (youtubeMatch) {
+    return { type: 'youtube', embedUrl: `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1` };
+  }
+  
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) {
+    return { type: 'vimeo', embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1` };
+  }
+  
+  // Direct video file
+  if (url.match(/\.(mp4|webm|ogg)(\?|$)/i)) {
+    return { type: 'direct', embedUrl: url };
+  }
+  
+  // Assume direct if nothing else matches
+  return { type: 'direct', embedUrl: url };
+};
+
 const OKompanii = () => {
   const { data: teamMembers, isLoading: teamLoading } = useTeamMembers();
   const [videoOpen, setVideoOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<typeof teamMembers extends (infer T)[] ? T : never | null>(null);
+  const [memberVideoOpen, setMemberVideoOpen] = useState(false);
+  const [selectedMemberVideo, setSelectedMemberVideo] = useState<string | null>(null);
+
+  const handleMemberVideoPlay = (e: React.MouseEvent, videoUrl: string) => {
+    e.stopPropagation();
+    setSelectedMemberVideo(videoUrl);
+    setMemberVideoOpen(true);
+  };
 
   return (
     <Layout>
@@ -116,7 +150,7 @@ const OKompanii = () => {
                   className="bg-card rounded-lg overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => setSelectedMember(member)}
                 >
-                  <div className="aspect-[4/5] bg-muted overflow-hidden">
+                  <div className="aspect-[4/5] bg-muted overflow-hidden relative">
                     {member.photo_url ? (
                       <img 
                         src={member.photo_url} 
@@ -129,6 +163,18 @@ const OKompanii = () => {
                           {member.name.charAt(0)}
                         </span>
                       </div>
+                    )}
+                    
+                    {/* Play button overlay for members with video */}
+                    {member.video_url && (
+                      <button
+                        onClick={(e) => handleMemberVideoPlay(e, member.video_url!)}
+                        className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <div className="h-16 w-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 hover:scale-110 transition-transform">
+                          <Play className="h-7 w-7 text-white fill-white ml-1" />
+                        </div>
+                      </button>
                     )}
                   </div>
                   <div className="p-6">
@@ -183,19 +229,43 @@ const OKompanii = () => {
         </div>
       </section>
 
-      {/* Video Dialog */}
+      {/* Company Video Dialog */}
       <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
         <DialogContent className="max-w-4xl p-0 overflow-hidden">
           <div className="aspect-video bg-black flex items-center justify-center">
             <p className="text-white/50">Видео будет добавлено позже</p>
-            {/* When you have a real video URL, replace with:
-            <iframe 
-              src="https://www.youtube.com/embed/VIDEO_ID" 
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-            */}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Member Video Dialog */}
+      <Dialog open={memberVideoOpen} onOpenChange={setMemberVideoOpen}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+          <div className="aspect-video bg-black">
+            {selectedMemberVideo && (() => {
+              const video = getVideoEmbed(selectedMemberVideo);
+              if (!video) return null;
+              
+              if (video.type === 'youtube' || video.type === 'vimeo') {
+                return (
+                  <iframe 
+                    src={video.embedUrl}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                );
+              }
+              
+              return (
+                <video 
+                  src={video.embedUrl} 
+                  controls 
+                  autoPlay 
+                  className="w-full h-full"
+                />
+              );
+            })()}
           </div>
         </DialogContent>
       </Dialog>
@@ -218,7 +288,20 @@ const OKompanii = () => {
             )}
             <p className="text-primary font-medium mb-4">{selectedMember?.role}</p>
             {selectedMember?.bio && (
-              <p className="text-muted-foreground leading-relaxed">{selectedMember.bio}</p>
+              <p className="text-muted-foreground leading-relaxed mb-4">{selectedMember.bio}</p>
+            )}
+            {selectedMember?.video_url && (
+              <Button 
+                onClick={() => {
+                  setSelectedMember(null);
+                  setSelectedMemberVideo(selectedMember.video_url);
+                  setMemberVideoOpen(true);
+                }}
+                className="w-full"
+              >
+                <Play className="h-4 w-4 mr-2" />
+                Смотреть видео
+              </Button>
             )}
           </div>
         </DialogContent>

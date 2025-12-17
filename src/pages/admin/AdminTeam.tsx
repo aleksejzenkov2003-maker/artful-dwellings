@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, Video, Loader2 } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
 type TeamMember = Tables<"team_members">;
@@ -40,6 +40,7 @@ export default function AdminTeam() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"team_members">>>({});
+  const [isUploading, setIsUploading] = useState(false);
 
   const { data: members, isLoading } = useQuery({
     queryKey: ["admin-team"],
@@ -112,6 +113,7 @@ export default function AdminTeam() {
       role: member.role,
       bio: member.bio,
       photo_url: member.photo_url,
+      video_url: member.video_url,
       city_id: member.city_id,
       order_position: member.order_position,
       is_published: member.is_published,
@@ -131,6 +133,46 @@ export default function AdminTeam() {
       updateMutation.mutate({ id: editingMember.id, data: formData });
     } else {
       createMutation.mutate(formData as TablesInsert<"team_members">);
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 50MB)
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error("Файл слишком большой. Максимум 50MB");
+      return;
+    }
+
+    // Check file type
+    if (!file.type.startsWith("video/")) {
+      toast.error("Выберите видеофайл");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from("team-videos")
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("team-videos")
+        .getPublicUrl(fileName);
+
+      setFormData({ ...formData, video_url: publicUrl });
+      toast.success("Видео загружено");
+    } catch (error: any) {
+      toast.error("Ошибка загрузки: " + error.message);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -210,6 +252,64 @@ export default function AdminTeam() {
                   />
                 </div>
 
+                {/* Video Section */}
+                <div className="space-y-3 pt-4 border-t">
+                  <Label className="text-base font-semibold flex items-center gap-2">
+                    <Video className="h-4 w-4" />
+                    Видео сотрудника
+                  </Label>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-sm text-muted-foreground">URL видео (YouTube, Vimeo или прямая ссылка)</Label>
+                    <Input
+                      value={formData.video_url || ""}
+                      onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                      placeholder="https://..."
+                    />
+                  </div>
+
+                  <div className="text-center text-sm text-muted-foreground">или</div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm text-muted-foreground">Загрузить с компьютера</Label>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        disabled={isUploading}
+                        onClick={() => document.getElementById("video-upload")?.click()}
+                      >
+                        {isUploading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Загрузка...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-4 w-4 mr-2" />
+                            Выбрать видео
+                          </>
+                        )}
+                      </Button>
+                      <input
+                        id="video-upload"
+                        type="file"
+                        accept="video/*"
+                        className="hidden"
+                        onChange={handleVideoUpload}
+                      />
+                    </div>
+                  </div>
+
+                  {formData.video_url && (
+                    <div className="p-3 bg-muted rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">Текущее видео:</p>
+                      <p className="text-sm truncate">{formData.video_url}</p>
+                    </div>
+                  )}
+                </div>
+
                 <div className="space-y-2">
                   <Label>Позиция сортировки</Label>
                   <Input
@@ -249,6 +349,7 @@ export default function AdminTeam() {
                 <TableHead>Имя</TableHead>
                 <TableHead>Должность</TableHead>
                 <TableHead>Город</TableHead>
+                <TableHead>Видео</TableHead>
                 <TableHead>Опубликован</TableHead>
                 <TableHead className="w-[100px]">Действия</TableHead>
               </TableRow>
@@ -260,6 +361,13 @@ export default function AdminTeam() {
                   <TableCell>{member.role}</TableCell>
                   <TableCell>
                     {cities?.find(c => c.id === member.city_id)?.name || "—"}
+                  </TableCell>
+                  <TableCell>
+                    {member.video_url ? (
+                      <Video className="h-4 w-4 text-primary" />
+                    ) : (
+                      "—"
+                    )}
                   </TableCell>
                   <TableCell>{member.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
