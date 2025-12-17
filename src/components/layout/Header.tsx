@@ -17,7 +17,7 @@ const mainNavigation = [
   { name: "Ипотека", href: "/ipoteka" },
   { name: "Новости", href: "/blog" },
   { name: "О компании", href: "/o-kompanii" },
-  { name: "Статьи", href: "/blog" },
+  { name: "Отзывы", href: "/otzyvy" },
   { name: "Акции", href: "/akcii" },
   { name: "Контакты", href: "/kontakty" },
 ];
