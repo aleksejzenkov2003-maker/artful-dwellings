@@ -44,10 +44,15 @@ export default function Otzyvy() {
   const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_PAGE);
   const [filter, setFilter] = useState("all");
   const [expandedReview, setExpandedReview] = useState<string | null>(null);
+  const [showWidget, setShowWidget] = useState(true);
 
   const displayedReviews = reviews?.slice(0, visibleCount) || [];
   const hasMore = reviews && visibleCount < reviews.length;
   const totalCount = reviews?.length || 0;
+  
+  const scrollToForm = () => {
+    document.getElementById('review-form')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + REVIEWS_PER_PAGE);
@@ -103,18 +108,28 @@ export default function Otzyvy() {
       </section>
 
       {/* Floating CTA Widget */}
-      <div className="fixed left-0 top-1/3 z-40 hidden lg:block">
-        <div className="bg-primary text-primary-foreground p-4 rounded-r-lg shadow-lg max-w-[180px]">
-          <button className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full text-foreground text-sm flex items-center justify-center shadow">
-            ×
-          </button>
-          <p className="text-xs mb-2">А вы довольны нашей работой?</p>
-          <p className="text-sm font-medium mb-3">Пожалуйста, оставьте отзыв.</p>
-          <Button size="sm" variant="secondary" className="w-full text-xs">
-            Оставить отзыв
-          </Button>
+      {showWidget && (
+        <div className="fixed left-0 top-1/3 z-40 hidden lg:block">
+          <div className="bg-primary text-primary-foreground p-4 rounded-r-lg shadow-lg max-w-[180px]">
+            <button 
+              onClick={() => setShowWidget(false)}
+              className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full text-foreground text-sm flex items-center justify-center shadow hover:bg-muted transition-colors"
+            >
+              ×
+            </button>
+            <p className="text-xs mb-2">А вы довольны нашей работой?</p>
+            <p className="text-sm font-medium mb-3">Пожалуйста, оставьте отзыв.</p>
+            <Button 
+              size="sm" 
+              variant="secondary" 
+              className="w-full text-xs"
+              onClick={scrollToForm}
+            >
+              Оставить отзыв
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Video Testimonials */}
       <section className="py-0 -mt-16 relative z-20">
@@ -270,7 +285,7 @@ export default function Otzyvy() {
       </section>
 
       {/* Leave Review Form Section */}
-      <section className="py-16 lg:py-20 bg-primary text-primary-foreground">
+      <section id="review-form" className="py-16 lg:py-20 bg-primary text-primary-foreground">
         <div className="container-wide">
           <div className="max-w-2xl mx-auto">
             <p className="text-sm uppercase tracking-wider mb-2 opacity-70">

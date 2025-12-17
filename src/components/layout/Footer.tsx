@@ -21,6 +21,7 @@ const footerNavigation = {
   ],
   col4: [
     { name: "Акции", href: "/akcii" },
+    { name: "Отзывы", href: "/otzyvy" },
     { name: "Контакты", href: "/kontakty" },
   ],
 };
