@@ -197,14 +197,6 @@ export function Footer() {
               <Link to="/privacy" className="hover:text-white/60 transition-colors">
                 Политика конфиденциальности
               </Link>
-              <a 
-                href="https://actis.ru" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-              >
-                Сайт создан actis
-              </a>
             </div>
           </div>
         </div>
