@@ -109,6 +109,7 @@ export type Database = {
       }
       company_stats: {
         Row: {
+          city_id: string | null
           created_at: string
           icon: string | null
           id: string
@@ -120,6 +121,7 @@ export type Database = {
           value: string
         }
         Insert: {
+          city_id?: string | null
           created_at?: string
           icon?: string | null
           id?: string
@@ -131,6 +133,7 @@ export type Database = {
           value: string
         }
         Update: {
+          city_id?: string | null
           created_at?: string
           icon?: string | null
           id?: string
@@ -141,7 +144,15 @@ export type Database = {
           updated_at?: string
           value?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "company_stats_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contacts: {
         Row: {

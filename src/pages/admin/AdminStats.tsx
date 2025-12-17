@@ -21,8 +21,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Globe } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
 type CompanyStat = Tables<"company_stats">;
@@ -41,6 +48,14 @@ export default function AdminStats() {
         .select("*")
         .order("order_position", { ascending: true });
       if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const { data: cities } = useQuery({
+    queryKey: ["cities-all"],
+    queryFn: async () => {
+      const { data } = await supabase.from("cities").select("*").order("order_position");
       return data || [];
     },
   });
@@ -98,6 +113,7 @@ export default function AdminStats() {
       icon: stat.icon,
       order_position: stat.order_position,
       is_published: stat.is_published,
+      city_id: stat.city_id,
     });
     setIsDialogOpen(true);
   };
@@ -110,10 +126,16 @@ export default function AdminStats() {
       return;
     }
 
+    // Clean up city_id if it's empty string
+    const dataToSubmit = {
+      ...formData,
+      city_id: formData.city_id || null,
+    };
+
     if (editingStat) {
-      updateMutation.mutate({ id: editingStat.id, data: formData });
+      updateMutation.mutate({ id: editingStat.id, data: dataToSubmit });
     } else {
-      createMutation.mutate(formData as TablesInsert<"company_stats">);
+      createMutation.mutate(dataToSubmit as TablesInsert<"company_stats">);
     }
   };
 
@@ -169,13 +191,41 @@ export default function AdminStats() {
                   </div>
                 </div>
 
+                <div className="space-y-2">
+                  <Label>Город</Label>
+                  <Select
+                    value={formData.city_id || "global"}
+                    onValueChange={(value) => setFormData({ ...formData, city_id: value === "global" ? null : value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Все города (глобальный)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="global">
+                        <span className="flex items-center gap-2">
+                          <Globe className="h-4 w-4" />
+                          Все города (глобальный)
+                        </span>
+                      </SelectItem>
+                      {cities?.map((city) => (
+                        <SelectItem key={city.id} value={city.id}>
+                          {city.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Глобальные показатели отображаются для всех городов
+                  </p>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Иконка (Lucide)</Label>
                     <Input
                       value={formData.icon || ""}
                       onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                      placeholder="Home, Users, etc."
+                      placeholder="home, users, building..."
                     />
                   </div>
                   <div className="space-y-2">
@@ -218,6 +268,7 @@ export default function AdminStats() {
                 <TableHead>Название</TableHead>
                 <TableHead>Значение</TableHead>
                 <TableHead>Суффикс</TableHead>
+                <TableHead>Город</TableHead>
                 <TableHead>Позиция</TableHead>
                 <TableHead>Опубликован</TableHead>
                 <TableHead className="w-[100px]">Действия</TableHead>
@@ -229,6 +280,16 @@ export default function AdminStats() {
                   <TableCell className="font-medium">{stat.label}</TableCell>
                   <TableCell>{stat.value}</TableCell>
                   <TableCell>{stat.suffix || "—"}</TableCell>
+                  <TableCell>
+                    {stat.city_id ? (
+                      cities?.find(c => c.id === stat.city_id)?.name || "—"
+                    ) : (
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <Globe className="h-3 w-3" />
+                        Все
+                      </span>
+                    )}
+                  </TableCell>
                   <TableCell>{stat.order_position}</TableCell>
                   <TableCell>{stat.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
