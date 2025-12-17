@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { PropertyCard } from "@/components/property/PropertyCard";
@@ -13,6 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Building2, Map, List, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCity } from "@/contexts/CityContext";
+
+// City center coordinates for map initialization
+const cityCoordinates: Record<string, { lat: number; lng: number }> = {
+  "Санкт-Петербург": { lat: 59.9343, lng: 30.3351 },
+  "Москва": { lat: 55.7558, lng: 37.6173 },
+  "Дубай": { lat: 25.2048, lng: 55.2708 },
+};
 
 export interface PropertyFiltersState {
   search: string;
@@ -187,12 +194,48 @@ const PropertyCatalog = ({ pageType, initialStatus }: PropertyCatalogProps) => {
 
               {/* Map View */}
               {viewMode === "map" && (
-                <div className="mb-8 h-[500px] bg-muted rounded-lg flex items-center justify-center">
-                  <div className="text-center text-muted-foreground">
-                    <Map className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>Карта объектов</p>
-                    <p className="text-sm">Интеграция с картами в разработке</p>
-                  </div>
+                <div className="mb-8 h-[500px] bg-muted rounded-lg overflow-hidden">
+                  {(() => {
+                    // Get properties with coordinates
+                    const propertiesWithCoords = (data?.data || []).filter(
+                      (p) => p.coordinates && typeof p.coordinates === 'object' && 'lat' in p.coordinates && 'lng' in p.coordinates
+                    );
+                    
+                    // Build markers string for Yandex Map
+                    const cityCenter = cityCoordinates[cityName] || cityCoordinates["Санкт-Петербург"];
+                    
+                    if (propertiesWithCoords.length === 0) {
+                      // Show map centered on city without markers
+                      return (
+                        <iframe
+                          src={`https://yandex.ru/map-widget/v1/?ll=${cityCenter.lng},${cityCenter.lat}&z=11`}
+                          width="100%"
+                          height="100%"
+                          frameBorder="0"
+                          allowFullScreen
+                        />
+                      );
+                    }
+                    
+                    // Build markers for all properties with coordinates
+                    const markers = propertiesWithCoords.map((p) => {
+                      const coords = p.coordinates as { lat: number; lng: number };
+                      return `${coords.lng},${coords.lat},pm2rdm`;
+                    }).join('~');
+                    
+                    // Center on first property or city center
+                    const firstCoords = propertiesWithCoords[0].coordinates as { lat: number; lng: number };
+                    
+                    return (
+                      <iframe
+                        src={`https://yandex.ru/map-widget/v1/?ll=${firstCoords.lng},${firstCoords.lat}&z=12&pt=${markers}`}
+                        width="100%"
+                        height="100%"
+                        frameBorder="0"
+                        allowFullScreen
+                      />
+                    );
+                  })()}
                 </div>
               )}
 

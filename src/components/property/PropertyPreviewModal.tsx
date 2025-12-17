@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Dialog,
@@ -6,9 +6,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PropertyPreviewModalProps {
   property: ResidentialComplex;
@@ -16,9 +17,57 @@ interface PropertyPreviewModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+type Coordinates = { lat: number; lng: number };
+
 export function PropertyPreviewModal({ property, open, onOpenChange }: PropertyPreviewModalProps) {
   const [activeTab, setActiveTab] = useState<"photo" | "video" | "3d" | "plan" | "map">("photo");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [geocodedCoordinates, setGeocodedCoordinates] = useState<Coordinates | null>(null);
+  const [isGeocoding, setIsGeocoding] = useState(false);
+
+  // Get existing coordinates or use geocoded ones
+  const hasExistingCoords = property.coordinates && 
+    typeof property.coordinates === 'object' && 
+    'lat' in property.coordinates && 
+    'lng' in property.coordinates;
+  
+  const coordinates: Coordinates | null = hasExistingCoords 
+    ? (property.coordinates as Coordinates) 
+    : geocodedCoordinates;
+
+  // Auto-geocode when switching to map tab if no coordinates
+  useEffect(() => {
+    if (activeTab === "map" && !hasExistingCoords && !geocodedCoordinates && !isGeocoding && property.address) {
+      const geocode = async () => {
+        const fullAddress = property.city 
+          ? `${property.city}, ${property.address}` 
+          : property.address;
+        
+        setIsGeocoding(true);
+        try {
+          const { data, error } = await supabase.functions.invoke('geocode', {
+            body: { address: fullAddress }
+          });
+
+          if (!error && data?.coordinates) {
+            setGeocodedCoordinates(data.coordinates);
+            
+            // Also update the database for future use
+            await supabase
+              .from('residential_complexes')
+              .update({ coordinates: data.coordinates })
+              .eq('id', property.id);
+          }
+        } catch (err) {
+          console.error('Geocoding error:', err);
+        } finally {
+          setIsGeocoding(false);
+        }
+      };
+      
+      geocode();
+    }
+  }, [activeTab, hasExistingCoords, geocodedCoordinates, isGeocoding, property]);
 
   // Get gallery images - check if images array has actual content
   const imagesArray = Array.isArray(property.images) ? (property.images as string[]) : [];
@@ -131,9 +180,14 @@ export function PropertyPreviewModal({ property, open, onOpenChange }: PropertyP
               <div className="relative aspect-[4/3] bg-muted">
                 {activeTab === "map" ? (
                   // Yandex Map
-                  property.coordinates && typeof property.coordinates === 'object' && 'lat' in property.coordinates && 'lng' in property.coordinates ? (
+                  isGeocoding ? (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                      <Loader2 className="h-8 w-8 animate-spin mr-2" />
+                      Определение координат...
+                    </div>
+                  ) : coordinates ? (
                     <iframe
-                      src={`https://yandex.ru/map-widget/v1/?ll=${(property.coordinates as {lat: number, lng: number}).lng},${(property.coordinates as {lat: number, lng: number}).lat}&z=16&pt=${(property.coordinates as {lat: number, lng: number}).lng},${(property.coordinates as {lat: number, lng: number}).lat},pm2rdm`}
+                      src={`https://yandex.ru/map-widget/v1/?ll=${coordinates.lng},${coordinates.lat}&z=16&pt=${coordinates.lng},${coordinates.lat},pm2rdm`}
                       width="100%"
                       height="100%"
                       frameBorder="0"
@@ -142,7 +196,7 @@ export function PropertyPreviewModal({ property, open, onOpenChange }: PropertyP
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                      Координаты не указаны
+                      {property.address ? "Не удалось определить координаты" : "Адрес не указан"}
                     </div>
                   )
                 ) : images.length > 0 ? (
