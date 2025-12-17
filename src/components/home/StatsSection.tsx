@@ -1,6 +1,7 @@
-import { useCompanyStats } from "@/hooks/useCompanyStats";
+import { useCompanyStats, useCityComplexesCount } from "@/hooks/useCompanyStats";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, Users, Building2, CheckCircle, Award, TrendingUp, Home, Briefcase } from "lucide-react";
+import { useCity } from "@/contexts/CityContext";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   calendar: Calendar,
@@ -16,10 +17,13 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 interface StatsSectionProps {
   variant?: "primary" | "secondary";
   className?: string;
+  showComplexesCount?: boolean;
 }
 
-export const StatsSection = ({ variant = "primary", className = "" }: StatsSectionProps) => {
-  const { data: stats, isLoading } = useCompanyStats();
+export const StatsSection = ({ variant = "primary", className = "", showComplexesCount = true }: StatsSectionProps) => {
+  const { currentCity } = useCity();
+  const { data: stats, isLoading } = useCompanyStats(currentCity?.id);
+  const { data: complexesCount } = useCityComplexesCount(currentCity?.id);
 
   const bgClass = variant === "primary" 
     ? "bg-primary text-primary-foreground" 
@@ -43,15 +47,36 @@ export const StatsSection = ({ variant = "primary", className = "" }: StatsSecti
     );
   }
 
-  if (!stats || stats.length === 0) {
+  // Create dynamic stats array with complexes count if enabled
+  const displayStats = [...(stats || [])];
+  
+  // Add dynamic complexes count stat if enabled and we have data
+  if (showComplexesCount && complexesCount !== undefined && complexesCount > 0) {
+    // Check if we already have a "complexes" stat to avoid duplicates
+    const hasComplexesStat = displayStats.some(s => s.icon === 'building' && s.label.toLowerCase().includes('жк'));
+    
+    if (!hasComplexesStat) {
+      displayStats.unshift({
+        id: 'dynamic-complexes',
+        label: currentCity ? `ЖК в ${currentCity.name}` : 'Жилых комплексов',
+        value: String(complexesCount),
+        suffix: null,
+        icon: 'building',
+        order_position: -1,
+        city_id: currentCity?.id || null,
+      });
+    }
+  }
+
+  if (displayStats.length === 0) {
     return null;
   }
 
   return (
     <section className={`py-12 ${bgClass} ${className}`}>
       <div className="container-wide">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat) => {
+        <div className={`grid grid-cols-2 ${displayStats.length >= 4 ? 'md:grid-cols-4' : `md:grid-cols-${displayStats.length}`} gap-8`}>
+          {displayStats.map((stat) => {
             const IconComponent = stat.icon ? iconMap[stat.icon] : null;
             return (
               <div key={stat.id} className="text-center">
