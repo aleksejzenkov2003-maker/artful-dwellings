@@ -55,8 +55,8 @@ export function HeroSection() {
                 комфорт и бизнес-класса
               </p>
               <Button 
-                size="lg" 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase tracking-[0.15em] text-xs font-medium px-8 py-6 h-auto"
+                variant="teal"
+                size="xl"
               >
                 Заказать бесплатную консультацию
               </Button>
