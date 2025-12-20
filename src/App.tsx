@@ -30,6 +30,7 @@ import Auth from "./pages/Auth";
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminComplexes from "./pages/admin/AdminComplexes";
+import AdminComplexEdit from "./pages/admin/AdminComplexEdit";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminServices from "./pages/admin/AdminServices";
@@ -86,6 +87,7 @@ const App = () => (
               {/* Admin routes - open access for development */}
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/complexes" element={<AdminComplexes />} />
+              <Route path="/admin/complexes/:id" element={<AdminComplexEdit />} />
               <Route path="/admin/blog" element={<AdminBlog />} />
               <Route path="/admin/promotions" element={<AdminPromotions />} />
               <Route path="/admin/services" element={<AdminServices />} />

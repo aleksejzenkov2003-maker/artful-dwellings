@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ComplexPdfGenerator } from "./ComplexPdfGenerator";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
+import { useApartmentStats } from "@/hooks/useApartments";
 import { toast } from "sonner";
 
 interface ComplexHeroProps {
@@ -10,6 +10,8 @@ interface ComplexHeroProps {
 }
 
 export function ComplexHero({ complex }: ComplexHeroProps) {
+  const { data: apartmentStats } = useApartmentStats(complex.id);
+  
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -23,6 +25,12 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
       toast.success("Ссылка скопирована");
     }
   };
+
+  // Use real apartment count or fallback to apartments_count field
+  const availableCount = apartmentStats?.totalAvailable ?? complex.apartments_count ?? 0;
+  
+  // Map status to display text
+  const statusDisplay = complex.status === "ready" ? "СДАН" : "СТРОИТСЯ";
 
   return (
     <section className="relative min-h-[600px] lg:min-h-[700px]">
@@ -113,10 +121,10 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
 
           {/* Right Sidebar */}
           <div className="flex flex-col justify-center lg:justify-start lg:pt-20">
-            {/* Apartments Count */}
+            {/* Apartments Count - Dynamic from apartments table */}
             <div className="mb-8">
               <p className="text-primary font-serif text-[48px] leading-none">
-                {complex.apartments_count || 0}
+                {availableCount}
               </p>
               <p className="text-white/50 text-[12px] uppercase tracking-[0.1em] mt-1">
                 Квартир в продаже
@@ -126,7 +134,7 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
             {/* Status */}
             <div className="mb-8">
               <p className="text-white text-[16px] font-medium uppercase tracking-wider">
-                {complex.status || "Строится"}
+                {statusDisplay}
               </p>
             </div>
 
@@ -134,6 +142,12 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
             <Button 
               variant="outline"
               className="bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase tracking-wider text-[13px] py-6"
+              onClick={() => {
+                const apartmentsSection = document.getElementById('apartments');
+                if (apartmentsSection) {
+                  apartmentsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
             >
               Выбрать квартиру
             </Button>
