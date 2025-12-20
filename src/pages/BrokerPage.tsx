@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Phone, Mail, Send } from "lucide-react";
+import { ArrowLeft, Phone, Mail, Send, Building2, MapPin, Maximize2 } from "lucide-react";
 import { toast } from "sonner";
 import { ComplexCard } from "@/components/novostroyki/ComplexCard";
 
@@ -188,6 +188,34 @@ const BrokerPage = () => {
     enabled: !!broker?.id,
   });
 
+  // Fetch broker's apartments
+  const { data: brokerApartments } = useQuery({
+    queryKey: ["broker-apartments", broker?.id],
+    queryFn: async () => {
+      if (!broker?.id) return [];
+      
+      const { data: assignments, error: assignError } = await supabase
+        .from("broker_apartments")
+        .select("apartment_id")
+        .eq("broker_id", broker.id);
+      
+      if (assignError) throw assignError;
+      if (!assignments || assignments.length === 0) return [];
+      
+      const apartmentIds = assignments.map(a => a.apartment_id);
+      
+      const { data: apartments, error } = await supabase
+        .from("apartments")
+        .select("*, residential_complexes!inner(name, address, district, slug)")
+        .in("id", apartmentIds)
+        .eq("is_published", true);
+      
+      if (error) throw error;
+      return apartments || [];
+    },
+    enabled: !!broker?.id,
+  });
+
   // Parse content blocks
   const contentBlocks: ContentBlock[] = (() => {
     if (!broker?.content_blocks) return [];
@@ -354,12 +382,85 @@ const BrokerPage = () => {
         </section>
       )}
 
-      {/* Broker's properties */}
-      {brokerComplexes && brokerComplexes.length > 0 && (
+      {/* Broker's apartments */}
+      {brokerApartments && brokerApartments.length > 0 && (
         <section className="py-16 bg-secondary/30">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-serif mb-8">
-              Объекты {broker.name.split(" ")[0]}
+              Объекты в продаже ({brokerApartments.length})
+            </h2>
+            
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {brokerApartments.map((apartment: any) => (
+                <Link 
+                  key={apartment.id} 
+                  to={`/novostroyki/${apartment.residential_complexes?.slug}`}
+                  className="group bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow"
+                >
+                  {/* Image */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                    {apartment.layout_image ? (
+                      <img 
+                        src={apartment.layout_image} 
+                        alt={`${apartment.room_type} квартира`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                        <Building2 className="h-12 w-12" />
+                      </div>
+                    )}
+                    <div className="absolute top-3 left-3">
+                      <span className="px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded">
+                        КВАРТИРА
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Info */}
+                  <div className="p-4 space-y-3">
+                    <p className="text-2xl font-bold text-primary">
+                      {Number(apartment.price).toLocaleString("ru-RU")} ₽
+                    </p>
+                    
+                    <p className="text-sm text-muted-foreground line-clamp-1">
+                      {apartment.residential_complexes?.address || apartment.residential_complexes?.district || "—"}
+                    </p>
+                    
+                    <div className="flex items-center gap-4 text-sm text-foreground">
+                      <span className="flex items-center gap-1">
+                        <Building2 className="h-4 w-4 text-muted-foreground" />
+                        {apartment.room_type}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Maximize2 className="h-4 w-4 text-muted-foreground" />
+                        {apartment.area} м²
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        {apartment.floor} этаж
+                      </span>
+                    </div>
+                    
+                    <div className="pt-2 border-t flex items-center justify-between text-sm text-muted-foreground">
+                      <span className="truncate">
+                        {apartment.residential_complexes?.name}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Broker's complexes */}
+      {brokerComplexes && brokerComplexes.length > 0 && (
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-serif mb-8">
+              Жилые комплексы {broker.name.split(" ")[0]}
             </h2>
             
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { 
   ArrowLeft, 
@@ -30,13 +31,17 @@ import {
   Heading1,
   FileText,
   MoveUp,
-  MoveDown
+  MoveDown,
+  Building2,
+  Home
 } from "lucide-react";
 import type { Tables, TablesUpdate, Json } from "@/integrations/supabase/types";
 import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 type TeamMember = Tables<"team_members">;
+type ResidentialComplex = Tables<"residential_complexes">;
+type Apartment = Tables<"apartments">;
 
 // Content block types
 type BlockType = "text" | "heading" | "image" | "quote" | "colored-block" | "two-columns" | "image-text";
@@ -275,6 +280,8 @@ export default function AdminTeamEdit() {
   const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [specializationInput, setSpecializationInput] = useState("");
+  const [selectedComplexes, setSelectedComplexes] = useState<string[]>([]);
+  const [selectedApartments, setSelectedApartments] = useState<string[]>([]);
 
   // Fetch cities
   const { data: cities } = useQuery({
@@ -284,6 +291,73 @@ export default function AdminTeamEdit() {
       return data || [];
     },
   });
+
+  // Fetch all complexes for selection
+  const { data: allComplexes } = useQuery({
+    queryKey: ["all-complexes-for-broker"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("residential_complexes")
+        .select("*")
+        .eq("is_published", true)
+        .order("name");
+      return data || [];
+    },
+  });
+
+  // Fetch all apartments for selection
+  const { data: allApartments } = useQuery({
+    queryKey: ["all-apartments-for-broker"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("apartments")
+        .select("*, residential_complexes!inner(name)")
+        .eq("is_published", true)
+        .order("price");
+      return data || [];
+    },
+  });
+
+  // Fetch broker's current complexes
+  const { data: brokerComplexes } = useQuery({
+    queryKey: ["broker-complexes-admin", id],
+    queryFn: async () => {
+      if (!id || isNew) return [];
+      const { data } = await supabase
+        .from("broker_complexes")
+        .select("complex_id")
+        .eq("broker_id", id);
+      return data?.map(d => d.complex_id) || [];
+    },
+    enabled: !isNew && !!id,
+  });
+
+  // Fetch broker's current apartments
+  const { data: brokerApartments } = useQuery({
+    queryKey: ["broker-apartments-admin", id],
+    queryFn: async () => {
+      if (!id || isNew) return [];
+      const { data } = await supabase
+        .from("broker_apartments")
+        .select("apartment_id")
+        .eq("broker_id", id);
+      return data?.map(d => d.apartment_id) || [];
+    },
+    enabled: !isNew && !!id,
+  });
+
+  // Initialize selected complexes/apartments when data loads
+  useMemo(() => {
+    if (brokerComplexes && selectedComplexes.length === 0 && brokerComplexes.length > 0) {
+      setSelectedComplexes(brokerComplexes);
+    }
+  }, [brokerComplexes]);
+
+  useMemo(() => {
+    if (brokerApartments && selectedApartments.length === 0 && brokerApartments.length > 0) {
+      setSelectedApartments(brokerApartments);
+    }
+  }, [brokerApartments]);
 
   // Fetch team member data
   const { data: member, isLoading } = useQuery({
@@ -395,7 +469,26 @@ export default function AdminTeamEdit() {
     },
   });
 
-  const handleSave = () => {
+  // Save complexes and apartments assignments
+  const saveAssignments = async (brokerId: string) => {
+    // Save complexes
+    await supabase.from("broker_complexes").delete().eq("broker_id", brokerId);
+    if (selectedComplexes.length > 0) {
+      await supabase.from("broker_complexes").insert(
+        selectedComplexes.map(complexId => ({ broker_id: brokerId, complex_id: complexId }))
+      );
+    }
+
+    // Save apartments
+    await supabase.from("broker_apartments").delete().eq("broker_id", brokerId);
+    if (selectedApartments.length > 0) {
+      await supabase.from("broker_apartments").insert(
+        selectedApartments.map(apartmentId => ({ broker_id: brokerId, apartment_id: apartmentId }))
+      );
+    }
+  };
+
+  const handleSave = async () => {
     if (!formData.name || !formData.role) {
       toast.error("Заполните обязательные поля (имя и должность)");
       return;
@@ -414,11 +507,34 @@ export default function AdminTeamEdit() {
     };
 
     setIsSaving(true);
+    
     if (isNew) {
       createMutation.mutate(saveData);
     } else {
       updateMutation.mutate(saveData);
+      // Save assignments for existing broker
+      if (id) {
+        await saveAssignments(id);
+        queryClient.invalidateQueries({ queryKey: ["broker-complexes-admin", id] });
+        queryClient.invalidateQueries({ queryKey: ["broker-apartments-admin", id] });
+      }
     }
+  };
+
+  const toggleComplex = (complexId: string) => {
+    setSelectedComplexes(prev => 
+      prev.includes(complexId) 
+        ? prev.filter(id => id !== complexId)
+        : [...prev, complexId]
+    );
+  };
+
+  const toggleApartment = (apartmentId: string) => {
+    setSelectedApartments(prev => 
+      prev.includes(apartmentId) 
+        ? prev.filter(id => id !== apartmentId)
+        : [...prev, apartmentId]
+    );
   };
 
   // Block management
@@ -511,6 +627,7 @@ export default function AdminTeamEdit() {
           <TabsList>
             <TabsTrigger value="main">Основное</TabsTrigger>
             <TabsTrigger value="contacts">Контакты</TabsTrigger>
+            <TabsTrigger value="objects">Объекты</TabsTrigger>
             <TabsTrigger value="content">Контент страницы</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
@@ -674,6 +791,101 @@ export default function AdminTeamEdit() {
                   onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
                   placeholder="+79991234567"
                 />
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Objects Tab */}
+          <TabsContent value="objects" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Complexes */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5 text-primary" />
+                  <Label className="text-lg">Жилые комплексы</Label>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Выберите ЖК, которые ведёт этот брокер
+                </p>
+                <div className="border rounded-lg max-h-80 overflow-y-auto">
+                  {allComplexes?.length === 0 ? (
+                    <p className="text-sm text-muted-foreground p-4">Нет доступных ЖК</p>
+                  ) : (
+                    allComplexes?.map((complex) => (
+                      <label 
+                        key={complex.id}
+                        className="flex items-center gap-3 p-3 hover:bg-muted/50 cursor-pointer border-b last:border-b-0"
+                      >
+                        <Checkbox
+                          checked={selectedComplexes.includes(complex.id)}
+                          onCheckedChange={() => toggleComplex(complex.id)}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{complex.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {complex.district || complex.address || "—"}
+                          </p>
+                        </div>
+                        {complex.main_image && (
+                          <img 
+                            src={complex.main_image} 
+                            alt="" 
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                        )}
+                      </label>
+                    ))
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Выбрано: {selectedComplexes.length}
+                </p>
+              </div>
+
+              {/* Apartments */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Home className="h-5 w-5 text-primary" />
+                  <Label className="text-lg">Квартиры</Label>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Выберите конкретные квартиры для этого брокера
+                </p>
+                <div className="border rounded-lg max-h-80 overflow-y-auto">
+                  {allApartments?.length === 0 ? (
+                    <p className="text-sm text-muted-foreground p-4">Нет доступных квартир</p>
+                  ) : (
+                    allApartments?.map((apartment: any) => (
+                      <label 
+                        key={apartment.id}
+                        className="flex items-center gap-3 p-3 hover:bg-muted/50 cursor-pointer border-b last:border-b-0"
+                      >
+                        <Checkbox
+                          checked={selectedApartments.includes(apartment.id)}
+                          onCheckedChange={() => toggleApartment(apartment.id)}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium">
+                            {apartment.room_type} · {apartment.area} м² · {apartment.floor} этаж
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {apartment.residential_complexes?.name} · {Number(apartment.price).toLocaleString("ru-RU")} ₽
+                          </p>
+                        </div>
+                        {apartment.layout_image && (
+                          <img 
+                            src={apartment.layout_image} 
+                            alt="" 
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                        )}
+                      </label>
+                    ))
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Выбрано: {selectedApartments.length}
+                </p>
               </div>
             </div>
           </TabsContent>
