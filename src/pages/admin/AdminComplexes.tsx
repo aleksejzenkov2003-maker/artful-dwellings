@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -30,7 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, MapPin, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, MapPin, Loader2, ExternalLink } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
 type Complex = Tables<"residential_complexes">;
@@ -439,8 +440,15 @@ export default function AdminComplexes() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="ghost" onClick={() => handleEdit(complex)}>
-                        <Pencil className="h-4 w-4" />
+                      <Button size="icon" variant="ghost" asChild>
+                        <Link to={`/admin/complexes/${complex.id}`}>
+                          <Pencil className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <Button size="icon" variant="ghost" asChild>
+                        <Link to={`/novostroyki/${complex.slug}`} target="_blank">
+                          <ExternalLink className="h-4 w-4" />
+                        </Link>
                       </Button>
                       <Button
                         size="icon"

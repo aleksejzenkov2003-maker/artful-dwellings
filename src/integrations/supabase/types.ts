@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      apartments: {
+        Row: {
+          area: number
+          complex_id: string
+          created_at: string
+          floor: number
+          id: string
+          is_published: boolean | null
+          layout_image: string | null
+          price: number
+          room_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          area: number
+          complex_id: string
+          created_at?: string
+          floor: number
+          id?: string
+          is_published?: boolean | null
+          layout_image?: string | null
+          price: number
+          room_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          area?: number
+          complex_id?: string
+          created_at?: string
+          floor?: number
+          id?: string
+          is_published?: boolean | null
+          layout_image?: string | null
+          price?: number
+          room_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apartments_complex_id_fkey"
+            columns: ["complex_id"]
+            isOneToOne: false
+            referencedRelation: "residential_complexes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_name: string | null
