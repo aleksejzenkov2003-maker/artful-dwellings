@@ -2,8 +2,12 @@ import { Layout } from "@/components/layout/Layout";
 import { useParams, Link } from "react-router-dom";
 import { useResidentialComplex } from "@/hooks/useResidentialComplexes";
 import { ComplexHero } from "@/components/complex/ComplexHero";
+import { ComplexNavigation } from "@/components/complex/ComplexNavigation";
 import { ComplexPhotoGallery } from "@/components/complex/ComplexPhotoGallery";
+import { ComplexDetails } from "@/components/complex/ComplexDetails";
 import { ComplexAdvantages } from "@/components/complex/ComplexAdvantages";
+import { ComplexApartments } from "@/components/complex/ComplexApartments";
+import { ComplexDescription } from "@/components/complex/ComplexDescription";
 import { ComplexQuizBanner } from "@/components/complex/ComplexQuizBanner";
 import { ComplexLocation } from "@/components/complex/ComplexLocation";
 import { ComplexExcursionForm } from "@/components/complex/ComplexExcursionForm";
@@ -57,17 +61,29 @@ const ResidentialComplex = () => {
       {/* Hero Section */}
       <ComplexHero complex={complex} />
 
+      {/* Sticky Navigation */}
+      <ComplexNavigation />
+
       {/* Photo Gallery Section */}
       <ComplexPhotoGallery complex={complex} />
+
+      {/* Details Section */}
+      <ComplexDetails complex={complex} />
+
+      {/* Location Section */}
+      <ComplexLocation complex={complex} />
+
+      {/* Apartments Section */}
+      <ComplexApartments complex={complex} />
+
+      {/* Description Section */}
+      <ComplexDescription complex={complex} />
 
       {/* Advantages Section */}
       <ComplexAdvantages complex={complex} />
 
       {/* Quiz Banner */}
       <ComplexQuizBanner />
-
-      {/* Location Info */}
-      <ComplexLocation complex={complex} />
 
       {/* Excursion Form */}
       <ComplexExcursionForm complex={complex} />

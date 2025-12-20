@@ -6,10 +6,7 @@ interface ComplexPhotoGalleryProps {
   complex: ResidentialComplex;
 }
 
-const tabs = ["ФОТО", "ДЕТАЛИ", "МЕСТО", "КВАРТИРЫ", "ОПИСАНИЕ"];
-
 export function ComplexPhotoGallery({ complex }: ComplexPhotoGalleryProps) {
-  const [activeTab, setActiveTab] = useState("ФОТО");
   const [mediaType, setMediaType] = useState<"photo" | "video">("photo");
 
   const images = complex.main_image 
@@ -17,32 +14,11 @@ export function ComplexPhotoGallery({ complex }: ComplexPhotoGalleryProps) {
     : (Array.isArray(complex.images) ? complex.images as string[] : ["/placeholder.svg"]);
 
   return (
-    <section className="py-16 lg:py-24 bg-background relative overflow-hidden">
+    <section id="photo" className="py-16 lg:py-24 bg-background relative overflow-hidden">
       {/* Hexagon Pattern - Right Side */}
       <HexagonPattern className="top-0 right-0 w-64 h-96" />
       
       <div className="container mx-auto px-4 lg:px-8">
-        {/* Navigation Tabs */}
-        <nav className="flex items-center justify-center gap-8 lg:gap-16 mb-16">
-          {tabs.map((tab, index) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`relative text-[13px] uppercase tracking-[0.15em] font-medium transition-colors ${
-                activeTab === tab 
-                  ? "text-foreground" 
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab}
-              {/* Connector Line */}
-              {index < tabs.length - 1 && (
-                <span className="absolute left-full top-1/2 w-8 lg:w-16 h-px bg-border ml-4 hidden lg:block" />
-              )}
-            </button>
-          ))}
-        </nav>
-
         {/* Content */}
         <div className="grid grid-cols-1 lg:grid-cols-[120px_1fr] gap-8">
           {/* Left Sidebar - Vertical Labels */}
