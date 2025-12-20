@@ -7,102 +7,79 @@ import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
 
 interface ComplexCardProps {
   complex: ResidentialComplex;
-  variant: "overlay" | "text-top" | "text-bottom";
+  isLarge?: boolean;
 }
 
-function ComplexCard({ complex, variant }: ComplexCardProps) {
-  const imageBlock = (
-    <div className="relative overflow-hidden aspect-[4/3]">
+function formatPrice(price: number | null): string {
+  if (!price) return "";
+  return `от ${price.toLocaleString("ru-RU")} ₽/м²`;
+}
+
+function ComplexCard({ complex, isLarge = false }: ComplexCardProps) {
+  const isNew = complex.status === "building" || complex.status === "pre-sale";
+
+  return (
+    <Link
+      to={`/novostroyki/${complex.slug}`}
+      className={`group block relative overflow-hidden ${isLarge ? "aspect-[3/4]" : "aspect-[4/3]"}`}
+    >
       <img
         src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800"}
         alt={complex.name}
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
-      {variant === "overlay" && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
-            {complex.district && (
-              <span className="font-sans font-medium text-[11px] uppercase tracking-[0.15em] text-white/70 mb-2 block">
-                РАЙОН {complex.district.toUpperCase()}
-              </span>
-            )}
-            <h3 className="font-serif font-normal text-[28px] lg:text-[36px] leading-[1.1] text-white mb-2">
-              {complex.name}
-            </h3>
-            {complex.address && (
-              <p className="font-sans font-normal text-[13px] text-white/70">
-                {complex.address}
-              </p>
-            )}
-          </div>
-        </>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+      
+      {/* New badge */}
+      {isNew && (
+        <div className="absolute top-4 left-4">
+          <span className="bg-primary text-primary-foreground font-sans font-medium text-[11px] uppercase tracking-wider px-3 py-1.5">
+            Новый объект
+          </span>
+        </div>
       )}
-    </div>
-  );
 
-  // Text-top: Only name and address, no district (like reference)
-  const textBlockTop = variant === "text-top" && (
-    <div className="pb-4">
-      <h3 className="font-serif font-normal text-[42px] lg:text-[56px] leading-[1.05] text-foreground group-hover:text-primary transition-colors mb-2">
-        {complex.name}
-      </h3>
-      {complex.address && (
-        <p className="font-sans font-normal text-[14px] text-muted-foreground">
-          {complex.address}
-        </p>
-      )}
-    </div>
-  );
-
-  // Text-bottom: District + name + address (like reference)
-  const textBlockBottom = variant === "text-bottom" && (
-    <div className="pt-6">
-      {complex.district && (
-        <span className="font-sans font-medium text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3 block">
-          РАЙОН {complex.district.toUpperCase()}
-        </span>
-      )}
-      <h3 className="font-serif font-normal text-[42px] lg:text-[56px] leading-[1.05] text-foreground group-hover:text-primary transition-colors mb-2">
-        {complex.name}
-      </h3>
-      {complex.address && (
-        <p className="font-sans font-normal text-[14px] text-muted-foreground">
-          {complex.address}
-        </p>
-      )}
-    </div>
-  );
-
-  return (
-    <Link
-      to={`/novostroyki/${complex.slug}`}
-      className="group block"
-    >
-      {textBlockTop}
-      {imageBlock}
-      {textBlockBottom}
+      {/* Content */}
+      <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-6">
+        {complex.developer && (
+          <span className="font-sans font-medium text-[11px] uppercase tracking-[0.12em] text-white/70 mb-1.5 block">
+            {complex.developer}
+          </span>
+        )}
+        <h3 className="font-serif font-normal text-[22px] lg:text-[26px] leading-[1.15] text-white mb-1.5">
+          {complex.name}
+        </h3>
+        {complex.price_from && (
+          <p className="font-sans font-medium text-[14px] text-primary">
+            {formatPrice(complex.price_from)}
+          </p>
+        )}
+        {isLarge && complex.address && (
+          <p className="font-sans font-normal text-[13px] text-white/60 mt-2">
+            {complex.address}
+          </p>
+        )}
+      </div>
     </Link>
   );
 }
 
 export function ComplexCatalog() {
-  const { data: complexes, isLoading } = useResidentialComplexes({ limit: 4 });
+  const { data: complexes, isLoading } = useResidentialComplexes({ limit: 6 });
   const { currentCity } = useCity();
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {[...Array(4)].map((_, i) => (
-          <div key={i}>
-            <Skeleton className="aspect-[4/3] mb-4" />
-            <div className="space-y-3">
-              <Skeleton className="h-3 w-32" />
-              <Skeleton className="h-10 w-48" />
-              <Skeleton className="h-4 w-36" />
-            </div>
-          </div>
-        ))}
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="aspect-[4/3]" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Skeleton className="aspect-[3/4]" />
+          <Skeleton className="aspect-[4/3]" />
+        </div>
       </div>
     );
   }
@@ -117,23 +94,30 @@ export function ComplexCatalog() {
     );
   }
 
-  // Pattern: overlay, text-top, text-bottom, overlay (repeating)
-  const getVariant = (index: number): "overlay" | "text-top" | "text-bottom" => {
-    const patterns: ("overlay" | "text-top" | "text-bottom")[] = ["overlay", "text-top", "text-bottom", "overlay"];
-    return patterns[index % 4];
-  };
+  // Split complexes: first 4 for top row, next 2 for bottom row
+  const topRow = complexes.slice(0, 4);
+  const bottomRow = complexes.slice(4, 6);
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-        {complexes?.map((complex, index) => (
-          <ComplexCard
-            key={complex.id}
-            complex={complex}
-            variant={getVariant(index)}
-          />
+      {/* Top row: 4 equal cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        {topRow.map((complex) => (
+          <ComplexCard key={complex.id} complex={complex} />
         ))}
       </div>
+
+      {/* Bottom row: 1 large + 1 regular */}
+      {bottomRow.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {bottomRow[0] && (
+            <ComplexCard complex={bottomRow[0]} isLarge />
+          )}
+          {bottomRow[1] && (
+            <ComplexCard complex={bottomRow[1]} />
+          )}
+        </div>
+      )}
 
       <div className="mt-12 text-center">
         <Button variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-background" asChild>
