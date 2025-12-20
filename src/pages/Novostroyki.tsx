@@ -3,9 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { ComplexCard } from "@/components/novostroyki/ComplexCard";
 import { ComplexFilters, FiltersState } from "@/components/novostroyki/ComplexFilters";
+import { ComplexesMap } from "@/components/novostroyki/ComplexesMap";
 import {
   useResidentialComplexesFiltered,
   useDistrictsList,
+  SortOption,
 } from "@/hooks/useResidentialComplexesFiltered";
 import {
   Pagination,
@@ -16,20 +18,37 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Building2, Hammer, CheckCircle2 } from "lucide-react";
+import { Building2, Hammer, CheckCircle2, List, Map, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCity } from "@/contexts/CityContext";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface NovostroykiProps {
   initialStatus?: string;
 }
 
 type TabType = "all" | "building" | "completed";
+type ViewMode = "list" | "map";
 
 const tabs: { value: TabType; label: string; icon: React.ElementType; description: string }[] = [
   { value: "all", label: "Все объекты", icon: Building2, description: "Полный каталог" },
   { value: "building", label: "Строящиеся", icon: Hammer, description: "В процессе строительства" },
   { value: "completed", label: "Готовые", icon: CheckCircle2, description: "Сданы в эксплуатацию" },
+];
+
+const sortOptions = [
+  { value: "default", label: "По умолчанию" },
+  { value: "price_asc", label: "Цена: по возрастанию" },
+  { value: "price_desc", label: "Цена: по убыванию" },
+  { value: "address_asc", label: "Адрес: А-Я" },
+  { value: "address_desc", label: "Адрес: Я-А" },
 ];
 
 const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
@@ -46,6 +65,8 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
   };
 
   const [activeTab, setActiveTab] = useState<TabType>(getInitialTab);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [sort, setSort] = useState<SortOption>("default");
   const [filters, setFilters] = useState<FiltersState>({
     district: "all",
     status: initialStatus || "all",
@@ -90,7 +111,8 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
     priceFrom: filters.priceFrom ? Number(filters.priceFrom) : undefined,
     priceTo: filters.priceTo ? Number(filters.priceTo) : undefined,
     page,
-    limit: 9,
+    limit: viewMode === "map" ? 100 : 9,
+    sort,
   });
 
   const handleTabChange = (tab: TabType) => {
@@ -178,20 +200,64 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
             hideStatusFilter={activeTab !== "all"}
           />
 
-          <div className="mt-12">
+          {/* View Mode Toggle + Sort */}
+          <div className="flex items-center justify-between mt-8 mb-6">
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === "list" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+                className="gap-2"
+              >
+                <List className="w-4 h-4" />
+                Список
+              </Button>
+              <Button
+                variant={viewMode === "map" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("map")}
+                className="gap-2"
+              >
+                <Map className="w-4 h-4" />
+                Карта
+              </Button>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
+              <Select value={sort} onValueChange={(v) => setSort(v as SortOption)}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Сортировка" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sortOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="mt-6">
             {isLoading || districtsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="rounded-xl overflow-hidden">
-                    <Skeleton className="aspect-[4/3] w-full" />
-                    <div className="p-6 space-y-4">
-                      <Skeleton className="h-7 w-3/4" />
-                      <Skeleton className="h-5 w-1/2" />
-                      <Skeleton className="h-5 w-2/3" />
+              viewMode === "map" ? (
+                <Skeleton className="w-full h-[600px] rounded-xl" />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="rounded-xl overflow-hidden">
+                      <Skeleton className="aspect-[4/3] w-full" />
+                      <div className="p-6 space-y-4">
+                        <Skeleton className="h-7 w-3/4" />
+                        <Skeleton className="h-5 w-1/2" />
+                        <Skeleton className="h-5 w-2/3" />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )
             ) : error ? (
               <div className="text-center py-16">
                 <p className="text-destructive">Ошибка загрузки данных</p>
@@ -204,6 +270,17 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
                   В городе {cityName} пока нет объектов. Выберите другой город или измените фильтры.
                 </p>
               </div>
+            ) : viewMode === "map" ? (
+              <>
+                <p className="text-muted-foreground text-lg mb-4">
+                  Найдено: <span className="font-medium text-foreground">{data?.total}</span>{" "}
+                  {data?.total === 1 ? "объект" : data?.total && data.total < 5 ? "объекта" : "объектов"}
+                </p>
+                <ComplexesMap
+                  complexes={data?.data || []}
+                  onComplexClick={(slug) => navigate(`/novostroyki/${slug}`)}
+                />
+              </>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-8">

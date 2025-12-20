@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import type { ResidentialComplex } from "./useResidentialComplexes";
 import { useCity } from "@/contexts/CityContext";
 
+export type SortOption = "default" | "price_asc" | "price_desc" | "address_asc" | "address_desc";
+
 export interface FilterOptions {
   district?: string;
   status?: string;
@@ -10,11 +12,12 @@ export interface FilterOptions {
   priceTo?: number;
   page?: number;
   limit?: number;
+  sort?: SortOption;
 }
 
 export function useResidentialComplexesFiltered(options: FilterOptions = {}) {
   const { currentCity } = useCity();
-  const { page = 1, limit = 9 } = options;
+  const { page = 1, limit = 9, sort = "default" } = options;
 
   return useQuery({
     queryKey: ["residential_complexes_filtered", options, currentCity?.id],
@@ -22,9 +25,22 @@ export function useResidentialComplexesFiltered(options: FilterOptions = {}) {
       let query = supabase
         .from("residential_complexes")
         .select("*", { count: "exact" })
-        .eq("is_published", true)
-        .order("is_featured", { ascending: false })
-        .order("created_at", { ascending: false });
+        .eq("is_published", true);
+
+      // Apply sorting
+      if (sort === "price_asc") {
+        query = query.order("price_from", { ascending: true, nullsFirst: false });
+      } else if (sort === "price_desc") {
+        query = query.order("price_from", { ascending: false, nullsFirst: false });
+      } else if (sort === "address_asc") {
+        query = query.order("address", { ascending: true, nullsFirst: false });
+      } else if (sort === "address_desc") {
+        query = query.order("address", { ascending: false, nullsFirst: false });
+      } else {
+        query = query
+          .order("is_featured", { ascending: false })
+          .order("created_at", { ascending: false });
+      }
 
       // Filter by city if available
       if (currentCity?.id) {
