@@ -615,6 +615,7 @@ export type Database = {
       }
       services: {
         Row: {
+          content_blocks: Json | null
           created_at: string
           description: string | null
           features: Json | null
@@ -631,6 +632,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          content_blocks?: Json | null
           created_at?: string
           description?: string | null
           features?: Json | null
@@ -647,6 +649,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          content_blocks?: Json | null
           created_at?: string
           description?: string | null
           features?: Json | null

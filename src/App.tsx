@@ -35,6 +35,7 @@ import AdminBlog from "./pages/admin/AdminBlog";
 import AdminBlogEdit from "./pages/admin/AdminBlogEdit";
 import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminServices from "./pages/admin/AdminServices";
+import AdminServiceEdit from "./pages/admin/AdminServiceEdit";
 import AdminTeam from "./pages/admin/AdminTeam";
 import AdminTeamEdit from "./pages/admin/AdminTeamEdit";
 import AdminReviews from "./pages/admin/AdminReviews";
@@ -96,6 +97,7 @@ const App = () => (
               <Route path="/admin/blog/:id" element={<AdminBlogEdit />} />
               <Route path="/admin/promotions" element={<AdminPromotions />} />
               <Route path="/admin/services" element={<AdminServices />} />
+              <Route path="/admin/services/:id" element={<AdminServiceEdit />} />
               <Route path="/admin/team" element={<AdminTeam />} />
               <Route path="/admin/team/:id" element={<AdminTeamEdit />} />
               <Route path="/admin/reviews" element={<AdminReviews />} />
