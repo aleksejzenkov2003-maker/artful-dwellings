@@ -133,7 +133,7 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
             {/* Select Apartment Button */}
             <Button 
               variant="outline"
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase tracking-wider text-[13px] py-6"
+              className="bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase tracking-wider text-[13px] py-6"
             >
               Выбрать квартиру
             </Button>
