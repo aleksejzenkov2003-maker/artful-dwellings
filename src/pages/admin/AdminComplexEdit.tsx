@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +6,6 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -40,6 +39,8 @@ import {
   useDeleteApartment,
   type Apartment 
 } from "@/hooks/useApartments";
+import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 type Complex = Tables<"residential_complexes">;
 type Coordinates = { lat: number; lng: number };
@@ -174,6 +175,46 @@ export default function AdminComplexEdit() {
     } finally {
       setIsGeocoding(false);
     }
+  };
+
+  // Media items from main_image and images array
+  const mediaItems = useMemo((): MediaItem[] => {
+    const items: MediaItem[] = [];
+    
+    // Add main image first
+    if (formData.main_image) {
+      items.push({ url: formData.main_image, type: "image", isMain: true });
+    }
+    
+    // Add other images from images array
+    const imagesArray = Array.isArray(formData.images) ? formData.images : [];
+    imagesArray.forEach((img: unknown) => {
+      if (typeof img === "string" && img !== formData.main_image) {
+        items.push({ url: img, type: "image", isMain: false });
+      } else if (typeof img === "object" && img !== null) {
+        const mediaObj = img as { url?: string; type?: string; isMain?: boolean };
+        if (mediaObj.url && mediaObj.url !== formData.main_image) {
+          items.push({
+            url: mediaObj.url,
+            type: (mediaObj.type as "image" | "video") || "image",
+            isMain: false,
+          });
+        }
+      }
+    });
+    
+    return items;
+  }, [formData.main_image, formData.images]);
+
+  const handleMediaChange = (items: MediaItem[]) => {
+    const mainItem = items.find(item => item.isMain && item.type === "image");
+    const otherItems = items.filter(item => !item.isMain || item.type !== "image" || item.url !== mainItem?.url);
+    
+    setFormData({
+      ...formData,
+      main_image: mainItem?.url || items.find(i => i.type === "image")?.url || null,
+      images: otherItems.map(item => ({ url: item.url, type: item.type })),
+    });
   };
 
   const handleSave = () => {
@@ -360,10 +401,10 @@ export default function AdminComplexEdit() {
 
                 <div className="space-y-2">
                   <Label>Описание</Label>
-                  <Textarea
+                  <RichTextEditor
                     value={formData.description || ""}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    rows={4}
+                    onChange={(value) => setFormData({ ...formData, description: value })}
+                    placeholder="Введите описание ЖК..."
                   />
                 </div>
 
@@ -602,19 +643,24 @@ export default function AdminComplexEdit() {
 
           {/* Media Tab */}
           <TabsContent value="media" className="space-y-6">
-            <div className="space-y-4">
+            <div className="space-y-6">
+              {/* Images and Videos Uploader */}
               <div className="space-y-2">
-                <Label>URL главного изображения</Label>
-                <Input
-                  value={formData.main_image || ""}
-                  onChange={(e) => setFormData({ ...formData, main_image: e.target.value })}
+                <Label>Фотографии и видео</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Загрузите фото и видео с компьютера. Изображения автоматически оптимизируются. Отметьте звёздочкой главное фото.
+                </p>
+                <MediaUploader
+                  value={mediaItems}
+                  onChange={handleMediaChange}
+                  folder={id}
+                  acceptImages={true}
+                  acceptVideos={true}
                 />
-                {formData.main_image && (
-                  <img src={formData.main_image} alt="Preview" className="w-48 h-32 object-cover rounded mt-2" />
-                )}
               </div>
 
-              <div className="space-y-2">
+              {/* Presentation PDF */}
+              <div className="space-y-2 pt-4 border-t">
                 <Label>Презентация застройщика (PDF)</Label>
                 <div className="flex gap-2">
                   <Input
@@ -697,10 +743,10 @@ export default function AdminComplexEdit() {
 
               <div className="space-y-2">
                 <Label>SEO Описание</Label>
-                <Textarea
+                <Input
                   value={formData.seo_description || ""}
                   onChange={(e) => setFormData({ ...formData, seo_description: e.target.value })}
-                  rows={3}
+                  placeholder="Краткое описание для поисковых систем"
                 />
               </div>
             </div>
