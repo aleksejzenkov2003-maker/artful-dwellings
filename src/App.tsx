@@ -36,10 +36,12 @@ import AdminBlogEdit from "./pages/admin/AdminBlogEdit";
 import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminTeam from "./pages/admin/AdminTeam";
+import AdminTeamEdit from "./pages/admin/AdminTeamEdit";
 import AdminReviews from "./pages/admin/AdminReviews";
 import AdminLeads from "./pages/admin/AdminLeads";
 import AdminStats from "./pages/admin/AdminStats";
 import AdminCities from "./pages/admin/AdminCities";
+import BrokerPage from "./pages/BrokerPage";
 
 const queryClient = new QueryClient();
 
@@ -81,6 +83,7 @@ const App = () => (
               <Route path="/akcii/:slug" element={<AkciiDetail />} />
               <Route path="/otzyvy" element={<Otzyvy />} />
               <Route path="/kontakty" element={<Kontakty />} />
+              <Route path="/broker/:slug" element={<BrokerPage />} />
               
               {/* Auth */}
               <Route path="/auth" element={<Auth />} />
@@ -94,6 +97,7 @@ const App = () => (
               <Route path="/admin/promotions" element={<AdminPromotions />} />
               <Route path="/admin/services" element={<AdminServices />} />
               <Route path="/admin/team" element={<AdminTeam />} />
+              <Route path="/admin/team/:id" element={<AdminTeamEdit />} />
               <Route path="/admin/reviews" element={<AdminReviews />} />
               <Route path="/admin/leads" element={<AdminLeads />} />
               <Route path="/admin/stats" element={<AdminStats />} />
