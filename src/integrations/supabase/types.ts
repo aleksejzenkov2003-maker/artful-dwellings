@@ -121,6 +121,78 @@ export type Database = {
         }
         Relationships: []
       }
+      broker_apartments: {
+        Row: {
+          apartment_id: string
+          broker_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          apartment_id: string
+          broker_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          apartment_id?: string
+          broker_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broker_apartments_apartment_id_fkey"
+            columns: ["apartment_id"]
+            isOneToOne: false
+            referencedRelation: "apartments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "broker_apartments_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      broker_complexes: {
+        Row: {
+          broker_id: string
+          complex_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          broker_id: string
+          complex_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          broker_id?: string
+          complex_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broker_complexes_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "broker_complexes_complex_id_fkey"
+            columns: ["complex_id"]
+            isOneToOne: false
+            referencedRelation: "residential_complexes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cities: {
         Row: {
           country: string | null
@@ -596,41 +668,71 @@ export type Database = {
         Row: {
           bio: string | null
           city_id: string | null
+          content_blocks: Json | null
           created_at: string
+          email: string | null
+          experience_years: number | null
           id: string
           is_published: boolean | null
           name: string
           order_position: number | null
+          phone: string | null
           photo_url: string | null
           role: string
+          seo_description: string | null
+          seo_title: string | null
+          slug: string | null
+          specialization: string[] | null
+          telegram: string | null
           updated_at: string
           video_url: string | null
+          whatsapp: string | null
         }
         Insert: {
           bio?: string | null
           city_id?: string | null
+          content_blocks?: Json | null
           created_at?: string
+          email?: string | null
+          experience_years?: number | null
           id?: string
           is_published?: boolean | null
           name: string
           order_position?: number | null
+          phone?: string | null
           photo_url?: string | null
           role: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string | null
+          specialization?: string[] | null
+          telegram?: string | null
           updated_at?: string
           video_url?: string | null
+          whatsapp?: string | null
         }
         Update: {
           bio?: string | null
           city_id?: string | null
+          content_blocks?: Json | null
           created_at?: string
+          email?: string | null
+          experience_years?: number | null
           id?: string
           is_published?: boolean | null
           name?: string
           order_position?: number | null
+          phone?: string | null
           photo_url?: string | null
           role?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string | null
+          specialization?: string[] | null
+          telegram?: string | null
           updated_at?: string
           video_url?: string | null
+          whatsapp?: string | null
         }
         Relationships: [
           {

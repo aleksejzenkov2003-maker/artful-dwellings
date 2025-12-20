@@ -30,7 +30,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Upload, Video, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, Video, Loader2, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
 type TeamMember = Tables<"team_members">;
@@ -184,13 +185,15 @@ export default function AdminTeam() {
             <h1 className="text-3xl font-display mb-2">Команда</h1>
             <p className="text-muted-foreground">Управление сотрудниками</p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingMember(null); setFormData({ is_published: true, order_position: 0 }); }}>
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link to="/admin/team/new">
                 <Plus className="h-4 w-4 mr-2" />
                 Добавить сотрудника
-              </Button>
-            </DialogTrigger>
+              </Link>
+            </Button>
+          </div>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
@@ -346,11 +349,13 @@ export default function AdminTeam() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Имя</TableHead>
-                <TableHead>Должность</TableHead>
-                <TableHead>Город</TableHead>
-                <TableHead>Видео</TableHead>
-                <TableHead>Опубликован</TableHead>
+              <TableHead>Имя</TableHead>
+              <TableHead>Slug</TableHead>
+              <TableHead>Должность</TableHead>
+              <TableHead>Город</TableHead>
+              <TableHead>Видео</TableHead>
+              <TableHead>Опубликован</TableHead>
+              <TableHead className="w-[140px]">Действия</TableHead>
                 <TableHead className="w-[100px]">Действия</TableHead>
               </TableRow>
             </TableHeader>
@@ -358,6 +363,20 @@ export default function AdminTeam() {
               {members?.map((member) => (
                 <TableRow key={member.id}>
                   <TableCell className="font-medium">{member.name}</TableCell>
+                  <TableCell>
+                    {member.slug ? (
+                      <Link 
+                        to={`/broker/${member.slug}`} 
+                        target="_blank"
+                        className="text-primary hover:underline flex items-center gap-1"
+                      >
+                        {member.slug}
+                        <ExternalLink className="h-3 w-3" />
+                      </Link>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
                   <TableCell>{member.role}</TableCell>
                   <TableCell>
                     {cities?.find(c => c.id === member.city_id)?.name || "—"}
@@ -372,8 +391,10 @@ export default function AdminTeam() {
                   <TableCell>{member.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="ghost" onClick={() => handleEdit(member)}>
-                        <Pencil className="h-4 w-4" />
+                      <Button asChild size="icon" variant="ghost">
+                        <Link to={`/admin/team/${member.id}`}>
+                          <Pencil className="h-4 w-4" />
+                        </Link>
                       </Button>
                       <Button
                         size="icon"
