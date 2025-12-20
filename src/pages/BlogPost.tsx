@@ -9,15 +9,171 @@ import { ru } from "date-fns/locale";
 import { toast } from "sonner";
 import { useState } from "react";
 
+// Content block types matching AdminBlogEdit
+interface ContentBlock {
+  id: string;
+  type: "text" | "heading" | "image" | "quote" | "colored-block" | "two-columns" | "image-text";
+  content?: string;
+  heading?: string;
+  imageUrl?: string;
+  imageCaption?: string;
+  imagePosition?: "left" | "right" | "full";
+  backgroundColor?: string;
+  textColor?: string;
+  quoteAuthor?: string;
+  leftContent?: string;
+  rightContent?: string;
+  alignment?: "left" | "center" | "right";
+}
+
+// Block renderer component
+const BlockRenderer = ({ block }: { block: ContentBlock }) => {
+  const alignmentClass = {
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
+  }[block.alignment || "left"];
+
+  switch (block.type) {
+    case "heading":
+      return (
+        <h2 className={`text-2xl md:text-3xl font-serif mb-6 ${alignmentClass}`}>
+          {block.heading || block.content}
+        </h2>
+      );
+
+    case "text":
+      return (
+        <div 
+          className={`prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-p:text-foreground/80 prose-a:text-primary ${alignmentClass}`}
+          dangerouslySetInnerHTML={{ __html: block.content || "" }}
+        />
+      );
+
+    case "image":
+      return (
+        <figure className="my-8">
+          <img 
+            src={block.imageUrl} 
+            alt={block.imageCaption || ""} 
+            className="w-full h-auto rounded-lg"
+          />
+          {block.imageCaption && (
+            <figcaption className="text-sm text-muted-foreground mt-2 uppercase tracking-wider">
+              {block.imageCaption}
+            </figcaption>
+          )}
+        </figure>
+      );
+
+    case "quote":
+      return (
+        <blockquote className="border-l-4 border-primary bg-primary/5 py-6 px-8 my-8 font-serif text-lg italic">
+          <p className="mb-2">{block.content}</p>
+          {block.quoteAuthor && (
+            <cite className="text-sm text-muted-foreground not-italic">
+              — {block.quoteAuthor}
+            </cite>
+          )}
+        </blockquote>
+      );
+
+    case "colored-block":
+      return (
+        <div 
+          className="p-8 lg:p-12 my-8 rounded-lg"
+          style={{ 
+            backgroundColor: block.backgroundColor || "#c4a77d",
+            color: block.textColor || "#ffffff"
+          }}
+        >
+          <div 
+            className="text-lg md:text-xl font-serif italic leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: block.content || "" }}
+          />
+        </div>
+      );
+
+    case "two-columns":
+      return (
+        <div className="grid md:grid-cols-2 gap-8 my-8">
+          <div 
+            className="prose prose-lg max-w-none prose-p:text-foreground/80"
+            dangerouslySetInnerHTML={{ __html: block.leftContent || "" }}
+          />
+          <div 
+            className="prose prose-lg max-w-none prose-p:text-foreground/80"
+            dangerouslySetInnerHTML={{ __html: block.rightContent || "" }}
+          />
+        </div>
+      );
+
+    case "image-text":
+      const isImageLeft = block.imagePosition !== "right";
+      return (
+        <div className={`flex flex-col md:flex-row gap-6 my-8 ${!isImageLeft ? "md:flex-row-reverse" : ""}`}>
+          <div className="md:w-1/3 flex-shrink-0">
+            {block.imageUrl && (
+              <>
+                <img 
+                  src={block.imageUrl} 
+                  alt={block.imageCaption || ""}
+                  className="w-full h-auto rounded"
+                />
+                {block.imageCaption && (
+                  <p className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">
+                    {block.imageCaption}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+          <div className="flex-1">
+            <div 
+              className="prose prose-lg max-w-none prose-p:text-foreground/80 prose-p:text-sm"
+              dangerouslySetInnerHTML={{ __html: block.content || "" }}
+            />
+          </div>
+        </div>
+      );
+
+    default:
+      return null;
+  }
+};
+
 const BlogPost = () => {
   const { slug } = useParams();
   const { data: post, isLoading, error } = useBlogPost(slug || "");
   const { data: allPosts } = useBlogPosts();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Get current post index for navigation
   const currentIndex = allPosts?.findIndex(p => p.slug === slug) ?? -1;
   const totalPosts = allPosts?.length ?? 0;
+
+  // Parse content blocks from JSON
+  const contentBlocks: ContentBlock[] = (() => {
+    if (!post?.content) return [];
+    try {
+      const parsed = JSON.parse(post.content);
+      if (Array.isArray(parsed)) return parsed;
+      return [];
+    } catch {
+      // If not JSON, return empty - old content won't render as blocks
+      return [];
+    }
+  })();
+
+  // Check if content is in old format (HTML string, not JSON)
+  const isOldFormat = (() => {
+    if (!post?.content) return false;
+    try {
+      JSON.parse(post.content);
+      return false;
+    } catch {
+      return true;
+    }
+  })();
 
   const formatDateParts = (dateString: string | null) => {
     if (!dateString) return { day: "", month: "", year: "" };
@@ -53,11 +209,6 @@ const BlogPost = () => {
     
     window.open(shareUrl, "_blank", "width=600,height=400");
   };
-
-  // Mock gallery images (in real app would come from post)
-  const galleryImages = post?.cover_image 
-    ? [post.cover_image, post.cover_image, post.cover_image] 
-    : [];
 
   const dateParts = formatDateParts(post?.published_at || null);
 
@@ -201,99 +352,28 @@ const BlogPost = () => {
             <div className="flex-1 max-w-3xl">
               {/* Excerpt / Lead */}
               {post.excerpt && (
-                <p className="text-lg md:text-xl leading-relaxed mb-8">
-                  {post.excerpt}
-                </p>
+                <div 
+                  className="text-lg md:text-xl leading-relaxed mb-8"
+                  dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                />
               )}
 
-              {/* Image gallery */}
-              {galleryImages.length > 0 && (
-                <div className="mb-8">
-                  <div className="relative aspect-[16/10] bg-muted rounded-lg overflow-hidden">
-                    <img 
-                      src={galleryImages[currentImageIndex]} 
-                      alt={post.title}
-                      className="w-full h-full object-cover"
-                    />
-                    {galleryImages.length > 1 && (
-                      <>
-                        <button 
-                          onClick={() => setCurrentImageIndex(prev => prev > 0 ? prev - 1 : galleryImages.length - 1)}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur rounded flex items-center justify-center hover:bg-white transition-colors"
-                        >
-                          <ChevronLeft className="h-5 w-5" />
-                        </button>
-                        <button 
-                          onClick={() => setCurrentImageIndex(prev => prev < galleryImages.length - 1 ? prev + 1 : 0)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 backdrop-blur rounded flex items-center justify-center hover:bg-white transition-colors"
-                        >
-                          <ChevronRight className="h-5 w-5" />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                  {/* Gallery dots */}
-                  {galleryImages.length > 1 && (
-                    <div className="flex justify-center gap-2 mt-4">
-                      {galleryImages.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCurrentImageIndex(idx)}
-                          className={`w-2 h-2 rounded-full transition-colors ${
-                            idx === currentImageIndex ? "bg-primary" : "bg-muted-foreground/30"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
+              {/* Render content blocks (new JSON format) */}
+              {contentBlocks.length > 0 && (
+                <div className="space-y-6">
+                  {contentBlocks.map((block) => (
+                    <BlockRenderer key={block.id} block={block} />
+                  ))}
                 </div>
               )}
 
-              {/* Article content */}
-              {post.content ? (
+              {/* Fallback for old HTML content format */}
+              {isOldFormat && post.content && (
                 <div 
                   className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-p:text-foreground/80 prose-a:text-primary prose-blockquote:border-l-primary prose-blockquote:bg-primary/5 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic prose-blockquote:font-serif prose-blockquote:text-lg"
                   dangerouslySetInnerHTML={{ __html: post.content }}
                 />
-              ) : null}
-
-              {/* Highlight block */}
-              <div className="bg-primary text-primary-foreground p-8 lg:p-12 mt-12">
-                <p className="text-lg md:text-xl font-serif italic leading-relaxed">
-                  Проект предусматривает детский клуб, оборудование для маломобильных групп населения, единую входную группу с камином, системы видеонаблюдения и контроля доступа на территорию и в дом.
-                </p>
-              </div>
-
-              {/* Additional content section */}
-              <div className="mt-12">
-                <h2 className="text-2xl md:text-3xl font-serif mb-6">
-                  Инновации в ваших домах — реальность.
-                </h2>
-                <p className="text-foreground/80 leading-relaxed mb-8">
-                  Отличительными особенностями нового ЖК станут квартиры с каминами и пентхаусы с просторными террасами на последних этажах. На первом этаже спланировано 10 помещений универсального назначения. Проект предусматривает детский клуб, оборудование для маломобильных групп населения, единую входную группу с камином, системы видеонаблюдения и контроля доступа на территорию и в дом.
-                </p>
-
-                {/* Image with text wrap */}
-                {post.cover_image && (
-                  <div className="flex flex-col md:flex-row gap-6 mb-8">
-                    <div className="md:w-1/3 flex-shrink-0">
-                      <img 
-                        src={post.cover_image} 
-                        alt={post.title}
-                        className="w-full h-auto rounded"
-                      />
-                      <p className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">
-                        Комплекс «{post.title}»
-                      </p>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-foreground/80 leading-relaxed text-sm">
-                        Новый жилой комплекс бизнес-класса возводится холдингом «Аквилон-Инвест» в Петроградском районе Санкт-Петербурга на пересечении улиц Лодейнопольской и Петрозаводской, в шаговой доступности от станции метро «Чкаловская». В жилом комплексе общей площадью 18,5 тыс. кв. м запроектировано 156 комфортных квартир — от однокомнатных до четырехкомнатных площадью до 150 кв. м, с возможностью объединения в пентхаус до 400 кв. м. Окна всех квартир выходят на спокойные Лодейнопольскую или Петрозаводскую улицы и в тихий закрытый двор. Для удобства автомобилистов предусмотрен подземный паркинг на 81 машино-место.
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
+              )}
 
               {/* Tags */}
               {post.tags && Array.isArray(post.tags) && post.tags.length > 0 && (
