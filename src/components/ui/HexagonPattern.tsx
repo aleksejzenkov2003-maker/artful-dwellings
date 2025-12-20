@@ -1,9 +1,12 @@
-// Geometric hexagon pattern component
+import logoIconLight from "@/assets/logo-icon-light.png";
+
+// Geometric hexagon pattern component with Art Estate logo
 interface HexagonPatternProps {
   className?: string;
+  variant?: "light" | "dark";
 }
 
-export function HexagonPattern({ className = "" }: HexagonPatternProps) {
+export function HexagonPattern({ className = "", variant = "light" }: HexagonPatternProps) {
   return (
     <div className={`absolute pointer-events-none ${className}`}>
       {/* Large gray hexagon */}
@@ -25,33 +28,12 @@ export function HexagonPattern({ className = "" }: HexagonPatternProps) {
         />
       </svg>
       
-      {/* Medium coral hexagon with A */}
-      <svg 
-        viewBox="0 0 100 115" 
-        className="absolute w-28 h-32 top-16 right-0 text-coral"
-      >
-        <path
-          d="M50 5L90 30V80L50 105L10 80V30L50 5Z"
-          stroke="currentColor"
-          strokeWidth="1"
-          fill="none"
-        />
-        <path
-          d="M50 18L80 38V72L50 92L20 72V38L50 18Z"
-          stroke="currentColor"
-          strokeWidth="0.5"
-          fill="none"
-        />
-        <text
-          x="50"
-          y="62"
-          textAnchor="middle"
-          className="fill-current"
-          style={{ fontSize: '24px', fontFamily: 'Cormorant Garamond, serif' }}
-        >
-          A
-        </text>
-      </svg>
+      {/* Art Estate Logo Icon */}
+      <img 
+        src={logoIconLight}
+        alt="Art Estate"
+        className="absolute w-24 h-24 md:w-28 md:h-28 top-12 right-0 object-contain opacity-80"
+      />
 
       {/* Small gray hexagon bottom right */}
       <svg 
@@ -68,19 +50,6 @@ export function HexagonPattern({ className = "" }: HexagonPatternProps) {
           d="M40 14L62 28V56L40 70L18 56V28L40 14Z"
           stroke="currentColor"
           strokeWidth="0.5"
-          fill="none"
-        />
-      </svg>
-
-      {/* Tiny coral hexagon */}
-      <svg 
-        viewBox="0 0 60 70" 
-        className="absolute w-12 h-14 bottom-8 right-24 text-coral/60"
-      >
-        <path
-          d="M30 4L54 18V46L30 60L6 46V18L30 4Z"
-          stroke="currentColor"
-          strokeWidth="1"
           fill="none"
         />
       </svg>
