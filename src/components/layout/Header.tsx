@@ -12,6 +12,7 @@ import {
 import { CitySelector } from "./CitySelector";
 import { useCityContacts } from "@/hooks/useCityContacts";
 import { CallbackDialog } from "./CallbackDialog";
+import logoImage from "@/assets/logo.png";
 const mainNavigation = [
   { name: "Услуги", href: "/uslugi" },
   { name: "Ипотека", href: "/ipoteka" },
@@ -28,45 +29,14 @@ const propertyDropdownItems = [
   { name: "Эксклюзив", href: "/ekskluziv" },
 ];
 
-// Geometric logo component matching reference design
+// Logo component using uploaded image
 const Logo = () => (
-  <Link to="/" className="flex items-center gap-3">
-    <div className="relative w-11 h-11">
-      <svg viewBox="0 0 44 44" fill="none" className="w-full h-full">
-        {/* Outer hexagon */}
-        <path
-          d="M22 2L40 13V31L22 42L4 31V13L22 2Z"
-          stroke="#C9A86C"
-          strokeWidth="1"
-          fill="none"
-        />
-        {/* Inner hexagon */}
-        <path
-          d="M22 8L34 15V29L22 36L10 29V15L22 8Z"
-          stroke="#C9A86C"
-          strokeWidth="0.75"
-          fill="none"
-        />
-        {/* Letter A */}
-        <text
-          x="22"
-          y="27"
-          textAnchor="middle"
-          fill="#C9A86C"
-          style={{ fontSize: '16px', fontFamily: 'Cormorant Garamond, serif', fontWeight: 500 }}
-        >
-          A
-        </text>
-      </svg>
-    </div>
-    <div className="flex flex-col">
-      <span className="text-sm font-sans font-medium tracking-[0.25em] uppercase text-white">
-        Art Estate
-      </span>
-      <span className="text-[9px] font-sans tracking-[0.15em] uppercase text-white/50">
-        Агентство недвижимости
-      </span>
-    </div>
+  <Link to="/" className="flex items-center">
+    <img 
+      src={logoImage} 
+      alt="Art Estate - Агентство недвижимости" 
+      className="h-10 w-auto"
+    />
   </Link>
 );
 
