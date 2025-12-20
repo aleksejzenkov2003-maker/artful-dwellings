@@ -1,22 +1,12 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
-import { PropertyPreviewModal } from "./PropertyPreviewModal";
 
 interface PropertyCardProps {
   property: ResidentialComplex;
   variant?: "image-top" | "image-bottom";
-  enablePreview?: boolean;
 }
 
-export function PropertyCard({ property, variant = "image-top", enablePreview = true }: PropertyCardProps) {
-  const [previewOpen, setPreviewOpen] = useState(false);
-
-  const handleClick = () => {
-    if (enablePreview) {
-      setPreviewOpen(true);
-    }
-  };
-
+export function PropertyCard({ property, variant = "image-top" }: PropertyCardProps) {
   const imageBlock = (
     <div className="relative aspect-[4/3] overflow-hidden">
       <img
@@ -65,32 +55,21 @@ export function PropertyCard({ property, variant = "image-top", enablePreview = 
   );
 
   return (
-    <>
-      <div
-        onClick={handleClick}
-        className="group block cursor-pointer"
-      >
-        {variant === "image-top" ? (
-          <>
-            {imageBlock}
-            {captionBlock}
-          </>
-        ) : (
-          <>
-            {captionBlock}
-            {imageBlock}
-          </>
-        )}
-      </div>
-
-      {/* Preview Modal */}
-      {enablePreview && (
-        <PropertyPreviewModal
-          property={property}
-          open={previewOpen}
-          onOpenChange={setPreviewOpen}
-        />
+    <Link
+      to={`/novostroyki/${property.slug}`}
+      className="group block"
+    >
+      {variant === "image-top" ? (
+        <>
+          {imageBlock}
+          {captionBlock}
+        </>
+      ) : (
+        <>
+          {captionBlock}
+          {imageBlock}
+        </>
       )}
-    </>
+    </Link>
   );
 }
