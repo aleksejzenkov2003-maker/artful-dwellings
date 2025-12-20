@@ -82,8 +82,22 @@ export default {
         },
       },
       fontFamily: {
-        serif: ["'Cormorant Garamond'", "Georgia", "serif"],
+        serif: ["'Playfair Display'", "Georgia", "serif"],
         sans: ["'Montserrat'", "system-ui", "sans-serif"],
+      },
+      fontSize: {
+        // Hero headings: 40-56px
+        'hero': ['3.5rem', { lineHeight: '1.2', fontWeight: '400' }],
+        'hero-sm': ['2.5rem', { lineHeight: '1.25', fontWeight: '400' }],
+        // Block headings: 26-32px
+        'heading': ['2rem', { lineHeight: '1.25', fontWeight: '400' }],
+        'heading-sm': ['1.625rem', { lineHeight: '1.25', fontWeight: '400' }],
+        // CTA buttons: 14-16px uppercase
+        'cta': ['0.875rem', { lineHeight: '1.1', fontWeight: '600', letterSpacing: '0.08em' }],
+        // Labels: 12-14px uppercase
+        'label': ['0.75rem', { lineHeight: '1.2', fontWeight: '500', letterSpacing: '0.1em' }],
+        // Filter values: 14-16px
+        'filter': ['0.875rem', { lineHeight: '1.2', fontWeight: '500' }],
       },
       borderRadius: {
         lg: "var(--radius)",
