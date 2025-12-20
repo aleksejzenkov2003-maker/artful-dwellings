@@ -28,11 +28,11 @@ export function HexagonPattern({ className = "", variant = "light" }: HexagonPat
         />
       </svg>
       
-      {/* Art Estate Logo Icon */}
+      {/* Art Estate Logo Icon - no background */}
       <img 
         src={logoIconLight}
         alt="Art Estate"
-        className="absolute w-24 h-24 md:w-28 md:h-28 top-12 right-0 object-contain opacity-80"
+        className="absolute w-24 h-24 md:w-28 md:h-28 top-12 right-0 object-contain opacity-80 mix-blend-multiply"
       />
 
       {/* Small gray hexagon bottom right */}
