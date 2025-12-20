@@ -43,6 +43,7 @@ export default function AdminComplexes() {
   const [editingComplex, setEditingComplex] = useState<Complex | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"residential_complexes">>>({});
   const [isGeocoding, setIsGeocoding] = useState(false);
+  const [isGeocodingAll, setIsGeocodingAll] = useState(false);
 
   const { data: complexes, isLoading } = useQuery({
     queryKey: ["admin-complexes"],
@@ -143,6 +144,23 @@ export default function AdminComplexes() {
     }
   };
 
+  const geocodeAllAddresses = async () => {
+    setIsGeocodingAll(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('geocode-all');
+      
+      if (error) throw error;
+
+      toast.success(`Геокодирование завершено: ${data.success} из ${data.total} объектов`);
+      queryClient.invalidateQueries({ queryKey: ["admin-complexes"] });
+    } catch (error) {
+      console.error('Geocode-all error:', error);
+      toast.error("Ошибка массового геокодирования");
+    } finally {
+      setIsGeocodingAll(false);
+    }
+  };
+
   const handleEdit = (complex: Complex) => {
     setEditingComplex(complex);
     setFormData({
@@ -192,13 +210,26 @@ export default function AdminComplexes() {
             <h1 className="text-3xl font-display mb-2">Жилые комплексы</h1>
             <p className="text-muted-foreground">Управление каталогом ЖК</p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingComplex(null); setFormData({ is_published: true }); }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить ЖК
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={geocodeAllAddresses}
+              disabled={isGeocodingAll}
+            >
+              {isGeocodingAll ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <MapPin className="h-4 w-4 mr-2" />
+              )}
+              Геокодировать все
+            </Button>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={() => { setEditingComplex(null); setFormData({ is_published: true }); }}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить ЖК
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
@@ -412,6 +443,7 @@ export default function AdminComplexes() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {isLoading ? (
