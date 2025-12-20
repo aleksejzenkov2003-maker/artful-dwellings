@@ -6,6 +6,181 @@ import { useResidentialComplexes } from "@/hooks/useResidentialComplexes";
 import { HexagonPattern } from "@/components/ui/HexagonPattern";
 import { useSubmitLead } from "@/hooks/useSubmitLead";
 import { toast } from "sonner";
+import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
+
+// Format price helper
+function formatPrice(price: number | null): string {
+  if (!price) return "";
+  return new Intl.NumberFormat("ru-RU").format(price);
+}
+
+// Small card for top grid (4 cards row)
+interface SmallCardProps {
+  complex: ResidentialComplex;
+  showBadge?: boolean;
+}
+
+function SmallCard({ complex, showBadge = false }: SmallCardProps) {
+  const isNew = complex.status === "building" || complex.status === "pre-sale";
+  
+  return (
+    <Link
+      to={`/novostroyki/${complex.slug}`}
+      className="group relative overflow-hidden aspect-[4/3]"
+    >
+      <img
+        src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600"}
+        alt={complex.name}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+      
+      {/* New badge */}
+      {(showBadge || isNew) && (
+        <div className="absolute top-3 left-3">
+          <span className="bg-primary text-primary-foreground font-sans font-medium text-[10px] uppercase tracking-wider px-2.5 py-1">
+            Новый объект
+          </span>
+        </div>
+      )}
+      
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        {complex.developer && (
+          <p className="text-[10px] text-white/60 uppercase tracking-wider mb-0.5">
+            {complex.developer}
+          </p>
+        )}
+        <h3 className="text-sm font-serif text-white mb-1">
+          {complex.name}
+        </h3>
+        {complex.price_from && (
+          <p className="text-primary text-xs font-medium">
+            от {formatPrice(complex.price_from)} ₽/м²
+          </p>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+// Large card for bottom grid (spans 2 rows on left)
+interface LargeCardProps {
+  complex: ResidentialComplex;
+}
+
+function LargeCard({ complex }: LargeCardProps) {
+  const isNew = complex.status === "building" || complex.status === "pre-sale";
+  
+  return (
+    <Link
+      to={`/novostroyki/${complex.slug}`}
+      className="group relative overflow-hidden aspect-[3/4]"
+    >
+      <img
+        src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600"}
+        alt={complex.name}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+      
+      {/* New badge */}
+      {isNew && (
+        <div className="absolute top-4 left-4">
+          <span className="bg-primary text-primary-foreground font-sans font-medium text-[11px] uppercase tracking-wider px-3 py-1.5">
+            Новый объект
+          </span>
+        </div>
+      )}
+      
+      <div className="absolute bottom-0 left-0 right-0 p-5">
+        {complex.developer && (
+          <p className="text-xs text-white/60 uppercase tracking-wider mb-1">
+            {complex.developer}
+          </p>
+        )}
+        <h3 className="text-xl font-serif text-white mb-2">
+          {complex.name}
+        </h3>
+        {complex.price_from && (
+          <p className="text-primary font-medium">
+            от {formatPrice(complex.price_from)} ₽/м²
+          </p>
+        )}
+        {complex.address && (
+          <p className="text-white/50 text-xs mt-1">
+            {complex.city}, {complex.district}
+          </p>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+// Extra large card with text below (for second section)
+interface FeatureCardProps {
+  complex: ResidentialComplex;
+  variant: "overlay" | "text-below";
+}
+
+function FeatureCard({ complex, variant }: FeatureCardProps) {
+  if (variant === "overlay") {
+    return (
+      <Link to={`/novostroyki/${complex.slug}`} className="group block">
+        <div className="relative overflow-hidden aspect-[4/3]">
+          <img
+            src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800"}
+            alt={complex.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
+            {complex.district && (
+              <span className="font-sans font-normal text-[12px] uppercase tracking-[0.1em] text-primary mb-2 block">
+                Район {complex.district}
+              </span>
+            )}
+            <h3 className="font-serif font-normal text-[28px] lg:text-[36px] leading-[1.1] text-white mb-2">
+              {complex.name}
+            </h3>
+            {complex.address && (
+              <p className="font-sans font-normal text-[13px] text-primary">
+                {complex.address}
+              </p>
+            )}
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  // text-below variant
+  return (
+    <Link to={`/novostroyki/${complex.slug}`} className="group block">
+      <div className="relative overflow-hidden aspect-[4/3] mb-6">
+        <img
+          src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800"}
+          alt={complex.name}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <div>
+        {complex.district && (
+          <span className="font-sans font-normal text-[12px] uppercase tracking-[0.1em] text-muted-foreground mb-3 block">
+            Район {complex.district}
+          </span>
+        )}
+        <h3 className="font-serif font-normal text-[36px] lg:text-[48px] leading-[1.05] text-foreground group-hover:text-primary transition-colors mb-2">
+          {complex.name}
+        </h3>
+        {complex.address && (
+          <p className="font-sans font-normal text-[14px] text-muted-foreground">
+            {complex.address}
+          </p>
+        )}
+      </div>
+    </Link>
+  );
+}
 
 export function PropertySearchSection() {
   const [activeTab, setActiveTab] = useState<"new" | "secondary">("new");
@@ -14,15 +189,12 @@ export function PropertySearchSection() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   
-  const { data: complexes } = useResidentialComplexes();
+  const { data: complexes } = useResidentialComplexes({ limit: 10 });
   const mutation = useSubmitLead();
   
-  const displayComplexes = complexes?.slice(0, 5) || [];
-
-  const formatPrice = (price: number | null) => {
-    if (!price) return "—";
-    return new Intl.NumberFormat("ru-RU").format(price);
-  };
+  // First 6 for top grid, next 4 for feature section
+  const topGridComplexes = complexes?.slice(0, 6) || [];
+  const featureComplexes = complexes?.slice(6, 10) || [];
 
   const toggleRoom = (room: string) => {
     setRooms(prev => 
@@ -147,81 +319,33 @@ export function PropertySearchSection() {
           </button>
         </div>
 
-        {/* Property Cards - Masonry layout matching reference */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[200px]">
-          {/* Large card - spans 2 rows */}
-          {displayComplexes[0] && (
-            <Link
-              to={`/novostroyki/${displayComplexes[0].slug}`}
-              className="group relative overflow-hidden bg-card border border-border md:row-span-2"
-            >
-              <img
-                src={displayComplexes[0].main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600"}
-                alt={displayComplexes[0].name}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              
-              {/* New badge */}
-              <div className="absolute top-4 left-4">
-                <span className="bg-primary text-primary-foreground text-xs px-3 py-1 uppercase tracking-wider">
-                  Новый объект
-                </span>
+        {/* Property Cards Grid - Reference layout */}
+        {topGridComplexes.length > 0 && (
+          <div className="space-y-4">
+            {/* Top row: 4 small cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {topGridComplexes.slice(0, 4).map((complex, index) => (
+                <SmallCard 
+                  key={complex.id} 
+                  complex={complex} 
+                  showBadge={index < 2}
+                />
+              ))}
+            </div>
+            
+            {/* Bottom row: 1 large card + 1 small card */}
+            {topGridComplexes.length > 4 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {topGridComplexes[4] && (
+                  <LargeCard complex={topGridComplexes[4]} />
+                )}
+                {topGridComplexes[5] && (
+                  <SmallCard complex={topGridComplexes[5]} />
+                )}
               </div>
-              
-              <div className="absolute bottom-0 left-0 right-0 p-5">
-                <p className="text-xs text-white/60 uppercase tracking-wider mb-1">
-                  {displayComplexes[0].developer || "Застройщик"}
-                </p>
-                <h3 className="text-xl font-serif text-white mb-2">
-                  {displayComplexes[0].name}
-                </h3>
-                <p className="text-primary font-medium">
-                  от {formatPrice(displayComplexes[0].price_from)} ₽/м²
-                </p>
-                <p className="text-white/50 text-xs mt-1">
-                  {displayComplexes[0].city}, {displayComplexes[0].district}
-                </p>
-              </div>
-            </Link>
-          )}
-
-          {/* Regular cards */}
-          {displayComplexes.slice(1, 5).map((complex, index) => (
-            <Link
-              key={complex.id}
-              to={`/novostroyki/${complex.slug}`}
-              className="group relative overflow-hidden bg-card border border-border"
-            >
-              <img
-                src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600"}
-                alt={complex.name}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              
-              {index === 0 && (
-                <div className="absolute top-3 left-3">
-                  <span className="bg-primary text-primary-foreground text-[10px] px-2 py-0.5 uppercase tracking-wider">
-                    Новый объект
-                  </span>
-                </div>
-              )}
-              
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <p className="text-[10px] text-white/60 uppercase tracking-wider mb-0.5">
-                  {complex.developer || "Застройщик"}
-                </p>
-                <h3 className="text-sm font-serif text-white mb-1">
-                  {complex.name}
-                </h3>
-                <p className="text-primary text-xs font-medium">
-                  от {formatPrice(complex.price_from)} ₽/м²
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+            )}
+          </div>
+        )}
 
         {/* Show More Button */}
         <div className="text-center mt-12">
@@ -231,6 +355,32 @@ export function PropertySearchSection() {
             </Button>
           </Link>
         </div>
+
+        {/* Feature Section - Large cards with text below (like reference 2) */}
+        {featureComplexes.length > 0 && (
+          <div className="mt-24 pt-16 border-t border-border">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+              {featureComplexes.slice(0, 2).map((complex, index) => (
+                <FeatureCard 
+                  key={complex.id} 
+                  complex={complex} 
+                  variant={index === 0 ? "overlay" : "text-below"}
+                />
+              ))}
+            </div>
+            {featureComplexes.length > 2 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mt-8">
+                {featureComplexes.slice(2, 4).map((complex, index) => (
+                  <FeatureCard 
+                    key={complex.id} 
+                    complex={complex} 
+                    variant={index === 0 ? "text-below" : "overlay"}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );
