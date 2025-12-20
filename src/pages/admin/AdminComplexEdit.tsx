@@ -615,11 +615,70 @@ export default function AdminComplexEdit() {
               </div>
 
               <div className="space-y-2">
-                <Label>URL презентации</Label>
-                <Input
-                  value={formData.presentation_url || ""}
-                  onChange={(e) => setFormData({ ...formData, presentation_url: e.target.value })}
-                />
+                <Label>Презентация застройщика (PDF)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={formData.presentation_url || ""}
+                    onChange={(e) => setFormData({ ...formData, presentation_url: e.target.value })}
+                    placeholder="URL презентации или загрузите файл"
+                    className="flex-1"
+                  />
+                  <label className="cursor-pointer">
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        
+                        const fileName = `${id}/${Date.now()}_${file.name}`;
+                        const { error: uploadError } = await supabase.storage
+                          .from("presentations")
+                          .upload(fileName, file);
+                        
+                        if (uploadError) {
+                          toast.error("Ошибка загрузки: " + uploadError.message);
+                          return;
+                        }
+                        
+                        const { data: urlData } = supabase.storage
+                          .from("presentations")
+                          .getPublicUrl(fileName);
+                        
+                        setFormData({ ...formData, presentation_url: urlData.publicUrl });
+                        toast.success("Презентация загружена");
+                      }}
+                    />
+                    <Button type="button" variant="outline" asChild>
+                      <span>Загрузить PDF</span>
+                    </Button>
+                  </label>
+                </div>
+                {formData.presentation_url && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <a 
+                      href={formData.presentation_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary text-sm hover:underline"
+                    >
+                      Просмотреть загруженную презентацию
+                    </a>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="text-destructive"
+                      onClick={() => setFormData({ ...formData, presentation_url: null })}
+                    >
+                      Удалить
+                    </Button>
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Если презентация не загружена, будет автоматически сгенерирована из данных ЖК
+                </p>
               </div>
             </div>
           </TabsContent>
