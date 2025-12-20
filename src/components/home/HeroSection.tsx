@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { TealButton } from "@/components/ui/teal-button";
 import { Link } from "react-router-dom";
 import { useCity } from "@/contexts/CityContext";
 
@@ -54,12 +54,9 @@ export function HeroSection() {
               <p className="text-white/60 text-lg md:text-xl lg:text-2xl font-light tracking-wide mb-10 italic font-serif">
                 комфорт и бизнес-класса
               </p>
-              <Button 
-                variant="teal"
-                size="xl"
-              >
+              <TealButton size="xl">
                 Заказать бесплатную консультацию
-              </Button>
+              </TealButton>
             </div>
           </div>
         </div>
