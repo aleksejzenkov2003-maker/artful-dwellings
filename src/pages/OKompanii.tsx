@@ -1,13 +1,12 @@
 import { Layout } from "@/components/layout/Layout";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Play } from "lucide-react";
+import { Play, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
 import { StatsSection } from "@/components/home/StatsSection";
 import { Button } from "@/components/ui/button";
@@ -48,11 +47,11 @@ const getVideoEmbed = (url: string) => {
 const OKompanii = () => {
   const { data: teamMembers, isLoading: teamLoading } = useTeamMembers();
   const [videoOpen, setVideoOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<typeof teamMembers extends (infer T)[] ? T : never | null>(null);
   const [memberVideoOpen, setMemberVideoOpen] = useState(false);
   const [selectedMemberVideo, setSelectedMemberVideo] = useState<string | null>(null);
 
   const handleMemberVideoPlay = (e: React.MouseEvent, videoUrl: string) => {
+    e.preventDefault();
     e.stopPropagation();
     setSelectedMemberVideo(videoUrl);
     setMemberVideoOpen(true);
@@ -144,48 +143,70 @@ const OKompanii = () => {
             </div>
           ) : teamMembers && teamMembers.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {teamMembers.map((member) => (
-                <div 
-                  key={member.id} 
-                  className="bg-card rounded-lg overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => setSelectedMember(member)}
-                >
-                  <div className="aspect-[4/5] bg-muted overflow-hidden relative">
-                    {member.photo_url ? (
-                      <img 
-                        src={member.photo_url} 
-                        alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                        <span className="text-6xl font-serif text-primary/30">
-                          {member.name.charAt(0)}
-                        </span>
-                      </div>
-                    )}
-                    
-                    {/* Play button overlay for members with video */}
-                    {member.video_url && (
-                      <button
-                        onClick={(e) => handleMemberVideoPlay(e, member.video_url!)}
-                        className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <div className="h-16 w-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 hover:scale-110 transition-transform">
-                          <Play className="h-7 w-7 text-white fill-white ml-1" />
+              {teamMembers.map((member) => {
+                const hasPage = !!member.slug;
+                const CardContent = (
+                  <>
+                    <div className="aspect-[4/5] bg-muted overflow-hidden relative">
+                      {member.photo_url ? (
+                        <img 
+                          src={member.photo_url} 
+                          alt={member.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+                          <span className="text-6xl font-serif text-primary/30">
+                            {member.name.charAt(0)}
+                          </span>
                         </div>
-                      </button>
-                    )}
+                      )}
+                      
+                      {/* Play button overlay for members with video */}
+                      {member.video_url && (
+                        <button
+                          onClick={(e) => handleMemberVideoPlay(e, member.video_url!)}
+                          className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <div className="h-16 w-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 hover:scale-110 transition-transform">
+                            <Play className="h-7 w-7 text-white fill-white ml-1" />
+                          </div>
+                        </button>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-serif font-semibold mb-1">{member.name}</h3>
+                      <p className="text-primary text-sm font-medium mb-3">{member.role}</p>
+                      {member.bio && (
+                        <p className="text-muted-foreground text-sm line-clamp-2">{member.bio}</p>
+                      )}
+                      {hasPage && (
+                        <div className="mt-4 flex items-center text-primary text-sm font-medium group-hover:gap-2 transition-all">
+                          <span>Подробнее</span>
+                          <ArrowRight className="h-4 w-4 ml-1" />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                );
+
+                return hasPage ? (
+                  <Link 
+                    key={member.id}
+                    to={`/broker/${member.slug}`}
+                    className="bg-card rounded-lg overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow block"
+                  >
+                    {CardContent}
+                  </Link>
+                ) : (
+                  <div 
+                    key={member.id} 
+                    className="bg-card rounded-lg overflow-hidden group"
+                  >
+                    {CardContent}
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-serif font-semibold mb-1">{member.name}</h3>
-                    <p className="text-primary text-sm font-medium mb-3">{member.role}</p>
-                    {member.bio && (
-                      <p className="text-muted-foreground text-sm line-clamp-2">{member.bio}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="bg-card rounded-lg p-8 text-center">
@@ -270,42 +291,6 @@ const OKompanii = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Member Bio Dialog */}
-      <Dialog open={!!selectedMember} onOpenChange={() => setSelectedMember(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-2xl">{selectedMember?.name}</DialogTitle>
-          </DialogHeader>
-          <div className="mt-4">
-            {selectedMember?.photo_url && (
-              <div className="aspect-square w-32 rounded-lg overflow-hidden mb-4">
-                <img 
-                  src={selectedMember.photo_url} 
-                  alt={selectedMember.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            <p className="text-primary font-medium mb-4">{selectedMember?.role}</p>
-            {selectedMember?.bio && (
-              <p className="text-muted-foreground leading-relaxed mb-4">{selectedMember.bio}</p>
-            )}
-            {selectedMember?.video_url && (
-              <Button 
-                onClick={() => {
-                  setSelectedMember(null);
-                  setSelectedMemberVideo(selectedMember.video_url);
-                  setMemberVideoOpen(true);
-                }}
-                className="w-full"
-              >
-                <Play className="h-4 w-4 mr-2" />
-                Смотреть видео
-              </Button>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </Layout>
   );
 };
