@@ -55,21 +55,21 @@ const Uslugi = () => {
       {/* Numbered Services Section */}
       <section className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-serif mb-16">
+          <h1 className="text-3xl md:text-4xl font-serif mb-16">
             Услуги
           </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-16">
             {numberedServices.map((service) => (
-              <div key={service.number} className="flex gap-2">
-                <span className="text-4xl md:text-5xl font-serif italic text-primary shrink-0">
+              <div key={service.number} className="flex items-start gap-1">
+                <span className="text-5xl md:text-6xl lg:text-7xl font-serif italic text-primary leading-none">
                   {service.number}/
                 </span>
-                <div>
-                  <h3 className="text-sm font-medium tracking-wide mb-2">
+                <div className="pt-1">
+                  <h3 className="text-xs font-medium tracking-wide mb-3 leading-tight">
                     {service.title}
                   </h3>
-                  <p className="text-muted-foreground italic text-sm">
+                  <p className="text-muted-foreground italic text-sm leading-relaxed">
                     {service.description}
                   </p>
                 </div>
@@ -95,38 +95,29 @@ const Uslugi = () => {
               Услуги пока не добавлены
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {services.map((service) => (
                 <Link
                   key={service.id}
                   to={`/uslugi/${service.slug}`}
                   className="group block"
                 >
-                  {/* Image Card with Hover Overlay */}
-                  <div className="relative aspect-[4/3] overflow-hidden mb-4">
+                  {/* Image Card */}
+                  <div className="relative aspect-square overflow-hidden mb-6">
                     <img
                       src={service.main_image || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600"}
                       alt={service.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-[#C4A484]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 text-center">
-                      <p className="text-foreground mb-6 text-sm md:text-base">
-                        {service.short_description || `${service.title} — одна из популярных услуг компании «Арт Истейт».`}
-                      </p>
-                      <span className="inline-block border border-foreground px-6 py-2 text-sm tracking-wider uppercase hover:bg-foreground hover:text-background transition-colors">
-                        Перейти к услуге
-                      </span>
-                    </div>
                   </div>
                   
-                  {/* Title */}
-                  <h3 className="text-2xl md:text-3xl font-serif mb-2">
+                  {/* Title - Large serif */}
+                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-serif mb-3">
                     {service.title}
                   </h3>
                   
-                  {/* Description */}
-                  <p className="text-xs tracking-wider uppercase text-muted-foreground">
+                  {/* Description - Orange/red uppercase */}
+                  <p className="text-xs tracking-wider uppercase text-[#C4785A] leading-relaxed">
                     {service.short_description?.toUpperCase() || "ПОДРОБНЕЕ ОБ УСЛУГЕ"}
                   </p>
                 </Link>
