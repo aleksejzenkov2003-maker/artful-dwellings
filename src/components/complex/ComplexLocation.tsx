@@ -7,7 +7,7 @@ interface ComplexLocationProps {
 
 export function ComplexLocation({ complex }: ComplexLocationProps) {
   return (
-    <section className="py-16 lg:py-20 bg-background border-b border-border">
+    <section id="location" className="py-16 lg:py-20 bg-background border-b border-border">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Address */}
         <div className="text-center mb-8">
