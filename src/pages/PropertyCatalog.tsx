@@ -267,18 +267,21 @@ const PropertyCatalog = ({ pageType, initialStatus }: PropertyCatalogProps) => {
                 </div>
               ) : (
                 <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                     {displayedItems.map((item, index) => (
-                      <>
-                        <PropertyCard key={item.id} property={item} variant={index % 3 === 0 ? "large" : "default"} />
+                      <div key={item.id}>
+                        <PropertyCard 
+                          property={item} 
+                          variant={index % 2 === 0 ? "image-top" : "image-bottom"}
+                        />
                         
                         {/* Insert promo banner after every 4 items */}
                         {index === 3 && (
-                          <div className="md:col-span-2">
+                          <div className="md:col-span-2 mt-6">
                             <PropertyPromoBanner />
                           </div>
                         )}
-                      </>
+                      </div>
                     ))}
                   </div>
 

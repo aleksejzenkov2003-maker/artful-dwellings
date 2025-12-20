@@ -8,26 +8,12 @@ import { PropertyPreviewModal } from "./PropertyPreviewModal";
 
 interface PropertyCardProps {
   property: ResidentialComplex;
-  variant?: "default" | "large";
+  variant?: "image-top" | "image-bottom";
   enablePreview?: boolean;
 }
 
-export function PropertyCard({ property, variant = "default", enablePreview = true }: PropertyCardProps) {
+export function PropertyCard({ property, variant = "image-top", enablePreview = true }: PropertyCardProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
-
-  const formatPrice = (price: number | null) => {
-    if (!price) return null;
-    const millions = price / 1000000;
-    return `${millions.toFixed(1).replace(".", ",")} МЛН ₽`;
-  };
-
-  const formatPricePerSqm = (price: number | null, area: number | null) => {
-    if (!price || !area) return null;
-    const pricePerSqm = Math.round(price / area);
-    return new Intl.NumberFormat("ru-RU").format(pricePerSqm) + " за м²";
-  };
-
-  const isLarge = variant === "large";
 
   const handleClick = (e: React.MouseEvent) => {
     if (enablePreview) {
@@ -36,90 +22,62 @@ export function PropertyCard({ property, variant = "default", enablePreview = tr
     }
   };
 
-  const CardWrapper = enablePreview ? "div" : Link;
-  const cardProps = enablePreview 
-    ? { onClick: handleClick, className: "cursor-pointer" }
-    : { to: `/novostroyki/${property.slug}` };
+  const imageBlock = (
+    <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
+      <img
+        src={property.main_image || "/placeholder.svg"}
+        alt={property.name}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+    </div>
+  );
+
+  const captionBlock = (
+    <div className="py-6">
+      {/* District and metro info */}
+      <div className="flex flex-wrap items-center gap-x-3 text-xs uppercase tracking-wider text-muted-foreground mb-3">
+        {property.district && (
+          <span>РАЙОН {property.district.toUpperCase()}</span>
+        )}
+        {property.address && (
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+            {property.address.split(",")[0]} — 10 минут пешком
+          </span>
+        )}
+      </div>
+      
+      {/* Complex name - Large serif */}
+      <h3 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-2 group-hover:text-primary transition-colors leading-tight">
+        {property.name}
+      </h3>
+      
+      {/* Address */}
+      {property.address && (
+        <p className="text-muted-foreground text-sm">
+          {property.address}
+        </p>
+      )}
+    </div>
+  );
 
   return (
     <>
       <div
         onClick={handleClick}
-        className={cn(
-          "group block relative overflow-hidden rounded-lg cursor-pointer",
-          isLarge ? "aspect-[4/5]" : "aspect-square"
-        )}
+        className="group block cursor-pointer"
       >
-        {/* Background Image */}
-        <img
-          src={property.main_image || "/placeholder.svg"}
-          alt={property.name}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-        {/* Top Tags */}
-        <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-          {property.district && (
-            <Badge variant="secondary" className="bg-white/90 text-foreground text-xs">
-              {property.district}
-            </Badge>
-          )}
-          {property.address && (
-            <Badge className="bg-primary/90 text-primary-foreground text-xs flex items-center gap-1">
-              <MapPin className="h-3 w-3" />
-              {property.address.split(",")[0]}
-            </Badge>
-          )}
-        </div>
-
-        {/* Featured Badge */}
-        {property.is_featured && (
-          <div className="absolute top-4 right-4">
-            <Badge className="bg-[hsl(var(--coral))] text-white text-xs">
-              Новое предложение
-            </Badge>
-          </div>
+        {variant === "image-top" ? (
+          <>
+            {imageBlock}
+            {captionBlock}
+          </>
+        ) : (
+          <>
+            {captionBlock}
+            {imageBlock}
+          </>
         )}
-
-        {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-5">
-          <h3 className="text-xl md:text-2xl font-display text-white mb-2">
-            {property.address?.split(",")[0] || property.name}
-          </h3>
-          
-          {/* Meta Info */}
-          <div className="flex flex-wrap items-center gap-2 text-xs text-white/70 mb-3">
-            {property.area_from && (
-              <span>{property.area_from} м²</span>
-            )}
-            <span className="text-white/40">·</span>
-            <span>3 комнаты</span>
-            {(property.features as string[] | null)?.includes("Балкон") && (
-              <>
-                <span className="text-white/40">·</span>
-                <span className="text-primary">Балкон</span>
-              </>
-            )}
-          </div>
-
-          {/* Price */}
-          <div className="flex items-baseline gap-3">
-            <span className="text-xl font-semibold text-primary">
-              {formatPrice(property.price_from)}
-            </span>
-            <span className="text-sm text-white/60">
-              / {formatPricePerSqm(property.price_from, property.area_from)}
-            </span>
-          </div>
-        </div>
-
-        {/* Teal corner accent */}
-        <div className="absolute bottom-0 right-0 w-16 h-16 pointer-events-none">
-          <div className="absolute bottom-0 right-0 w-full h-full border-r-2 border-b-2 border-primary opacity-50" />
-        </div>
       </div>
 
       {/* Preview Modal */}
