@@ -217,9 +217,13 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {data?.data.map((complex) => (
-                    <ComplexCard key={complex.id} complex={complex} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                  {data?.data.map((complex, index) => (
+                    <ComplexCard 
+                      key={complex.id} 
+                      complex={complex} 
+                      variant={index % 2 === 0 ? "image-top" : "image-bottom"}
+                    />
                   ))}
                 </div>
 
