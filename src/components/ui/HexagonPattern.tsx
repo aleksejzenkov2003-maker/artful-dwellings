@@ -1,18 +1,18 @@
-import logoIconLight from "@/assets/logo-icon-light.png";
-
-// Geometric hexagon pattern component with Art Estate logo
+// Geometric hexagon pattern component
 interface HexagonPatternProps {
   className?: string;
   variant?: "light" | "dark";
 }
 
 export function HexagonPattern({ className = "", variant = "light" }: HexagonPatternProps) {
+  const strokeColor = variant === "light" ? "text-foreground/10" : "text-foreground/20";
+  
   return (
     <div className={`absolute pointer-events-none ${className}`}>
       {/* Large gray hexagon */}
       <svg 
         viewBox="0 0 120 140" 
-        className="absolute w-32 h-40 top-0 right-20 text-foreground/10"
+        className={`absolute w-32 h-40 top-0 right-20 ${strokeColor}`}
       >
         <path
           d="M60 5L110 35V105L60 135L10 105V35L60 5Z"
@@ -27,18 +27,11 @@ export function HexagonPattern({ className = "", variant = "light" }: HexagonPat
           fill="none"
         />
       </svg>
-      
-      {/* Art Estate Logo Icon - no background */}
-      <img 
-        src={logoIconLight}
-        alt="Art Estate"
-        className="absolute w-24 h-24 md:w-28 md:h-28 top-12 right-0 object-contain opacity-80 mix-blend-multiply"
-      />
 
       {/* Small gray hexagon bottom right */}
       <svg 
         viewBox="0 0 80 92" 
-        className="absolute w-20 h-24 bottom-20 right-8 text-foreground/15"
+        className={`absolute w-20 h-24 bottom-20 right-8 ${strokeColor}`}
       >
         <path
           d="M40 4L72 24V64L40 84L8 64V24L40 4Z"
