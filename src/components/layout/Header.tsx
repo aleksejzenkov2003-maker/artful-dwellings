@@ -28,37 +28,45 @@ const propertyDropdownItems = [
   { name: "Эксклюзив", href: "/ekskluziv" },
 ];
 
-// Geometric logo component - white version for transparent header
+// Geometric logo component matching reference design
 const Logo = () => (
   <Link to="/" className="flex items-center gap-3">
-    <div className="relative w-10 h-10">
-      <svg viewBox="0 0 40 40" fill="none" className="w-full h-full">
+    <div className="relative w-11 h-11">
+      <svg viewBox="0 0 44 44" fill="none" className="w-full h-full">
+        {/* Outer hexagon */}
         <path
-          d="M20 2L36 11V29L20 38L4 29V11L20 2Z"
-          stroke="currentColor"
+          d="M22 2L40 13V31L22 42L4 31V13L22 2Z"
+          stroke="#C9A86C"
           strokeWidth="1"
-          className="text-white/40"
+          fill="none"
         />
+        {/* Inner hexagon */}
         <path
-          d="M20 8L30 14V26L20 32L10 26V14L20 8Z"
-          stroke="currentColor"
+          d="M22 8L34 15V29L22 36L10 29V15L22 8Z"
+          stroke="#C9A86C"
           strokeWidth="0.75"
-          className="text-white/30"
+          fill="none"
         />
+        {/* Letter A */}
         <text
-          x="20"
-          y="24"
+          x="22"
+          y="27"
           textAnchor="middle"
-          className="text-white fill-current"
-          style={{ fontSize: '12px', fontFamily: 'Cormorant Garamond, serif' }}
+          fill="#C9A86C"
+          style={{ fontSize: '16px', fontFamily: 'Cormorant Garamond, serif', fontWeight: 500 }}
         >
           A
         </text>
       </svg>
     </div>
-    <span className="text-sm font-sans font-medium tracking-[0.2em] uppercase text-white">
-      Art Estate
-    </span>
+    <div className="flex flex-col">
+      <span className="text-sm font-sans font-medium tracking-[0.25em] uppercase text-white">
+        Art Estate
+      </span>
+      <span className="text-[9px] font-sans tracking-[0.15em] uppercase text-white/50">
+        Агентство недвижимости
+      </span>
+    </div>
   </Link>
 );
 
