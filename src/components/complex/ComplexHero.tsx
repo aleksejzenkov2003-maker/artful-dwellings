@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
 import { useApartmentStats } from "@/hooks/useApartments";
 import { toast } from "sonner";
+import { ComplexPresentationButton } from "./ComplexPresentationButton";
 
 interface ComplexHeroProps {
   complex: ResidentialComplex;
@@ -84,23 +85,10 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
               </p>
             )}
 
-            {/* Download Presentation Button */}
-            {complex.presentation_url && (
-              <div className="mb-8">
-                <a 
-                  href={complex.presentation_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 text-[14px] uppercase tracking-wider font-medium transition-colors"
-                >
-                  <span className="w-3 h-4 border border-primary-foreground flex items-center justify-center text-[10px]">■</span>
-                  Скачать презентацию
-                </a>
-                <p className="text-white/50 text-[13px] mt-2">
-                  Скачайте полную презентацию дома с ценами
-                </p>
-              </div>
-            )}
+            {/* Download Presentation Button with popup */}
+            <div className="mb-8">
+              <ComplexPresentationButton complex={complex} />
+            </div>
 
             {/* Share */}
             <div className="flex items-center gap-4">
