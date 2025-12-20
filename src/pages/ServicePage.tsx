@@ -4,9 +4,154 @@ import { useServiceBySlug } from "@/hooks/useServiceBySlug";
 import { ServiceContactForm } from "@/components/services/ServiceContactForm";
 import { Loader2, ArrowLeft, CheckCircle } from "lucide-react";
 
+// Content block types matching AdminServiceEdit
+interface ContentBlock {
+  id: string;
+  type: "text" | "heading" | "image" | "quote" | "colored-block" | "two-columns" | "image-text";
+  content?: string;
+  heading?: string;
+  imageUrl?: string;
+  imageCaption?: string;
+  imagePosition?: "left" | "right" | "full";
+  backgroundColor?: string;
+  textColor?: string;
+  quoteAuthor?: string;
+  leftContent?: string;
+  rightContent?: string;
+  alignment?: "left" | "center" | "right";
+}
+
+// Block renderer component
+const BlockRenderer = ({ block }: { block: ContentBlock }) => {
+  const alignmentClass = {
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
+  }[block.alignment || "left"];
+
+  switch (block.type) {
+    case "heading":
+      return (
+        <h2 className={`text-2xl md:text-3xl font-serif mb-6 ${alignmentClass}`}>
+          {block.heading || block.content}
+        </h2>
+      );
+
+    case "text":
+      return (
+        <div 
+          className={`prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-p:text-foreground/80 prose-a:text-primary ${alignmentClass}`}
+          dangerouslySetInnerHTML={{ __html: block.content || "" }}
+        />
+      );
+
+    case "image":
+      return (
+        <figure className="my-8">
+          <img 
+            src={block.imageUrl} 
+            alt={block.imageCaption || ""} 
+            className="w-full h-auto rounded-lg"
+          />
+          {block.imageCaption && (
+            <figcaption className="text-sm text-muted-foreground mt-2 uppercase tracking-wider">
+              {block.imageCaption}
+            </figcaption>
+          )}
+        </figure>
+      );
+
+    case "quote":
+      return (
+        <blockquote className="border-l-4 border-primary bg-primary/5 py-6 px-8 my-8 font-serif text-lg italic">
+          <p className="mb-2">{block.content}</p>
+          {block.quoteAuthor && (
+            <cite className="text-sm text-muted-foreground not-italic">
+              — {block.quoteAuthor}
+            </cite>
+          )}
+        </blockquote>
+      );
+
+    case "colored-block":
+      return (
+        <div 
+          className="p-8 lg:p-12 my-8 rounded-lg"
+          style={{ 
+            backgroundColor: block.backgroundColor || "#c4a77d",
+            color: block.textColor || "#ffffff"
+          }}
+        >
+          <div 
+            className="text-lg md:text-xl font-serif italic leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: block.content || "" }}
+          />
+        </div>
+      );
+
+    case "two-columns":
+      return (
+        <div className="grid md:grid-cols-2 gap-8 my-8">
+          <div 
+            className="prose prose-lg max-w-none prose-p:text-foreground/80"
+            dangerouslySetInnerHTML={{ __html: block.leftContent || "" }}
+          />
+          <div 
+            className="prose prose-lg max-w-none prose-p:text-foreground/80"
+            dangerouslySetInnerHTML={{ __html: block.rightContent || "" }}
+          />
+        </div>
+      );
+
+    case "image-text":
+      const isImageLeft = block.imagePosition !== "right";
+      return (
+        <div className={`flex flex-col md:flex-row gap-6 my-8 ${!isImageLeft ? "md:flex-row-reverse" : ""}`}>
+          <div className="md:w-1/3 flex-shrink-0">
+            {block.imageUrl && (
+              <>
+                <img 
+                  src={block.imageUrl} 
+                  alt={block.imageCaption || ""}
+                  className="w-full h-auto rounded"
+                />
+                {block.imageCaption && (
+                  <p className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">
+                    {block.imageCaption}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+          <div className="flex-1">
+            <div 
+              className="prose prose-lg max-w-none prose-p:text-foreground/80 prose-p:text-sm"
+              dangerouslySetInnerHTML={{ __html: block.content || "" }}
+            />
+          </div>
+        </div>
+      );
+
+    default:
+      return null;
+  }
+};
+
 const ServicePage = () => {
   const { slug } = useParams();
   const { data: service, isLoading, error } = useServiceBySlug(slug);
+
+  // Parse content blocks
+  const contentBlocks: ContentBlock[] = (() => {
+    if (!service) return [];
+    try {
+      const parsed = (service as any).content_blocks;
+      if (Array.isArray(parsed)) return parsed as unknown as ContentBlock[];
+      return [];
+    } catch {
+      return [];
+    }
+  })();
 
   if (isLoading) {
     return (
@@ -103,10 +248,18 @@ const ServicePage = () => {
                     Описание услуги
                   </h2>
                   <div 
-                    className="text-muted-foreground leading-relaxed whitespace-pre-line"
-                  >
-                    {service.description}
-                  </div>
+                    className="text-muted-foreground leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: service.description }}
+                  />
+                </div>
+              )}
+
+              {/* Content blocks */}
+              {contentBlocks.length > 0 && (
+                <div className="space-y-6">
+                  {contentBlocks.map((block) => (
+                    <BlockRenderer key={block.id} block={block} />
+                  ))}
                 </div>
               )}
 
