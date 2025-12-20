@@ -1,9 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { MapPin } from "lucide-react";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
-import { cn } from "@/lib/utils";
 import { PropertyPreviewModal } from "./PropertyPreviewModal";
 
 interface PropertyCardProps {
@@ -15,15 +11,14 @@ interface PropertyCardProps {
 export function PropertyCard({ property, variant = "image-top", enablePreview = true }: PropertyCardProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     if (enablePreview) {
-      e.preventDefault();
       setPreviewOpen(true);
     }
   };
 
   const imageBlock = (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
+    <div className="relative aspect-[4/3] overflow-hidden">
       <img
         src={property.main_image || "/placeholder.svg"}
         alt={property.name}
@@ -33,28 +28,36 @@ export function PropertyCard({ property, variant = "image-top", enablePreview = 
   );
 
   const captionBlock = (
-    <div className="py-6">
-      {/* District and metro info */}
-      <div className="flex flex-wrap items-center gap-x-3 text-xs uppercase tracking-wider text-muted-foreground mb-3">
+    <div className="py-5">
+      {/* District - UPPERCASE, Montserrat Medium, 12-13px, tracking wide */}
+      <div className="flex flex-wrap items-center gap-x-4 mb-3">
         {property.district && (
-          <span>РАЙОН {property.district.toUpperCase()}</span>
+          <span 
+            className="font-sans font-medium text-[13px] uppercase tracking-[0.1em] text-[#8A8A8A]"
+          >
+            РАЙОН {property.district.toUpperCase()}
+          </span>
         )}
+        
+        {/* Metro info - Montserrat Regular, 13-14px */}
         {property.address && (
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+          <span className="flex items-center gap-2 font-sans font-normal text-[13px] text-[#5F6368]">
+            <span className="w-[7px] h-[7px] rounded-full bg-[#E53935] shrink-0"></span>
             {property.address.split(",")[0]} — 10 минут пешком
           </span>
         )}
       </div>
       
-      {/* Complex name - Large serif */}
-      <h3 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-2 group-hover:text-primary transition-colors leading-tight">
+      {/* Complex name - Playfair Display, 36-48px, Regular */}
+      <h3 
+        className="font-serif font-normal text-[36px] md:text-[42px] lg:text-[48px] leading-[1.1] mb-2 text-foreground group-hover:text-primary transition-colors"
+      >
         {property.name}
       </h3>
       
-      {/* Address */}
+      {/* Address - Montserrat Regular, 14-16px */}
       {property.address && (
-        <p className="text-muted-foreground text-sm">
+        <p className="font-sans font-normal text-[14px] leading-[1.4] text-[#666666]">
           {property.address}
         </p>
       )}
