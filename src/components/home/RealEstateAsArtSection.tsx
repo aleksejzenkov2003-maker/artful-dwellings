@@ -1,5 +1,6 @@
 import { TealButton } from "@/components/ui/teal-button";
 import { Link } from "react-router-dom";
+import logoIconLight from "@/assets/logo-icon-light.png";
 
 const services = [
   {
@@ -72,25 +73,33 @@ function FlipCard({ title, description, image, className = "" }: FlipCardProps) 
   );
 }
 
-// Geometric hexagon pattern SVG
-function HexagonPattern() {
+// Geometric pattern with Art Estate logo
+function LogoPattern() {
   return (
-    <svg 
-      className="absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 text-muted-foreground/10"
-      viewBox="0 0 200 200"
-      fill="none"
-    >
-      <path d="M100 10L170 50V130L100 170L30 130V50L100 10Z" stroke="currentColor" strokeWidth="1" />
-      <path d="M100 30L150 60V120L100 150L50 120V60L100 30Z" stroke="currentColor" strokeWidth="1" />
-      <path d="M100 50L130 70V110L100 130L70 110V70L100 50Z" stroke="currentColor" strokeWidth="1" />
-      {/* Connecting lines */}
-      <line x1="100" y1="10" x2="100" y2="50" stroke="currentColor" strokeWidth="1" />
-      <line x1="170" y1="50" x2="130" y2="70" stroke="currentColor" strokeWidth="1" />
-      <line x1="170" y1="130" x2="130" y2="110" stroke="currentColor" strokeWidth="1" />
-      <line x1="100" y1="170" x2="100" y2="130" stroke="currentColor" strokeWidth="1" />
-      <line x1="30" y1="130" x2="70" y2="110" stroke="currentColor" strokeWidth="1" />
-      <line x1="30" y1="50" x2="70" y2="70" stroke="currentColor" strokeWidth="1" />
-    </svg>
+    <div className="absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64">
+      {/* Background hexagon lines */}
+      <svg 
+        className="absolute inset-0 w-full h-full text-muted-foreground/10"
+        viewBox="0 0 200 200"
+        fill="none"
+      >
+        <path d="M100 10L170 50V130L100 170L30 130V50L100 10Z" stroke="currentColor" strokeWidth="1" />
+        <path d="M100 30L150 60V120L100 150L50 120V60L100 30Z" stroke="currentColor" strokeWidth="1" />
+        {/* Connecting lines */}
+        <line x1="100" y1="10" x2="100" y2="30" stroke="currentColor" strokeWidth="1" />
+        <line x1="170" y1="50" x2="150" y2="60" stroke="currentColor" strokeWidth="1" />
+        <line x1="170" y1="130" x2="150" y2="120" stroke="currentColor" strokeWidth="1" />
+        <line x1="100" y1="170" x2="100" y2="150" stroke="currentColor" strokeWidth="1" />
+        <line x1="30" y1="130" x2="50" y2="120" stroke="currentColor" strokeWidth="1" />
+        <line x1="30" y1="50" x2="50" y2="60" stroke="currentColor" strokeWidth="1" />
+      </svg>
+      {/* Logo icon */}
+      <img 
+        src={logoIconLight}
+        alt="Art Estate"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 md:w-32 md:h-32 object-contain"
+      />
+    </div>
   );
 }
 
@@ -98,7 +107,7 @@ export function RealEstateAsArtSection() {
   return (
     <section className="py-16 lg:py-24 bg-[#F5F5F7] relative overflow-hidden">
       {/* Geometric pattern */}
-      <HexagonPattern />
+      <LogoPattern />
       
       <div className="container-wide">
         <div className="flex">
