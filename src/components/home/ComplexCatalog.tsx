@@ -12,43 +12,58 @@ interface ComplexCardProps {
 
 function ComplexCard({ complex, variant }: ComplexCardProps) {
   const imageBlock = (
-    <div className={`relative overflow-hidden ${variant === "overlay" ? "aspect-[4/3]" : "aspect-[4/3]"}`}>
+    <div className="relative overflow-hidden aspect-[4/3]">
       <img
         src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800"}
         alt={complex.name}
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       {variant === "overlay" && (
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-      )}
-      {variant === "overlay" && (
-        <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
-          {complex.district && (
-            <span className="font-sans font-medium text-[12px] uppercase tracking-[0.15em] text-white/80 mb-3 block">
-              РАЙОН {complex.district.toUpperCase()}
-            </span>
-          )}
-          <h3 className="font-serif font-normal text-[32px] lg:text-[42px] leading-[1.1] text-white mb-2">
-            {complex.name}
-          </h3>
-          {complex.address && (
-            <p className="font-sans font-normal text-[14px] text-white/80">
-              {complex.address}
-            </p>
-          )}
-        </div>
+        <>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
+            {complex.district && (
+              <span className="font-sans font-medium text-[11px] uppercase tracking-[0.15em] text-white/70 mb-2 block">
+                РАЙОН {complex.district.toUpperCase()}
+              </span>
+            )}
+            <h3 className="font-serif font-normal text-[28px] lg:text-[36px] leading-[1.1] text-white mb-2">
+              {complex.name}
+            </h3>
+            {complex.address && (
+              <p className="font-sans font-normal text-[13px] text-white/70">
+                {complex.address}
+              </p>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
 
-  const textBlock = variant !== "overlay" && (
-    <div className="py-6">
+  // Text-top: Only name and address, no district (like reference)
+  const textBlockTop = variant === "text-top" && (
+    <div className="pb-4">
+      <h3 className="font-serif font-normal text-[42px] lg:text-[56px] leading-[1.05] text-foreground group-hover:text-primary transition-colors mb-2">
+        {complex.name}
+      </h3>
+      {complex.address && (
+        <p className="font-sans font-normal text-[14px] text-muted-foreground">
+          {complex.address}
+        </p>
+      )}
+    </div>
+  );
+
+  // Text-bottom: District + name + address (like reference)
+  const textBlockBottom = variant === "text-bottom" && (
+    <div className="pt-6">
       {complex.district && (
-        <span className="font-sans font-medium text-[12px] uppercase tracking-[0.15em] text-muted-foreground mb-3 block">
+        <span className="font-sans font-medium text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-3 block">
           РАЙОН {complex.district.toUpperCase()}
         </span>
       )}
-      <h3 className="font-serif font-normal text-[36px] lg:text-[48px] leading-[1.1] text-foreground group-hover:text-primary transition-colors mb-2">
+      <h3 className="font-serif font-normal text-[42px] lg:text-[56px] leading-[1.05] text-foreground group-hover:text-primary transition-colors mb-2">
         {complex.name}
       </h3>
       {complex.address && (
@@ -64,9 +79,9 @@ function ComplexCard({ complex, variant }: ComplexCardProps) {
       to={`/novostroyki/${complex.slug}`}
       className="group block"
     >
-      {variant === "text-top" && textBlock}
+      {textBlockTop}
       {imageBlock}
-      {variant === "text-bottom" && textBlock}
+      {textBlockBottom}
     </Link>
   );
 }
