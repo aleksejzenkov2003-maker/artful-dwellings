@@ -74,7 +74,22 @@ const blockTypeLabels: Record<BlockType, { label: string; icon: React.ReactNode 
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-// Content Block Editor Component
+// Transliterate Russian to Latin for slug generation
+const transliterate = (text: string): string => {
+  const map: Record<string, string> = {
+    'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
+    'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
+    'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts',
+    'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+  };
+  return text.toLowerCase()
+    .split('')
+    .map(char => map[char] || char)
+    .join('')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+};
+
 const ContentBlockEditor = ({
   block,
   onUpdate,
@@ -348,13 +363,13 @@ export default function AdminTeamEdit() {
 
   // Initialize selected complexes/apartments when data loads
   useMemo(() => {
-    if (brokerComplexes && selectedComplexes.length === 0 && brokerComplexes.length > 0) {
+    if (brokerComplexes) {
       setSelectedComplexes(brokerComplexes);
     }
   }, [brokerComplexes]);
 
   useMemo(() => {
-    if (brokerApartments && selectedApartments.length === 0 && brokerApartments.length > 0) {
+    if (brokerApartments) {
       setSelectedApartments(brokerApartments);
     }
   }, [brokerApartments]);
@@ -435,7 +450,9 @@ export default function AdminTeamEdit() {
       if (error) throw error;
       return created;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      // Save assignments for new broker
+      await saveAssignments(data.id);
       queryClient.invalidateQueries({ queryKey: ["admin-team"] });
       toast.success("Сотрудник создан");
       navigate(`/admin/team/${data.id}`);
@@ -640,7 +657,15 @@ export default function AdminTeamEdit() {
                   <Label>Имя *</Label>
                   <Input
                     value={formData.name || ""}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) => {
+                      const name = e.target.value;
+                      const updates: Partial<typeof formData> = { name };
+                      // Auto-generate slug if it's empty or matches old name's slug
+                      if (!formData.slug || formData.slug === transliterate(formData.name || "")) {
+                        updates.slug = transliterate(name);
+                      }
+                      setFormData({ ...formData, ...updates });
+                    }}
                   />
                 </div>
 
