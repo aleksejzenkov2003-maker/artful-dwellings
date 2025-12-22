@@ -474,9 +474,15 @@ export default function AdminTeamEdit() {
         .eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Save assignments for existing broker
+      if (id) {
+        await saveAssignments(id);
+      }
       queryClient.invalidateQueries({ queryKey: ["admin-team-member", id] });
       queryClient.invalidateQueries({ queryKey: ["admin-team"] });
+      queryClient.invalidateQueries({ queryKey: ["broker-complexes", id] });
+      queryClient.invalidateQueries({ queryKey: ["broker-apartments", id] });
       toast.success("Сотрудник сохранён");
       setIsSaving(false);
     },
