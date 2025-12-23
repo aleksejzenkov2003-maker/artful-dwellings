@@ -161,15 +161,19 @@ const BrokerPage = () => {
   });
 
   // Fetch broker's complexes
-  const { data: brokerComplexes } = useQuery({
+  const { data: brokerComplexes, isLoading: complexesLoading } = useQuery({
     queryKey: ["broker-complexes", broker?.id],
     queryFn: async () => {
       if (!broker?.id) return [];
+      
+      console.log("Fetching complexes for broker:", broker.id);
       
       const { data: assignments, error: assignError } = await supabase
         .from("broker_complexes")
         .select("complex_id")
         .eq("broker_id", broker.id);
+      
+      console.log("Broker complex assignments:", assignments, "error:", assignError);
       
       if (assignError) throw assignError;
       if (!assignments || assignments.length === 0) return [];
@@ -181,6 +185,8 @@ const BrokerPage = () => {
         .select("*")
         .in("id", complexIds)
         .eq("is_published", true);
+      
+      console.log("Fetched complexes:", complexes, "error:", error);
       
       if (error) throw error;
       return complexes || [];
