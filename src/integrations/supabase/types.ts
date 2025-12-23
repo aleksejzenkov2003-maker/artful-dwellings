@@ -17,6 +17,7 @@ export type Database = {
       apartments: {
         Row: {
           area: number
+          building_id: string | null
           complex_id: string
           created_at: string
           floor: number
@@ -30,6 +31,7 @@ export type Database = {
         }
         Insert: {
           area: number
+          building_id?: string | null
           complex_id: string
           created_at?: string
           floor: number
@@ -43,6 +45,7 @@ export type Database = {
         }
         Update: {
           area?: number
+          building_id?: string | null
           complex_id?: string
           created_at?: string
           floor?: number
@@ -55,6 +58,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "apartments_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "complex_buildings"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "apartments_complex_id_fkey"
             columns: ["complex_id"]
@@ -272,6 +282,56 @@ export type Database = {
             columns: ["city_id"]
             isOneToOne: false
             referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      complex_buildings: {
+        Row: {
+          color: string | null
+          complex_id: string
+          created_at: string
+          floors_count: number | null
+          id: string
+          is_published: boolean | null
+          name: string
+          order_position: number | null
+          plan_image: string | null
+          polygon_points: Json
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          complex_id: string
+          created_at?: string
+          floors_count?: number | null
+          id?: string
+          is_published?: boolean | null
+          name: string
+          order_position?: number | null
+          plan_image?: string | null
+          polygon_points?: Json
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          complex_id?: string
+          created_at?: string
+          floors_count?: number | null
+          id?: string
+          is_published?: boolean | null
+          name?: string
+          order_position?: number | null
+          plan_image?: string | null
+          polygon_points?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "complex_buildings_complex_id_fkey"
+            columns: ["complex_id"]
+            isOneToOne: false
+            referencedRelation: "residential_complexes"
             referencedColumns: ["id"]
           },
         ]
