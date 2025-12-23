@@ -472,12 +472,17 @@ export default function AdminComplexes() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="ghost" asChild>
+                      <Button size="icon" variant="ghost" asChild title="Редактировать">
                         <Link to={`/admin/complexes/${complex.id}`}>
                           <Pencil className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <Button size="icon" variant="ghost" asChild>
+                      <Button size="icon" variant="ghost" asChild title="Корпуса">
+                        <Link to={`/admin/complexes/${complex.id}/buildings`}>
+                          <Building2 className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <Button size="icon" variant="ghost" asChild title="Просмотр">
                         <Link to={`/novostroyki/${complex.slug}`} target="_blank">
                           <ExternalLink className="h-4 w-4" />
                         </Link>

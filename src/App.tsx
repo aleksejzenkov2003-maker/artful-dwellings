@@ -30,6 +30,7 @@ import Auth from "./pages/Auth";
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminComplexes from "./pages/admin/AdminComplexes";
+import AdminComplexBuildings from "./pages/admin/AdminComplexBuildings";
 import AdminComplexEdit from "./pages/admin/AdminComplexEdit";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminBlogEdit from "./pages/admin/AdminBlogEdit";
@@ -93,6 +94,7 @@ const App = () => (
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/complexes" element={<AdminComplexes />} />
               <Route path="/admin/complexes/:id" element={<AdminComplexEdit />} />
+              <Route path="/admin/complexes/:complexId/buildings" element={<AdminComplexBuildings />} />
               <Route path="/admin/blog" element={<AdminBlog />} />
               <Route path="/admin/blog/:id" element={<AdminBlogEdit />} />
               <Route path="/admin/promotions" element={<AdminPromotions />} />

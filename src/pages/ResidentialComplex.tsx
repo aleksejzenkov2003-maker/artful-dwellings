@@ -12,6 +12,7 @@ import { ComplexQuizBanner } from "@/components/complex/ComplexQuizBanner";
 import { ComplexLocation } from "@/components/complex/ComplexLocation";
 import { ComplexExcursionForm } from "@/components/complex/ComplexExcursionForm";
 import { ComplexConceptCards } from "@/components/complex/ComplexConceptCards";
+import { BuildingSelector } from "@/components/complex/BuildingSelector";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -72,6 +73,13 @@ const ResidentialComplex = () => {
 
       {/* Location Section */}
       <ComplexLocation complex={complex} />
+
+      {/* Building Selector - shows if buildings are configured */}
+      <BuildingSelector 
+        complexId={complex.id} 
+        planImage={complex.main_image || ''} 
+        complexName={complex.name}
+      />
 
       {/* Apartments Section */}
       <ComplexApartments complex={complex} />
