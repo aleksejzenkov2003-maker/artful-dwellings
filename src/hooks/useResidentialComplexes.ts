@@ -8,6 +8,7 @@ export type ResidentialComplex = Tables<"residential_complexes">;
 export function useResidentialComplexes(options?: {
   featured?: boolean;
   limit?: number;
+  propertyType?: "new" | "secondary";
 }) {
   const { currentCity } = useCity();
 
@@ -19,6 +20,13 @@ export function useResidentialComplexes(options?: {
         .select("*")
         .eq("is_published", true)
         .order("created_at", { ascending: false });
+
+      // Filter by property type
+      if (options?.propertyType === "new") {
+        query = query.in("status", ["building", "pre-sale", "сдан"]);
+      } else if (options?.propertyType === "secondary") {
+        query = query.eq("status", "secondary");
+      }
 
       // Filter by city
       if (currentCity?.id) {

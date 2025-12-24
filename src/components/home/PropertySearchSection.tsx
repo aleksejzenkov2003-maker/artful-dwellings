@@ -189,7 +189,7 @@ export function PropertySearchSection() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   
-  const { data: complexes } = useResidentialComplexes({ limit: 10 });
+  const { data: complexes } = useResidentialComplexes({ limit: 10, propertyType: activeTab === "new" ? "new" : "secondary" });
   const mutation = useSubmitLead();
   
   // First 6 for top grid, next 4 for feature section
