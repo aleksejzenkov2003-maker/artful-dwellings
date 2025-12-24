@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export interface Apartment {
   id: string;
   complex_id: string;
+  building_id: string | null;
   room_type: string;
   area: number;
   floor: number;
