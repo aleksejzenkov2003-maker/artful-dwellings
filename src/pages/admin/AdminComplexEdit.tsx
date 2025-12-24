@@ -39,6 +39,7 @@ import {
   useDeleteApartment,
   type Apartment 
 } from "@/hooks/useApartments";
+import { useAllComplexBuildings } from "@/hooks/useComplexBuildings";
 import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
@@ -89,6 +90,9 @@ export default function AdminComplexEdit() {
   const createApartment = useCreateApartment();
   const updateApartment = useUpdateApartment();
   const deleteApartment = useDeleteApartment();
+  
+  // Fetch buildings for this complex
+  const { data: buildings } = useAllComplexBuildings(id);
 
   // Initialize form when complex loads
   useState(() => {
@@ -231,6 +235,7 @@ export default function AdminComplexEdit() {
     setEditingApartment(null);
     setApartmentForm({
       complex_id: id,
+      building_id: null,
       room_type: "1",
       area: 0,
       floor: 1,
@@ -244,6 +249,7 @@ export default function AdminComplexEdit() {
   const handleEditApartment = (apt: Apartment) => {
     setEditingApartment(apt);
     setApartmentForm({
+      building_id: apt.building_id,
       room_type: apt.room_type,
       area: apt.area,
       floor: apt.floor,
@@ -269,6 +275,7 @@ export default function AdminComplexEdit() {
     } else {
       createApartment.mutate({
         complex_id: id!,
+        building_id: apartmentForm.building_id || null,
         room_type: apartmentForm.room_type!,
         area: apartmentForm.area!,
         floor: apartmentForm.floor || 1,
@@ -763,6 +770,35 @@ export default function AdminComplexEdit() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Building selection */}
+            {buildings && buildings.length > 0 && (
+              <div className="space-y-2">
+                <Label>Корпус</Label>
+                <Select
+                  value={apartmentForm.building_id || "none"}
+                  onValueChange={(value) => setApartmentForm({ ...apartmentForm, building_id: value === "none" ? null : value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Выберите корпус" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Не указан</SelectItem>
+                    {buildings.map((building) => (
+                      <SelectItem key={building.id} value={building.id}>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: building.color }}
+                          />
+                          {building.name}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Тип квартиры *</Label>
