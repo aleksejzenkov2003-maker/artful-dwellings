@@ -3,59 +3,62 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, Phone, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { CitySelector } from "./CitySelector";
 import { useCityContacts } from "@/hooks/useCityContacts";
 import { CallbackDialog } from "./CallbackDialog";
 import logoImage from "@/assets/logo.png";
-const mainNavigation = [
-  { name: "Услуги", href: "/uslugi" },
-  { name: "Ипотека", href: "/ipoteka" },
-  { name: "Новости", href: "/blog" },
-  { name: "О компании", href: "/o-kompanii" },
-  { name: "Отзывы", href: "/otzyvy" },
-  { name: "Акции", href: "/akcii" },
-  { name: "Контакты", href: "/kontakty" },
-];
-
-const propertyDropdownItems = [
-  { name: "Новостройки", href: "/novostroyki" },
-  { name: "Вторичная недвижимость", href: "/vtorichnaya-nedvizhimost" },
-  { name: "Эксклюзив", href: "/ekskluziv" },
-];
+const mainNavigation = [{
+  name: "Услуги",
+  href: "/uslugi"
+}, {
+  name: "Ипотека",
+  href: "/ipoteka"
+}, {
+  name: "Новости",
+  href: "/blog"
+}, {
+  name: "О компании",
+  href: "/o-kompanii"
+}, {
+  name: "Отзывы",
+  href: "/otzyvy"
+}, {
+  name: "Акции",
+  href: "/akcii"
+}, {
+  name: "Контакты",
+  href: "/kontakty"
+}];
+const propertyDropdownItems = [{
+  name: "Новостройки",
+  href: "/novostroyki"
+}, {
+  name: "Вторичная недвижимость",
+  href: "/vtorichnaya-nedvizhimost"
+}, {
+  name: "Эксклюзив",
+  href: "/ekskluziv"
+}];
 
 // Logo component using uploaded image
-const Logo = () => (
-  <Link to="/" className="flex items-center">
-    <img 
-      src={logoImage} 
-      alt="Art Estate - Агентство недвижимости" 
-      className="h-14 w-auto"
-    />
-  </Link>
-);
-
+const Logo = () => <Link to="/" className="flex items-center">
+    <img src={logoImage} alt="Art Estate - Агентство недвижимости" className="h-28 w-auto" />
+  </Link>;
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { data: contacts } = useCityContacts();
-
+  const {
+    data: contacts
+  } = useCityContacts();
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";
     return location.pathname.startsWith(href);
   };
-
   const phoneNumber = contacts?.phone || "8 (812) 389-33-56";
   const phoneHref = `tel:${phoneNumber.replace(/[^\d+]/g, "")}`;
-
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50">
+  return <header className="fixed top-0 left-0 right-0 z-50">
       {/* Top bar - transparent with subtle backdrop */}
       <div className="bg-black/40 backdrop-blur-sm border-b border-white/10">
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
@@ -70,17 +73,11 @@ export function Header() {
                 <ChevronDown className="h-3 w-3" />
               </div>
               <CitySelector variant="light" />
-              <a
-                href={phoneHref}
-                className="text-sm font-medium text-white/90 hover:text-white transition-colors"
-              >
+              <a href={phoneHref} className="text-sm font-medium text-white/90 hover:text-white transition-colors">
                 {phoneNumber}
               </a>
               <CallbackDialog>
-                <Button 
-                  variant="outline" 
-                  className="border-white/80 text-white bg-white/10 hover:bg-white hover:text-navy uppercase text-xs tracking-wider px-6 font-medium"
-                >
+                <Button variant="outline" className="border-white/80 text-white bg-white/10 hover:bg-white hover:text-navy uppercase text-xs tracking-wider px-6 font-medium">
                   Заказать звонок
                 </Button>
               </CallbackDialog>
@@ -98,46 +95,23 @@ export function Header() {
                   <div className="mb-4">
                     <CitySelector />
                   </div>
-                  <Link
-                    to="/"
-                    onClick={() => setIsOpen(false)}
-                    className="text-lg font-medium py-2 hover:text-primary transition-colors"
-                  >
+                  <Link to="/" onClick={() => setIsOpen(false)} className="text-lg font-medium py-2 hover:text-primary transition-colors">
                     Главная
                   </Link>
                   
                   {/* Property section in mobile */}
                   <div className="space-y-2">
                     <span className="text-sm text-white/50 uppercase tracking-wider">Недвижимость</span>
-                    {propertyDropdownItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className="block text-lg font-medium py-2 pl-4 transition-colors hover:text-primary"
-                      >
+                    {propertyDropdownItems.map(item => <Link key={item.href} to={item.href} onClick={() => setIsOpen(false)} className="block text-lg font-medium py-2 pl-4 transition-colors hover:text-primary">
                         {item.name}
-                      </Link>
-                    ))}
+                      </Link>)}
                   </div>
                   
-                  {mainNavigation.map((item) => (
-                    <Link
-                      key={item.href + item.name}
-                      to={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className={`text-lg font-medium py-2 transition-colors hover:text-primary ${
-                        isActive(item.href) ? "text-primary" : "text-white/80"
-                      }`}
-                    >
+                  {mainNavigation.map(item => <Link key={item.href + item.name} to={item.href} onClick={() => setIsOpen(false)} className={`text-lg font-medium py-2 transition-colors hover:text-primary ${isActive(item.href) ? "text-primary" : "text-white/80"}`}>
                       {item.name}
-                    </Link>
-                  ))}
+                    </Link>)}
                   <div className="mt-6 pt-6 border-t border-white/20">
-                    <a
-                      href={phoneHref}
-                      className="flex items-center gap-2 text-lg font-medium mb-4"
-                    >
+                    <a href={phoneHref} className="flex items-center gap-2 text-lg font-medium mb-4">
                       <Phone className="h-5 w-5" />
                       {phoneNumber}
                     </a>
@@ -167,55 +141,30 @@ export function Header() {
                   <ChevronDown className="h-3 w-3 ml-1" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="start" 
-                className="w-56 bg-white border-border shadow-lg z-[100]"
-                sideOffset={0}
-              >
-                <DropdownMenuItem 
-                  onClick={() => navigate("/nedvizhimost")}
-                  className="cursor-pointer"
-                >
+              <DropdownMenuContent align="start" className="w-56 bg-white border-border shadow-lg z-[100]" sideOffset={0}>
+                <DropdownMenuItem onClick={() => navigate("/nedvizhimost")} className="cursor-pointer">
                   Вся недвижимость
                 </DropdownMenuItem>
-                {propertyDropdownItems.map((item) => (
-                  <DropdownMenuItem 
-                    key={item.href}
-                    onClick={() => navigate(item.href)}
-                    className="cursor-pointer"
-                  >
+                {propertyDropdownItems.map(item => <DropdownMenuItem key={item.href} onClick={() => navigate(item.href)} className="cursor-pointer">
                     {item.name}
-                  </DropdownMenuItem>
-                ))}
+                  </DropdownMenuItem>)}
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Search */}
-            <button 
-              onClick={() => navigate("/nedvizhimost")}
-              className="flex items-center gap-2 px-4 text-white/50 cursor-pointer hover:text-white/80 transition-colors"
-            >
+            <button onClick={() => navigate("/nedvizhimost")} className="flex items-center gap-2 px-4 text-white/50 cursor-pointer hover:text-white/80 transition-colors">
               <Search className="h-4 w-4" />
               <span className="text-xs uppercase tracking-wider">Поиск</span>
             </button>
 
             {/* Main navigation */}
             <nav className="flex items-center ml-auto">
-              {mainNavigation.map((item) => (
-                <Link
-                  key={item.href + item.name}
-                  to={item.href}
-                  className={`px-4 h-11 flex items-center text-xs font-medium uppercase tracking-wider transition-colors hover:text-primary ${
-                    isActive(item.href) ? "text-primary" : "text-white/70"
-                  }`}
-                >
+              {mainNavigation.map(item => <Link key={item.href + item.name} to={item.href} className={`px-4 h-11 flex items-center text-xs font-medium uppercase tracking-wider transition-colors hover:text-primary ${isActive(item.href) ? "text-primary" : "text-white/70"}`}>
                   {item.name}
-                </Link>
-              ))}
+                </Link>)}
             </nav>
           </div>
         </div>
       </div>
-    </header>
-  );
+    </header>;
 }
