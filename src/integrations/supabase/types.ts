@@ -719,6 +719,7 @@ export type Database = {
           description: string | null
           featured_text: string | null
           features: Json | null
+          hover_text: string | null
           icon: string | null
           id: string
           intro_text: string | null
@@ -741,6 +742,7 @@ export type Database = {
           description?: string | null
           featured_text?: string | null
           features?: Json | null
+          hover_text?: string | null
           icon?: string | null
           id?: string
           intro_text?: string | null
@@ -763,6 +765,7 @@ export type Database = {
           description?: string | null
           featured_text?: string | null
           features?: Json | null
+          hover_text?: string | null
           icon?: string | null
           id?: string
           intro_text?: string | null
