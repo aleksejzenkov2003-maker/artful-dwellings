@@ -61,16 +61,16 @@ export function HeroSection() {
           />
           
           {/* Award badges - top right corner */}
-          <div className="absolute top-4 right-4 md:top-8 md:right-8 flex gap-3 z-10">
-            <img 
-              src={awardBadge1} 
-              alt="European Property Awards Winner 2019-2020" 
-              className="h-20 md:h-28 lg:h-36 w-auto drop-shadow-lg"
-            />
+          <div className="absolute top-0 right-0 flex gap-2 z-10">
             <img 
               src={awardBadge2} 
               alt="European Property Awards Best Real Estate Agency" 
-              className="h-20 md:h-28 lg:h-36 w-auto drop-shadow-lg"
+              className="h-20 md:h-28 lg:h-36 w-auto"
+            />
+            <img 
+              src={awardBadge1} 
+              alt="European Property Awards Winner 2019-2020" 
+              className="h-20 md:h-28 lg:h-36 w-auto"
             />
           </div>
           
