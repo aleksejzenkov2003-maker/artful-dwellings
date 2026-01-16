@@ -726,6 +726,7 @@ export type Database = {
           is_published: boolean | null
           main_image: string | null
           order_position: number | null
+          problem_blocks: Json | null
           seo_description: string | null
           seo_title: string | null
           short_description: string | null
@@ -747,6 +748,7 @@ export type Database = {
           is_published?: boolean | null
           main_image?: string | null
           order_position?: number | null
+          problem_blocks?: Json | null
           seo_description?: string | null
           seo_title?: string | null
           short_description?: string | null
@@ -768,6 +770,7 @@ export type Database = {
           is_published?: boolean | null
           main_image?: string | null
           order_position?: number | null
+          problem_blocks?: Json | null
           seo_description?: string | null
           seo_title?: string | null
           short_description?: string | null
