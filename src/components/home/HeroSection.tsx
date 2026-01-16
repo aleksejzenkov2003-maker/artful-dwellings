@@ -31,9 +31,9 @@ export function HeroSection() {
 
   return (
     <>
-      <section className="relative -mt-[108px]">
+      <section className="relative">
         {/* Main Hero Area */}
-        <div className="relative min-h-[85vh] flex flex-col justify-center">
+        <div className="relative min-h-[70vh] flex flex-col justify-center">
           {/* Background Image - team photo for all cities */}
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
