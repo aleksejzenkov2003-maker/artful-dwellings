@@ -1,47 +1,67 @@
 import { Layout } from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useBlogPosts, useBlogCategories } from "@/hooks/useBlogPosts";
+import { useState, useMemo } from "react";
+import { useBlogPosts, useBlogCategoriesWithCount, isNewsCategory, isArticleCategory, normalizeCategory } from "@/hooks/useBlogPosts";
 import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
-import { ru } from "date-fns/locale";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { usePromotions } from "@/hooks/usePromotions";
 
 const Blog = () => {
-  const [activeCategory, setActiveCategory] = useState("Все");
   const [activeTab, setActiveTab] = useState<"all" | "news" | "articles">("all");
-  const { data: posts, isLoading: postsLoading } = useBlogPosts(activeCategory);
-  const { data: categories = ["Все"] } = useBlogCategories();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { data: posts, isLoading: postsLoading } = useBlogPosts();
+  const { data: categoriesWithCount = [] } = useBlogCategoriesWithCount();
   const { data: promotions } = usePromotions();
 
   const activePromo = promotions?.[0];
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return { day: "", monthYear: "" };
-    const date = new Date(dateString);
-    return {
-      day: format(date, "d", { locale: ru }),
-      monthYear: format(date, "MMMM yyyy", { locale: ru })
-    };
+  // Filter posts by tab (news/articles/all) and selected category
+  const filteredPosts = useMemo(() => {
+    if (!posts) return [];
+    
+    let filtered = posts;
+
+    // Filter by tab
+    if (activeTab === "news") {
+      filtered = filtered.filter(post => isNewsCategory(post.category));
+    } else if (activeTab === "articles") {
+      filtered = filtered.filter(post => isArticleCategory(post.category));
+    }
+
+    // Filter by selected category
+    if (selectedCategory) {
+      filtered = filtered.filter(post => normalizeCategory(post.category) === selectedCategory);
+    }
+
+    return filtered;
+  }, [posts, activeTab, selectedCategory]);
+
+  // Group posts by normalized category for category cards
+  const postsByCategory = useMemo(() => {
+    if (!posts) return {};
+    
+    return posts.reduce((acc, post) => {
+      const cat = normalizeCategory(post.category);
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(post);
+      return acc;
+    }, {} as Record<string, typeof posts>);
+  }, [posts]);
+
+  // Category images mapping
+  const categoryImages: Record<string, string> = {
+    "Советы": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+    "Аналитика": "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=800",
+    "Новости": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800",
+    "Ипотека": "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=800",
+    "Гайды": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800",
+    "Статьи": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800",
   };
 
-  // Create masonry layout pattern
-  const getMasonryClass = (index: number) => {
-    const pattern = index % 6;
-    switch (pattern) {
-      case 0: return "col-span-1 row-span-2"; // Tall left
-      case 1: return "col-span-1 row-span-1"; // Small right top
-      case 2: return "col-span-1 row-span-1"; // Small right bottom
-      case 3: return "col-span-1 row-span-1"; // Small left
-      case 4: return "col-span-1 row-span-2"; // Tall right
-      case 5: return "col-span-1 row-span-1"; // Small bottom
-      default: return "col-span-1 row-span-1";
-    }
+  const getCategoryImage = (categoryName: string) => {
+    return categoryImages[categoryName] || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800";
   };
 
   return (
@@ -70,22 +90,46 @@ const Blog = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
             <aside className="lg:w-64 flex-shrink-0 space-y-8">
-              {/* Categories */}
+              {/* Categories - Рубрики */}
               <div>
-                <h3 className="text-sm font-medium mb-4 uppercase text-primary">Другие рубрики</h3>
-                <div className="space-y-2">
-                  {categories.filter(c => c !== "Все").map((category) => (
+                <h3 className="text-lg font-medium mb-2 uppercase tracking-wider">Рубрики</h3>
+                <div className="w-16 h-0.5 bg-primary mb-4" />
+                <div className="space-y-1">
+                  <button
+                    onClick={() => setSelectedCategory(null)}
+                    className={`flex items-center justify-between w-full py-2 px-3 rounded text-sm transition-colors ${
+                      selectedCategory === null 
+                        ? "bg-primary text-primary-foreground" 
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    <span>Все рубрики</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      selectedCategory === null 
+                        ? "bg-primary-foreground/20 text-primary-foreground" 
+                        : "bg-primary/10 text-primary"
+                    }`}>
+                      {posts?.length || 0}
+                    </span>
+                  </button>
+                  {categoriesWithCount.map((category) => (
                     <button
-                      key={category}
-                      onClick={() => setActiveCategory(category)}
+                      key={category.name}
+                      onClick={() => setSelectedCategory(category.name)}
                       className={`flex items-center justify-between w-full py-2 px-3 rounded text-sm transition-colors ${
-                        activeCategory === category 
+                        selectedCategory === category.name 
                           ? "bg-primary text-primary-foreground" 
                           : "hover:bg-muted"
                       }`}
                     >
-                      <span>{category}</span>
-                      <ChevronRight className="h-4 w-4" />
+                      <span>{category.name}</span>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                        selectedCategory === category.name 
+                          ? "bg-primary-foreground/20 text-primary-foreground" 
+                          : "bg-primary/10 text-primary"
+                      }`}>
+                        {category.count}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -139,7 +183,7 @@ const Blog = () => {
               {/* Tabs */}
               <div className="flex gap-8 border-b border-border mb-8">
                 <button
-                  onClick={() => setActiveTab("all")}
+                  onClick={() => { setActiveTab("all"); setSelectedCategory(null); }}
                   className={`pb-4 text-sm font-medium uppercase tracking-wider border-b-2 transition-colors ${
                     activeTab === "all" 
                       ? "border-primary text-primary" 
@@ -149,7 +193,7 @@ const Blog = () => {
                   Все материалы
                 </button>
                 <button
-                  onClick={() => setActiveTab("news")}
+                  onClick={() => { setActiveTab("news"); setSelectedCategory(null); }}
                   className={`pb-4 text-sm font-medium uppercase tracking-wider border-b-2 transition-colors ${
                     activeTab === "news" 
                       ? "border-primary text-primary" 
@@ -159,7 +203,7 @@ const Blog = () => {
                   Новости
                 </button>
                 <button
-                  onClick={() => setActiveTab("articles")}
+                  onClick={() => { setActiveTab("articles"); setSelectedCategory(null); }}
                   className={`pb-4 text-sm font-medium uppercase tracking-wider border-b-2 transition-colors ${
                     activeTab === "articles" 
                       ? "border-primary text-primary" 
@@ -170,120 +214,140 @@ const Blog = () => {
                 </button>
               </div>
 
-              {/* Date indicator for first post */}
-              {posts && posts.length > 0 && (
-                <div className="flex items-start gap-4 mb-8">
-                  <div className="text-center">
-                    <span className="text-xs text-muted-foreground">Статья</span>
-                    <div className="text-primary text-xs">от {formatDate(posts[0].published_at).day} {formatDate(posts[0].published_at).monthYear}</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Masonry Grid */}
+              {/* Loading state */}
               {postsLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div key={i} className="bg-card border border-border rounded-lg overflow-hidden">
-                      <Skeleton className="aspect-square" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i}>
+                      <Skeleton className="aspect-[4/3] rounded-lg mb-4" />
+                      <Skeleton className="h-4 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-1/2" />
                     </div>
                   ))}
                 </div>
-              ) : posts && posts.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-[200px]">
-                  {posts.map((post, index) => {
-                    const isLarge = index % 3 === 0;
+              ) : selectedCategory ? (
+                /* Single category view - list of articles */
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-serif">{selectedCategory}</h2>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setSelectedCategory(null)}
+                    >
+                      ← Все рубрики
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {filteredPosts.map((post, index) => {
+                      const isLarge = index === 0;
+                      return (
+                        <Link
+                          key={post.id}
+                          to={`/blog/${post.slug}`}
+                          className={`group relative overflow-hidden rounded-lg ${
+                            isLarge ? "md:col-span-2 aspect-[21/9]" : "aspect-[4/3]"
+                          }`}
+                        >
+                          <div className="absolute inset-0 bg-muted">
+                            {post.cover_image ? (
+                              <img 
+                                src={post.cover_image} 
+                                alt={post.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20" />
+                            )}
+                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                            <span className="text-xs uppercase tracking-wider text-primary mb-2 block">
+                              {normalizeCategory(post.category)}
+                            </span>
+                            <h3 className={`font-serif leading-tight ${
+                              isLarge ? "text-xl md:text-2xl" : "text-base md:text-lg"
+                            }`}>
+                              {post.title}
+                            </h3>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  {filteredPosts.length === 0 && (
+                    <div className="text-center py-16">
+                      <p className="text-muted-foreground text-lg">
+                        Статей в категории "{selectedCategory}" не найдено
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Category cards grid view */
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {categoriesWithCount.map((category) => {
+                    const categoryPosts = postsByCategory[category.name] || [];
+                    const displayPosts = categoryPosts.slice(0, 3);
+                    
                     return (
-                      <Link
-                        key={post.id}
-                        to={`/blog/${post.slug}`}
-                        className={`group relative overflow-hidden rounded-lg ${
-                          isLarge ? "row-span-2" : "row-span-1"
-                        }`}
-                      >
-                        <div className="absolute inset-0 bg-muted">
-                          {post.cover_image ? (
-                            <img 
-                              src={post.cover_image} 
-                              alt={post.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20" />
-                          )}
+                      <div key={category.name} className="group">
+                        {/* Category card with image */}
+                        <button
+                          onClick={() => setSelectedCategory(category.name)}
+                          className="relative w-full aspect-[4/3] rounded-lg overflow-hidden mb-4"
+                        >
+                          <img 
+                            src={getCategoryImage(category.name)} 
+                            alt={category.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                          <div className="absolute bottom-0 left-0 right-0 p-6 text-white text-left">
+                            <h3 className="text-2xl font-serif mb-1">{category.name}</h3>
+                            <p className="text-sm text-white/70">{category.count} статей</p>
+                          </div>
+                        </button>
+
+                        {/* Article titles list */}
+                        <div className="space-y-2 mb-3">
+                          {displayPosts.map((post) => (
+                            <Link
+                              key={post.id}
+                              to={`/blog/${post.slug}`}
+                              className="block text-sm hover:text-primary transition-colors line-clamp-1"
+                            >
+                              {post.title}
+                            </Link>
+                          ))}
                         </div>
-                        {/* Gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                        {/* Content */}
-                        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                          <h3 className={`font-serif leading-tight ${
-                            isLarge ? "text-xl md:text-2xl" : "text-base md:text-lg"
-                          }`}>
-                            {post.title}
-                          </h3>
-                        </div>
-                      </Link>
+
+                        {/* View all button */}
+                        <button
+                          onClick={() => setSelectedCategory(category.name)}
+                          className="inline-flex items-center text-xs uppercase tracking-wider text-primary hover:text-primary/80 transition-colors"
+                        >
+                          Все статьи
+                          <ChevronRight className="h-3 w-3 ml-1" />
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
-              ) : (
+              )}
+
+              {/* Empty state for filtered results */}
+              {!postsLoading && !selectedCategory && filteredPosts.length === 0 && (
                 <div className="text-center py-16">
                   <p className="text-muted-foreground text-lg">
-                    {activeCategory === "Все" 
-                      ? "Статей пока нет" 
-                      : `Статей в категории "${activeCategory}" не найдено`}
+                    {activeTab === "news" 
+                      ? "Новостей пока нет" 
+                      : activeTab === "articles" 
+                        ? "Статей пока нет"
+                        : "Материалов пока нет"}
                   </p>
                 </div>
               )}
-
-              {/* Featured article card */}
-              {posts && posts.length > 0 && (
-                <div className="mt-8 bg-muted rounded-lg p-6 flex flex-col md:flex-row gap-6">
-                  <div className="flex-1">
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                      В отделочных решениях мы настроились для вас создать интерьер, который достигнет успешного финала. Его успех подтверждается — функциональность, оформление элементов, карнизы, использование необычных решений для окон.
-                    </p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Такой, помимо пуфа на полке форме мы настроились на нашу рядов, на это создал...
-                    </p>
-                  </div>
-                  <div className="flex-shrink-0">
-                    <Button variant="outline">В деталях</Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Consultation Section */}
-      <section className="bg-muted py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <p className="text-xs uppercase tracking-wider mb-2 text-muted-foreground">Консультация</p>
-            <p className="text-xs uppercase tracking-wider mb-8 text-muted-foreground">по недвижимости</p>
-            
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input placeholder="Имя" className="bg-transparent border-b border-border rounded-none px-0" />
-                <div className="flex gap-4">
-                  <Input placeholder="Телефон" className="bg-transparent border-b border-border rounded-none px-0" />
-                  <span className="text-muted-foreground self-center">или</span>
-                  <Input placeholder="E-mail" className="bg-transparent border-b border-border rounded-none px-0" />
-                </div>
-              </div>
-              <Textarea 
-                placeholder="Интересующий вас вопрос" 
-                className="bg-transparent border-b border-border rounded-none px-0 resize-none min-h-[80px]"
-              />
-              <div className="flex items-start gap-2">
-                <Checkbox id="consent" />
-                <label htmlFor="consent" className="text-xs text-muted-foreground leading-relaxed">
-                  Я даю свое согласие на обработку персональных данных в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных», в целях и объемах установленных Согласие на обработку персональных данных
-                </label>
-              </div>
-              <Button variant="outline">Отправить заявку</Button>
             </div>
           </div>
         </div>
