@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { TealButton } from "@/components/ui/teal-button";
 import { Link } from "react-router-dom";
 import { useHomepageContent } from "@/hooks/useHomepageContent";
@@ -34,6 +35,18 @@ const defaultServices: ServiceCard[] = [
     title: "Мы на вашей стороне",
     description: "Наша команда профессионалов всегда защищает интересы клиента. Мы работаем открыто и честно, предоставляя полную информацию о каждом объекте.",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop"
+  },
+  {
+    id: "5",
+    title: "Тотальная экономия времени",
+    description: "Мы берем на себя все заботы по подбору, проверке и оформлению недвижимости. Вы экономите сотни часов своего времени, получая готовое решение.",
+    image: "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=600&h=400&fit=crop"
+  },
+  {
+    id: "6",
+    title: "Профессиональная команда",
+    description: "Наши специалисты имеют многолетний опыт работы на рынке недвижимости. Мы знаем все нюансы и подводные камни каждой сделки.",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop"
   }
 ];
 
@@ -45,11 +58,18 @@ interface FlipCardProps {
 }
 
 function FlipCard({ title, description, image, className = "" }: FlipCardProps) {
+  const [imageError, setImageError] = useState(false);
+  
   return (
     <div className={`group relative overflow-hidden rounded-sm ${className}`}>
       {/* Front - Image with title */}
       <div className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-0">
-        <img src={image} alt={title} className="w-full h-full object-cover" />
+        <img 
+          src={imageError ? "/placeholder.svg" : image} 
+          alt={title} 
+          className="w-full h-full object-cover"
+          onError={() => setImageError(true)}
+        />
         <div className="absolute inset-0 bg-navy/60" />
         {/* Teal accent line top */}
         <div className="absolute top-6 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-[#1CBCB4]" />
@@ -174,6 +194,20 @@ export function RealEstateAsArtSection() {
                 description={services[3]?.description || ""} 
                 image={services[3]?.image || defaultServices[3].image} 
                 className="h-64 md:h-72" 
+              />
+              
+              {/* Row 3 - Additional cards */}
+              <FlipCard 
+                title={services[4]?.title || defaultServices[4].title} 
+                description={services[4]?.description || defaultServices[4].description} 
+                image={services[4]?.image || defaultServices[4].image} 
+                className="h-72 md:h-80" 
+              />
+              <FlipCard 
+                title={services[5]?.title || defaultServices[5].title} 
+                description={services[5]?.description || defaultServices[5].description} 
+                image={services[5]?.image || defaultServices[5].image} 
+                className="h-72 md:h-80" 
               />
             </div>
           </div>
