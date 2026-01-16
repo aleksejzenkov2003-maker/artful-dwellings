@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import heroTeamImage from "@/assets/hero-team.jpg";
+import awardBadge1 from "@/assets/award-badge-1.png";
+import awardBadge2 from "@/assets/award-badge-2.png";
 import { useHomepageContent } from "@/hooks/useHomepageContent";
 import { useCity } from "@/contexts/CityContext";
 
@@ -57,6 +59,20 @@ export function HeroSection() {
             alt="Команда Art Estate"
             className="w-full h-auto"
           />
+          
+          {/* Award badges - top right corner */}
+          <div className="absolute top-4 right-4 md:top-8 md:right-8 flex gap-3 z-10">
+            <img 
+              src={awardBadge1} 
+              alt="European Property Awards Winner 2019-2020" 
+              className="h-20 md:h-28 lg:h-36 w-auto drop-shadow-lg"
+            />
+            <img 
+              src={awardBadge2} 
+              alt="European Property Awards Best Real Estate Agency" 
+              className="h-20 md:h-28 lg:h-36 w-auto drop-shadow-lg"
+            />
+          </div>
           
           {/* Gradient overlay at bottom for buttons */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[hsl(var(--navy-dark))]/80 to-transparent" />
