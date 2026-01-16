@@ -1,19 +1,27 @@
 import { useTeamMembers } from "@/hooks/useTeamMembers";
+import { useHomepageContent } from "@/hooks/useHomepageContent";
+import { useCity } from "@/contexts/CityContext";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function ExpertsSection() {
   const { data: team } = useTeamMembers();
+  const { currentCity } = useCity();
+  const { data: expertsHeader } = useHomepageContent("experts_header", currentCity?.id);
+  
   const displayTeam = team?.slice(0, 3) || [];
+  
+  const title = expertsHeader?.content?.title || "Команда экспертов";
+  const subtitle = expertsHeader?.content?.subtitle || 
+    "Опытные переговорщики на вашей стороне — не понравит. Мы сделаем все возможное, чтобы вы купили квартиру на самых выгодных условиях.";
 
   return (
     <section className="py-16 lg:py-24 bg-background">
       <div className="container-wide">
         <h2 className="text-3xl md:text-4xl font-serif text-center mb-4">
-          Команда экспертов
+          {title}
         </h2>
         <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">
-          Опытные переговорщики на вашей стороне — не понравит. Мы сделаем все возможное, 
-          чтобы вы купили квартиру на самых выгодных условиях.
+          {subtitle}
         </p>
 
         <div className="relative">

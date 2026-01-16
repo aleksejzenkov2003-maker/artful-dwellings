@@ -17,6 +17,7 @@ import {
   Settings,
   BarChart3,
   MapPin,
+  Home,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -25,6 +26,7 @@ interface AdminLayoutProps {
 
 const navItems = [
   { href: "/admin", label: "Обзор", icon: LayoutDashboard },
+  { href: "/admin/homepage", label: "Главная", icon: Home },
   { href: "/admin/complexes", label: "ЖК", icon: Building2 },
   { href: "/admin/blog", label: "Блог", icon: FileText },
   { href: "/admin/promotions", label: "Акции", icon: Tag },

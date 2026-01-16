@@ -389,6 +389,44 @@ export type Database = {
           },
         ]
       }
+      homepage_content: {
+        Row: {
+          city_id: string | null
+          content: Json
+          created_at: string | null
+          id: string
+          is_published: boolean | null
+          section_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          city_id?: string | null
+          content?: Json
+          created_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          section_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          city_id?: string | null
+          content?: Json
+          created_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          section_key?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homepage_content_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           created_at: string
