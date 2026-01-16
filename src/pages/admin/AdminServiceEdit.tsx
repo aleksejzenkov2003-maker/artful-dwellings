@@ -281,6 +281,7 @@ export default function AdminServiceEdit() {
   const [introText, setIntroText] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
   const [featuredText, setFeaturedText] = useState("");
+  const [hoverText, setHoverText] = useState("");
 
   // Fetch service data
   const { data: service, isLoading } = useQuery({
@@ -343,6 +344,7 @@ export default function AdminServiceEdit() {
       setIntroText((service as any).intro_text || "");
       setIsFeatured((service as any).is_featured || false);
       setFeaturedText((service as any).featured_text || "");
+      setHoverText((service as any).hover_text || "");
     }
   }, [service]);
 
@@ -421,6 +423,7 @@ export default function AdminServiceEdit() {
       intro_text: introText,
       is_featured: isFeatured,
       featured_text: featuredText,
+      hover_text: hoverText,
     };
 
     setIsSaving(true);
@@ -595,7 +598,20 @@ export default function AdminServiceEdit() {
                       placeholder="Сопровождение перепланировки квартиры - одна из популярных услуг компании Art Estate"
                     />
                   </div>
-                )}
+                  )}
+
+                <div className="space-y-2 pt-4 border-t">
+                  <Label>Текст при наведении на карточку</Label>
+                  <Textarea
+                    value={hoverText}
+                    onChange={(e) => setHoverText(e.target.value)}
+                    rows={3}
+                    placeholder="С компанией «Art Estate» вы станете не только владельцем лучшего жилья..."
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Текст, который появляется при наведении мыши на карточку услуги
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-4">
