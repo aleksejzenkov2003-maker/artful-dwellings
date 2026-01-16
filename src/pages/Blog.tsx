@@ -225,66 +225,80 @@ const Blog = () => {
                     </div>
                   ))}
                 </div>
-              ) : selectedCategory ? (
-                /* Single category view - list of articles */
+              ) : selectedCategory || activeTab !== "all" ? (
+                /* Filtered view - list of articles when tab is news/articles OR category is selected */
                 <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-serif">{selectedCategory}</h2>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setSelectedCategory(null)}
-                    >
-                      ← Все рубрики
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {filteredPosts.map((post, index) => {
-                      const isLarge = index === 0;
-                      return (
-                        <Link
-                          key={post.id}
-                          to={`/blog/${post.slug}`}
-                          className={`group relative overflow-hidden rounded-lg ${
-                            isLarge ? "md:col-span-2 aspect-[21/9]" : "aspect-[4/3]"
-                          }`}
-                        >
-                          <div className="absolute inset-0 bg-muted">
-                            {post.cover_image ? (
-                              <img 
-                                src={post.cover_image} 
-                                alt={post.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20" />
-                            )}
-                          </div>
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <span className="text-xs uppercase tracking-wider text-primary mb-2 block">
-                              {normalizeCategory(post.category)}
-                            </span>
-                            <h3 className={`font-serif leading-tight ${
-                              isLarge ? "text-xl md:text-2xl" : "text-base md:text-lg"
-                            }`}>
-                              {post.title}
-                            </h3>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                  {filteredPosts.length === 0 && (
+                  {selectedCategory && (
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="text-2xl font-serif">{selectedCategory}</h2>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => setSelectedCategory(null)}
+                      >
+                        ← Все рубрики
+                      </Button>
+                    </div>
+                  )}
+                  {!selectedCategory && activeTab === "news" && (
+                    <h2 className="text-2xl font-serif mb-6">Новости</h2>
+                  )}
+                  {!selectedCategory && activeTab === "articles" && (
+                    <h2 className="text-2xl font-serif mb-6">Статьи</h2>
+                  )}
+                  
+                  {filteredPosts.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {filteredPosts.map((post, index) => {
+                        const isLarge = index === 0;
+                        return (
+                          <Link
+                            key={post.id}
+                            to={`/blog/${post.slug}`}
+                            className={`group relative overflow-hidden rounded-lg ${
+                              isLarge ? "md:col-span-2 aspect-[21/9]" : "aspect-[4/3]"
+                            }`}
+                          >
+                            <div className="absolute inset-0 bg-muted">
+                              {post.cover_image ? (
+                                <img 
+                                  src={post.cover_image} 
+                                  alt={post.title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20" />
+                              )}
+                            </div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                            <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                              <span className="text-xs uppercase tracking-wider text-primary mb-2 block">
+                                {normalizeCategory(post.category)}
+                              </span>
+                              <h3 className={`font-serif leading-tight ${
+                                isLarge ? "text-xl md:text-2xl" : "text-base md:text-lg"
+                              }`}>
+                                {post.title}
+                              </h3>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  ) : (
                     <div className="text-center py-16">
                       <p className="text-muted-foreground text-lg">
-                        Статей в категории "{selectedCategory}" не найдено
+                        {activeTab === "news" 
+                          ? "Новостей пока нет" 
+                          : activeTab === "articles" 
+                            ? "Статей пока нет"
+                            : `Статей в категории "${selectedCategory}" не найдено`}
                       </p>
                     </div>
                   )}
                 </div>
               ) : (
-                /* Category cards grid view */
+                /* Category cards grid view - only when "Все материалы" tab is active */
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {categoriesWithCount.map((category) => {
                     const categoryPosts = postsByCategory[category.name] || [];
@@ -333,19 +347,6 @@ const Blog = () => {
                       </div>
                     );
                   })}
-                </div>
-              )}
-
-              {/* Empty state for filtered results */}
-              {!postsLoading && !selectedCategory && filteredPosts.length === 0 && (
-                <div className="text-center py-16">
-                  <p className="text-muted-foreground text-lg">
-                    {activeTab === "news" 
-                      ? "Новостей пока нет" 
-                      : activeTab === "articles" 
-                        ? "Статей пока нет"
-                        : "Материалов пока нет"}
-                  </p>
                 </div>
               )}
             </div>
