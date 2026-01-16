@@ -46,7 +46,7 @@ const propertyDropdownItems = [{
 
 // Logo component using uploaded image
 const Logo = () => <Link to="/" className="flex items-center">
-    <img src={logoImage} alt="Art Estate - Агентство недвижимости" className="h-28 w-auto" />
+    <img alt="Art Estate - Агентство недвижимости" className="h-12 w-auto" src="/lovable-uploads/0283c99c-7b5c-45dc-8920-cb5b09be1c84.png" />
   </Link>;
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -137,10 +137,7 @@ export function Header() {
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
           <div className="flex items-center h-11">
             {/* Category button - opens mega menu */}
-            <button 
-              onClick={() => setIsMegaMenuOpen(true)}
-              className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors outline-none"
-            >
+            <button onClick={() => setIsMegaMenuOpen(true)} className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors outline-none">
               <Menu className="h-4 w-4" />
               <span className="text-xs font-medium uppercase tracking-wider">Вся недвижимость</span>
             </button>
