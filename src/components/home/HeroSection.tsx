@@ -38,18 +38,26 @@ export function HeroSection() {
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--navy-dark))]/40 via-transparent to-[hsl(var(--navy-dark))]/60" />
         </div>
 
-        {/* Content - centered */}
-        <div className="relative z-10 pt-[108px] pb-20">
+        {/* Content - bottom buttons */}
+        <div className="absolute bottom-8 left-0 right-0 z-10">
           <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-[1.1] mb-6">
-                Мы продаем квартиры<br />и апартаменты
-              </h1>
-              <p className="text-white/60 text-lg md:text-xl lg:text-2xl font-light tracking-wide mb-10 italic font-serif">
-                комфорт и бизнес-класса
-              </p>
-              <TealButton size="xl">
-                Заказать бесплатную консультацию
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              {/* Video presentation button */}
+              <button className="flex items-center gap-4 group">
+                <div className="w-14 h-14 rounded-full border-2 border-primary flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                  <svg className="w-5 h-5 text-primary ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <p className="text-white text-sm font-medium tracking-wide uppercase">Видео-презентация</p>
+                  <p className="text-white text-sm font-medium tracking-wide uppercase">компании Art Estate</p>
+                </div>
+              </button>
+              
+              {/* Consultation button */}
+              <TealButton size="xl" className="uppercase tracking-wider">
+                Бесплатная консультация
               </TealButton>
             </div>
           </div>
