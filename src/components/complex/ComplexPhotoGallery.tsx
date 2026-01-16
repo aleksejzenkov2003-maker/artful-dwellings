@@ -54,10 +54,10 @@ export function ComplexPhotoGallery({ complex }: ComplexPhotoGalleryProps) {
           if (!photos.includes(item)) {
             photos.push(item);
           }
-        } else if (item && typeof item === "object") {
+        } else if (item && typeof item === "object" && !Array.isArray(item)) {
           // New format - {url, type} objects
-          const mediaItem = item as MediaItem;
-          if (mediaItem.url) {
+          const mediaItem = item as unknown as MediaItem;
+          if (mediaItem.url && typeof mediaItem.url === "string") {
             if (mediaItem.type === "video") {
               videos.push(mediaItem.url);
             } else {
