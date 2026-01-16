@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { MapPin } from "lucide-react";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
 
 interface ComplexCardProps {
@@ -21,12 +21,15 @@ const statusColors: Record<string, string> = {
 };
 
 export function ComplexCard({ complex, variant = "image-top" }: ComplexCardProps) {
+  const [imageError, setImageError] = useState(false);
+  
   const imageBlock = (
     <div className="relative aspect-[4/3] overflow-hidden">
       <img
-        src={complex.main_image || "/placeholder.svg"}
+        src={imageError ? "/placeholder.svg" : (complex.main_image || "/placeholder.svg")}
         alt={complex.name}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        onError={() => setImageError(true)}
       />
       {complex.status && (
         <Badge

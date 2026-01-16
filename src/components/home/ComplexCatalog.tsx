@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useResidentialComplexes } from "@/hooks/useResidentialComplexes";
@@ -16,7 +17,9 @@ function formatPrice(price: number | null): string {
 }
 
 function ComplexCard({ complex, isLarge = false }: ComplexCardProps) {
+  const [imageError, setImageError] = useState(false);
   const isNew = complex.status === "building" || complex.status === "pre-sale";
+  const fallbackImage = "/placeholder.svg";
 
   return (
     <Link
@@ -24,9 +27,10 @@ function ComplexCard({ complex, isLarge = false }: ComplexCardProps) {
       className={`group block relative overflow-hidden ${isLarge ? "aspect-[3/4]" : "aspect-[4/3]"}`}
     >
       <img
-        src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800"}
+        src={imageError ? fallbackImage : (complex.main_image || fallbackImage)}
         alt={complex.name}
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        onError={() => setImageError(true)}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
       
