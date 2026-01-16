@@ -81,11 +81,17 @@ export default function AdminComplexBuildings() {
   const deleteMutation = useDeleteBuilding();
 
   // Get plan image - either specific to building or main complex image
-  const getPlanImage = () => {
+  const getPlanImage = (): string | null => {
     if (formData.plan_image) return formData.plan_image;
     if (complex?.main_image) return complex.main_image;
     if (complex?.images && Array.isArray(complex.images) && complex.images.length > 0) {
-      return complex.images[0] as string;
+      const firstItem = complex.images[0];
+      // Handle both string and MediaItem object formats
+      if (typeof firstItem === "string") {
+        return firstItem;
+      } else if (firstItem && typeof firstItem === "object" && "url" in firstItem) {
+        return (firstItem as { url: string }).url;
+      }
     }
     return null;
   };
