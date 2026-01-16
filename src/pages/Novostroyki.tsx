@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ConsultationBlock } from "@/components/shared/ConsultationBlock";
 
 interface NovostroykiProps {
   initialStatus?: string;
@@ -342,6 +343,15 @@ const Novostroyki = ({ initialStatus }: NovostroykiProps) => {
           </div>
         </div>
       </section>
+      
+      {/* Consultation Section */}
+      <ConsultationBlock
+        title="Консультация"
+        subtitle="по новостройкам"
+        topic="получить бесплатную консультацию по новостройкам"
+        variant="dark"
+        formSource="novostroyki_page"
+      />
     </Layout>
   );
 };
