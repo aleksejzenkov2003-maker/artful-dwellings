@@ -1,7 +1,38 @@
+import { useState } from "react";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
 
 interface ComplexAdvantagesProps {
   complex: ResidentialComplex;
+}
+
+interface ImageItem {
+  type?: string;
+  url?: string;
+}
+
+// Helper to extract URL from image data (handles both string and {url} object formats)
+function extractImageUrl(item: unknown): string | null {
+  if (typeof item === 'string') return item;
+  if (item && typeof item === 'object' && 'url' in item) {
+    return (item as ImageItem).url || null;
+  }
+  return null;
+}
+
+// Image component with fallback
+function AdvantageImage({ src, alt, className }: { src: string; alt: string; className?: string }) {
+  const [hasError, setHasError] = useState(false);
+  
+  if (hasError) return null;
+  
+  return (
+    <img 
+      src={src} 
+      alt={alt}
+      onError={() => setHasError(true)}
+      className={className}
+    />
+  );
 }
 
 export function ComplexAdvantages({ complex }: ComplexAdvantagesProps) {
@@ -24,9 +55,19 @@ export function ComplexAdvantages({ complex }: ComplexAdvantagesProps) {
     { title: "Собственная инфраструктура", description: "Подземный паркинг, кладовые, кинозал, коворкинг, детский клуб и комната для спорта. Закрытая территория." },
   ];
 
-  const images = complex.main_image 
-    ? [complex.main_image, ...(Array.isArray(complex.images) ? complex.images as string[] : [])]
-    : (Array.isArray(complex.images) ? complex.images as string[] : []);
+  // Parse images array - handle both string[] and {url, type}[] formats
+  const parsedImages: string[] = [];
+  
+  if (complex.main_image) {
+    parsedImages.push(complex.main_image);
+  }
+  
+  if (Array.isArray(complex.images)) {
+    complex.images.forEach((item) => {
+      const url = extractImageUrl(item);
+      if (url) parsedImages.push(url);
+    });
+  }
 
   return (
     <section className="py-16 lg:py-24 bg-background">
@@ -48,10 +89,10 @@ export function ComplexAdvantages({ complex }: ComplexAdvantagesProps) {
               }`}
             >
               {/* Background Image for even items */}
-              {index % 2 === 1 && images[index] && (
+              {index % 2 === 1 && parsedImages[index] && (
                 <div 
                   className="absolute inset-0 bg-cover bg-center -z-10"
-                  style={{ backgroundImage: `url(${images[index]})` }}
+                  style={{ backgroundImage: `url(${parsedImages[index]})` }}
                 >
                   <div className="absolute inset-0 bg-[#C4A882]/80" />
                 </div>
@@ -88,11 +129,11 @@ export function ComplexAdvantages({ complex }: ComplexAdvantagesProps) {
         </div>
 
         {/* Image Row */}
-        {images.length > 2 && (
+        {parsedImages.length > 2 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 mt-0">
-            {images.slice(2, 4).map((image, index) => (
+            {parsedImages.slice(2, 4).map((image, index) => (
               <div key={index} className="aspect-[16/10] overflow-hidden">
-                <img 
+                <AdvantageImage 
                   src={image} 
                   alt={`${complex.name} - преимущество ${index + 1}`}
                   className="w-full h-full object-cover"
