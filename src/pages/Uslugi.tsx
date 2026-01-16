@@ -1,7 +1,7 @@
 import { Layout } from "@/components/layout/Layout";
-import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useServices } from "@/hooks/useServices";
+import { ServiceCard } from "@/components/services/ServiceCard";
 
 // Static numbered services data for the first section
 const numberedServices = [
@@ -97,30 +97,14 @@ const Uslugi = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {services.map((service) => (
-                <Link
-                  key={service.id}
-                  to={`/uslugi/${service.slug}`}
-                  className="group block"
-                >
-                  {/* Image Card */}
-                  <div className="relative aspect-square overflow-hidden mb-6">
-                    <img
-                      src={service.main_image || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600"}
-                      alt={service.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  
-                  {/* Title - Large serif */}
-                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-serif mb-3">
-                    {service.title}
-                  </h3>
-                  
-                  {/* Description - Orange/red uppercase */}
-                  <p className="text-xs tracking-wider uppercase text-[#C4785A] leading-relaxed">
-                    {service.short_description?.toUpperCase() || "ПОДРОБНЕЕ ОБ УСЛУГЕ"}
-                  </p>
-                </Link>
+                <ServiceCard 
+                  key={service.id} 
+                  service={{
+                    ...service,
+                    is_featured: (service as any).is_featured,
+                    featured_text: (service as any).featured_text,
+                  }} 
+                />
               ))}
             </div>
           )}
