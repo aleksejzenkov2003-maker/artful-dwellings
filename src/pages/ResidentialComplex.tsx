@@ -91,7 +91,7 @@ const ResidentialComplex = () => {
       <ComplexAdvantages complex={complex} />
 
       {/* Quiz Banner */}
-      <ComplexQuizBanner />
+      <ComplexQuizBanner complexName={complex.name} />
 
       {/* Excursion Form */}
       <ComplexExcursionForm complex={complex} />
