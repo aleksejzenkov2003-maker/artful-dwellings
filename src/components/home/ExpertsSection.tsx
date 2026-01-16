@@ -1,85 +1,123 @@
 import { useTeamMembers } from "@/hooks/useTeamMembers";
-import { useHomepageContent } from "@/hooks/useHomepageContent";
-import { useCity } from "@/contexts/CityContext";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export function ExpertsSection() {
-  const { data: team } = useTeamMembers();
-  const { currentCity } = useCity();
-  const { data: expertsHeader } = useHomepageContent("experts_header", currentCity?.id);
-  
-  const displayTeam = team?.slice(0, 3) || [];
-  
-  const title = expertsHeader?.content?.title || "Команда экспертов";
-  const subtitle = expertsHeader?.content?.subtitle || 
-    "Опытные переговорщики на вашей стороне — не понравит. Мы сделаем все возможное, чтобы вы купили квартиру на самых выгодных условиях.";
+  const { data: teamMembers, isLoading } = useTeamMembers();
+
+  // Filter only members with photos for the carousel
+  const displayMembers = teamMembers?.filter(m => m.photo_url) || [];
 
   return (
-    <section className="py-16 lg:py-24 bg-background">
-      <div className="container-wide">
-        <h2 className="text-3xl md:text-4xl font-serif text-center mb-4">
-          {title}
-        </h2>
-        <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">
-          {subtitle}
-        </p>
-
-        <div className="relative">
-          {/* Navigation Arrows */}
-          <button className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-12 w-10 h-10 border border-border flex items-center justify-center hover:border-primary transition-colors z-10 bg-background">
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-12 w-10 h-10 border border-border flex items-center justify-center hover:border-primary transition-colors z-10 bg-background">
-            <ChevronRight className="h-5 w-5" />
-          </button>
-
-          {/* Team Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-8 lg:px-16">
-            {displayTeam.length > 0 ? (
-              displayTeam.map((member) => (
-                <div key={member.id} className="text-center group">
-                  <div className="relative mb-6 overflow-hidden">
-                    <img
-                      src={member.photo_url || `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop`}
-                      alt={member.name}
-                      className="w-full aspect-[3/4] object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                    />
-                  </div>
-                  <h3 className="font-serif text-lg mb-1">{member.name}</h3>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                    {member.role}
-                  </p>
-                </div>
-              ))
-            ) : (
-              // Placeholder team members
-              [
-                { name: "Елена Максимова", role: "Ведущий специалист агентства Art Estate" },
-                { name: "Виктор Борисов", role: "Брокер-аналитик Art Estate" },
-                { name: "Илья Кириллов", role: "Ведущий специалист агентства Art Estate" },
-              ].map((member, index) => (
-                <div key={index} className="text-center group">
-                  <div className="relative mb-6 overflow-hidden">
-                    <img
-                      src={`https://images.unsplash.com/photo-${
-                        index === 0 ? '1573496359142-b8d87734a5a2' :
-                        index === 1 ? '1472099645785-5658abf4ff4e' :
-                        '1519085360753-af0119f7cbe7'
-                      }?w=400&h=500&fit=crop`}
-                      alt={member.name}
-                      className="w-full aspect-[3/4] object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                    />
-                  </div>
-                  <h3 className="font-serif text-lg mb-1">{member.name}</h3>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                    {member.role}
-                  </p>
-                </div>
-              ))
-            )}
-          </div>
+    <section className="py-20 bg-zinc-900">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
+            Команда экспертов
+          </h2>
+          <div className="w-12 h-0.5 bg-primary mx-auto mb-6" />
+          <p className="text-zinc-400 italic font-serif text-lg max-w-2xl mx-auto">
+            Опытный переговорщик на вашей стороне — не повредит. Мы сделаем всё возможное,
+            чтобы вы купили квартиру на самых выгодных условиях.
+          </p>
         </div>
+
+        {/* Carousel */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="aspect-[3/4] bg-zinc-800" />
+            ))}
+          </div>
+        ) : displayMembers.length > 0 ? (
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {displayMembers.map((member) => (
+                <CarouselItem key={member.id} className="pl-4 md:basis-1/3 lg:basis-1/3">
+                  <ExpertCard member={member} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            
+            {/* Custom navigation buttons */}
+            <div className="flex justify-center gap-4 mt-8">
+              <CarouselPrevious className="static translate-y-0 bg-transparent border-zinc-600 text-white hover:bg-zinc-800 hover:border-primary hover:text-primary" />
+              <CarouselNext className="static translate-y-0 bg-transparent border-zinc-600 text-white hover:bg-zinc-800 hover:border-primary hover:text-primary" />
+            </div>
+          </Carousel>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-zinc-500">Команда формируется...</p>
+          </div>
+        )}
       </div>
     </section>
   );
+}
+
+interface ExpertCardProps {
+  member: {
+    id: string;
+    name: string;
+    role: string;
+    slug?: string | null;
+    photo_url?: string | null;
+  };
+}
+
+function ExpertCard({ member }: ExpertCardProps) {
+  const hasPage = !!member.slug;
+  
+  const cardContent = (
+    <div className="relative aspect-[3/4] overflow-hidden group cursor-pointer">
+      {/* Photo */}
+      <img
+        src={member.photo_url || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600"}
+        alt={member.name}
+        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+      />
+      
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      {/* Info overlay on hover */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+        <h3 className="text-white font-medium text-xl mb-1">{member.name}</h3>
+        <p className="text-zinc-300 text-sm uppercase tracking-wider mb-3">
+          {member.role}
+        </p>
+        {hasPage && (
+          <span className="inline-flex items-center text-primary text-sm font-medium">
+            Подробнее
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </span>
+        )}
+      </div>
+    </div>
+  );
+
+  if (hasPage) {
+    return (
+      <Link to={`/broker/${member.slug}`} className="block">
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }
