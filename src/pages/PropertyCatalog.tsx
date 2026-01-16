@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Building2, Map, List, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCity } from "@/contexts/CityContext";
+import { ConsultationBlock } from "@/components/shared/ConsultationBlock";
 
 // City center coordinates for map initialization
 const cityCoordinates: Record<string, { lat: number; lng: number }> = {
@@ -310,26 +311,13 @@ const PropertyCatalog = ({ pageType, initialStatus }: PropertyCatalogProps) => {
       </section>
 
       {/* Consultation Section */}
-      <section className="py-16 bg-muted/30 border-t border-border">
-        <div className="container-wide">
-          <p className="text-xs text-primary uppercase tracking-wider mb-4">
-            Консультация по квартирам
-          </p>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-display leading-relaxed max-w-3xl">
-            Здравствуйте, меня зовут{" "}
-            <span className="text-primary border-b border-primary">ваше имя</span>,
-            <br />
-            хочу получить бесплатную консультацию по квартирам,
-            <br />
-            свяжитесь со мной по номеру телефона —
-            <br />
-            <span className="text-primary">+7-987-654-32-10</span>
-          </h2>
-          <Button variant="outline" size="lg" className="mt-8">
-            Отправить запрос
-          </Button>
-        </div>
-      </section>
+      <ConsultationBlock
+        title="Консультация"
+        subtitle="по квартирам"
+        topic="получить бесплатную консультацию по квартирам"
+        variant="dark"
+        formSource="property_catalog_page"
+      />
     </Layout>
   );
 };

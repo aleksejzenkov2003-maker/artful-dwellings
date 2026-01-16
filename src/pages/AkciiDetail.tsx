@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { ConsultationBlock } from "@/components/shared/ConsultationBlock";
 
 const AkciiDetail = () => {
   const { slug } = useParams();
@@ -326,30 +327,13 @@ const AkciiDetail = () => {
       </article>
 
       {/* Consultation Section */}
-      <section className="bg-primary text-primary-foreground py-16 lg:py-24 relative">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-wider mb-2 opacity-80">Консультация</p>
-            <p className="text-xs uppercase tracking-wider mb-8 opacity-80">по акциям</p>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif italic mb-8">
-              Здравствуйте, меня зовут <span className="underline">ваше имя</span>,<br />
-              хочу получить консультацию по акциям,<br />
-              свяжитесь со мной по номеру телефона —<br />
-              <span className="underline">+7-987-654-32-10</span>
-            </h2>
-            <Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              Отправить запрос
-            </Button>
-          </div>
-        </div>
-        {/* Decorative pattern */}
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 pointer-events-none">
-          <div className="w-full h-full" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 17.32v34.64L30 60 0 51.96V17.32L30 0z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E")`,
-            backgroundSize: '60px 60px'
-          }} />
-        </div>
-      </section>
+      <ConsultationBlock
+        title="Консультация"
+        subtitle="по акциям"
+        topic="получить консультацию по акциям"
+        variant="primary"
+        formSource="akcii_detail_page"
+      />
     </Layout>
   );
 };
