@@ -39,68 +39,81 @@ export function PropertyMegaMenu({ isOpen, onClose }: PropertyMegaMenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-[#e8d5c4]">
-      {/* Close button */}
-      <div className="flex justify-center pt-32 pb-6">
-        <button
-          onClick={onClose}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider"
-        >
-          <X className="h-4 w-4" />
-          <span>Закрыть</span>
-        </button>
-      </div>
+    <>
+      {/* Backdrop overlay - closes menu on click */}
+      <div 
+        className="fixed inset-0 bg-black/20 z-[45]" 
+        style={{ top: '108px' }}
+        onClick={onClose}
+      />
+      
+      {/* Menu panel - opens below header */}
+      <div 
+        className="fixed left-0 right-0 z-[55] bg-[#e8d5c4] animate-fade-in shadow-lg"
+        style={{ top: '108px' }}
+      >
+        {/* Close button */}
+        <div className="flex justify-center pt-6 pb-4">
+          <button
+            onClick={onClose}
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider"
+          >
+            <X className="h-4 w-4" />
+            <span>Закрыть</span>
+          </button>
+        </div>
 
-      {/* Content */}
-      <div className="w-full max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((category) => (
-            <div key={category.href} className="bg-white rounded-lg overflow-hidden shadow-sm">
-              {/* Category Card with Image */}
-              <Link
-                to={category.href}
-                onClick={onClose}
-                className="block relative h-[220px] group overflow-hidden"
-              >
-                <img
-                  src={category.image}
-                  alt={category.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
-                <div className="absolute bottom-0 left-0 p-6">
-                  <h3 className="text-3xl font-serif text-white leading-tight">
-                    <span className="block border-b-2 border-white/50 pb-1 mb-1">{category.title}</span>
-                    <span className="block border-b-2 border-white/50 pb-1">{category.titleSecondLine}</span>
-                  </h3>
-                  <p className="text-white/80 text-xs uppercase tracking-wider mt-3">
-                    {category.subtitle}
+        {/* Content */}
+        <div className="w-full max-w-[1400px] mx-auto px-6 lg:px-12 pb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {categories.map((category) => (
+              <div key={category.href} className="bg-white rounded-lg overflow-hidden shadow-sm">
+                {/* Category Card with Image */}
+                <Link
+                  to={category.href}
+                  onClick={onClose}
+                  className="block relative h-[220px] group overflow-hidden"
+                >
+                  <img
+                    src={category.image}
+                    alt={category.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
+                  <div className="absolute bottom-0 left-0 p-6">
+                    <h3 className="text-3xl font-serif text-white leading-tight">
+                      <span className="block border-b-2 border-white/50 pb-1 mb-1">{category.title}</span>
+                      <span className="block border-b-2 border-white/50 pb-1">{category.titleSecondLine}</span>
+                    </h3>
+                    <p className="text-white/80 text-xs uppercase tracking-wider mt-3">
+                      {category.subtitle}
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Popular Links */}
+                <div className="p-6">
+                  <p className="text-xs text-coral uppercase tracking-wider mb-4">
+                    Популярные запросы
                   </p>
-                </div>
-              </Link>
-
-              {/* Popular Links */}
-              <div className="p-6">
-                <p className="text-xs text-coral uppercase tracking-wider mb-4">
-                  Популярные запросы
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {category.popularLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      to={link.href}
-                      onClick={onClose}
-                      className="px-4 py-2 border border-border rounded-full text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
+                  <div className="flex flex-wrap gap-2">
+                    {category.popularLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        to={link.href}
+                        onClick={onClose}
+                        className="px-4 py-2 border border-border rounded-full text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
