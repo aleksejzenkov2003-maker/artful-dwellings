@@ -7,6 +7,7 @@ import { PropertyPromoBanner } from "@/components/property/PropertyPromoBanner";
 import {
   useResidentialComplexesFiltered,
   useDistrictsList,
+  type SortOption,
 } from "@/hooks/useResidentialComplexesFiltered";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ const PropertyCatalog = ({ pageType, initialStatus }: PropertyCatalogProps) => {
   const { currentCity } = useCity();
   
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
-  const [sortBy, setSortBy] = useState<"default" | "address" | "price">("default");
+  const [sortBy, setSortBy] = useState<SortOption>("default");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   
   const [filters, setFilters] = useState<PropertyFiltersState>({
@@ -84,6 +85,7 @@ const PropertyCatalog = ({ pageType, initialStatus }: PropertyCatalogProps) => {
     priceFrom: filters.priceFrom ? Number(filters.priceFrom) : undefined,
     page: 1,
     limit: 100, // Get all for client-side pagination
+    sort: sortBy,
   });
 
   // Reset when city changes
@@ -174,22 +176,26 @@ const PropertyCatalog = ({ pageType, initialStatus }: PropertyCatalogProps) => {
                   Все сортировки
                 </button>
                 <button
-                  onClick={() => setSortBy("address")}
+                  onClick={() => setSortBy(sortBy === "address_asc" ? "address_desc" : "address_asc")}
                   className={cn(
-                    "uppercase tracking-wider transition-colors",
-                    sortBy === "address" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    "uppercase tracking-wider transition-colors flex items-center gap-1",
+                    (sortBy === "address_asc" || sortBy === "address_desc") ? "text-primary" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   По адресу
+                  {sortBy === "address_asc" && <span>↑</span>}
+                  {sortBy === "address_desc" && <span>↓</span>}
                 </button>
                 <button
-                  onClick={() => setSortBy("price")}
+                  onClick={() => setSortBy(sortBy === "price_asc" ? "price_desc" : "price_asc")}
                   className={cn(
-                    "uppercase tracking-wider transition-colors",
-                    sortBy === "price" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    "uppercase tracking-wider transition-colors flex items-center gap-1",
+                    (sortBy === "price_asc" || sortBy === "price_desc") ? "text-primary" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   По цене
+                  {sortBy === "price_asc" && <span>↑</span>}
+                  {sortBy === "price_desc" && <span>↓</span>}
                 </button>
               </div>
 

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
 
@@ -7,12 +8,15 @@ interface PropertyCardProps {
 }
 
 export function PropertyCard({ property, variant = "image-top" }: PropertyCardProps) {
+  const [imageError, setImageError] = useState(false);
+
   const imageBlock = (
-    <div className="relative aspect-[4/3] overflow-hidden">
+    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
       <img
-        src={property.main_image || "/placeholder.svg"}
+        src={imageError ? "/placeholder.svg" : (property.main_image || "/placeholder.svg")}
         alt={property.name}
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        onError={() => setImageError(true)}
       />
     </div>
   );
