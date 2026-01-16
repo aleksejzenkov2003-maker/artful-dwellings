@@ -713,12 +713,16 @@ export type Database = {
       }
       services: {
         Row: {
+          advantages: Json | null
           content_blocks: Json | null
           created_at: string
           description: string | null
+          featured_text: string | null
           features: Json | null
           icon: string | null
           id: string
+          intro_text: string | null
+          is_featured: boolean | null
           is_published: boolean | null
           main_image: string | null
           order_position: number | null
@@ -730,12 +734,16 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          advantages?: Json | null
           content_blocks?: Json | null
           created_at?: string
           description?: string | null
+          featured_text?: string | null
           features?: Json | null
           icon?: string | null
           id?: string
+          intro_text?: string | null
+          is_featured?: boolean | null
           is_published?: boolean | null
           main_image?: string | null
           order_position?: number | null
@@ -747,12 +755,16 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          advantages?: Json | null
           content_blocks?: Json | null
           created_at?: string
           description?: string | null
+          featured_text?: string | null
           features?: Json | null
           icon?: string | null
           id?: string
+          intro_text?: string | null
+          is_featured?: boolean | null
           is_published?: boolean | null
           main_image?: string | null
           order_position?: number | null

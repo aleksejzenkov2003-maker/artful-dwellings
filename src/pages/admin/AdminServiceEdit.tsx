@@ -29,6 +29,7 @@ import {
 import type { Tables, TablesUpdate, Json } from "@/integrations/supabase/types";
 import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { AdvantagesEditor } from "@/components/admin/AdvantagesEditor";
 import {
   Select,
   SelectContent,
@@ -276,6 +277,10 @@ export default function AdminServiceEdit() {
   const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [featuresInput, setFeaturesInput] = useState("");
+  const [advantages, setAdvantages] = useState<any[]>([]);
+  const [introText, setIntroText] = useState("");
+  const [isFeatured, setIsFeatured] = useState(false);
+  const [featuredText, setFeaturedText] = useState("");
 
   // Fetch service data
   const { data: service, isLoading } = useQuery({
@@ -323,6 +328,21 @@ export default function AdminServiceEdit() {
       if (service.features && Array.isArray(service.features)) {
         setFeaturesInput((service.features as string[]).join("\n"));
       }
+      
+      // Parse advantages
+      try {
+        const parsedAdvantages = (service as any).advantages;
+        if (Array.isArray(parsedAdvantages)) {
+          setAdvantages(parsedAdvantages);
+        }
+      } catch {
+        setAdvantages([]);
+      }
+      
+      // Load new fields
+      setIntroText((service as any).intro_text || "");
+      setIsFeatured((service as any).is_featured || false);
+      setFeaturedText((service as any).featured_text || "");
     }
   }, [service]);
 
@@ -397,6 +417,10 @@ export default function AdminServiceEdit() {
       ...formData,
       content_blocks: contentBlocks as unknown as Json,
       features: features as unknown as Json,
+      advantages: advantages as unknown as Json,
+      intro_text: introText,
+      is_featured: isFeatured,
+      featured_text: featuredText,
     };
 
     setIsSaving(true);
@@ -496,6 +520,7 @@ export default function AdminServiceEdit() {
         <Tabs defaultValue="main" className="space-y-6">
           <TabsList>
             <TabsTrigger value="main">Основное</TabsTrigger>
+            <TabsTrigger value="advantages">Преимущества</TabsTrigger>
             <TabsTrigger value="content">Контент страницы</TabsTrigger>
             <TabsTrigger value="features">Что входит</TabsTrigger>
             <TabsTrigger value="media">Медиа</TabsTrigger>
@@ -551,9 +576,39 @@ export default function AdminServiceEdit() {
                   />
                   <Label>Опубликована</Label>
                 </div>
+
+                <div className="flex items-center gap-2 pt-4 border-t">
+                  <Switch
+                    checked={isFeatured}
+                    onCheckedChange={setIsFeatured}
+                  />
+                  <Label>Показывать как промо-карточку</Label>
+                </div>
+
+                {isFeatured && (
+                  <div className="space-y-2">
+                    <Label>Текст для промо-карточки</Label>
+                    <Textarea
+                      value={featuredText}
+                      onChange={(e) => setFeaturedText(e.target.value)}
+                      rows={3}
+                      placeholder="Сопровождение перепланировки квартиры - одна из популярных услуг компании Art Estate"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Вступительный текст</Label>
+                  <Textarea
+                    value={introText}
+                    onChange={(e) => setIntroText(e.target.value)}
+                    rows={4}
+                    placeholder="Вступительный текст, который будет показан под заголовком на странице услуги..."
+                  />
+                </div>
+
                 <div className="space-y-2">
                   <Label>Краткое описание</Label>
                   <Textarea
@@ -575,6 +630,14 @@ export default function AdminServiceEdit() {
                 </div>
               </div>
             </div>
+          </TabsContent>
+
+          {/* Advantages Tab */}
+          <TabsContent value="advantages" className="space-y-6">
+            <AdvantagesEditor 
+              advantages={advantages}
+              onChange={setAdvantages}
+            />
           </TabsContent>
 
           {/* Content Tab */}
