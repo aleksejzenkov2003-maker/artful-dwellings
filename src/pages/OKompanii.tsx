@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { StatsSection } from "@/components/home/StatsSection";
 import { Button } from "@/components/ui/button";
+import founderSergey from "@/assets/founder-sergey.jpg";
+import founderKonstantin from "@/assets/founder-konstantin.jpg";
 
 const timeline = [
   { year: "2015", title: "Основание компании", description: "Открытие первого офиса в Санкт-Петербурге" },
@@ -111,6 +113,57 @@ const OKompanii = () => {
                   <Play className="h-8 w-8 text-white fill-white ml-1" />
                 </div>
                 <p className="text-white mt-4 font-medium">Смотреть видео о компании</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Founders */}
+      <section className="py-16 lg:py-24 bg-secondary">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-serif font-bold mb-12 text-center uppercase tracking-wider text-primary">
+            Основатели компании
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+            {/* Sergey */}
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-muted flex-shrink-0">
+                <img 
+                  src={founderSergey} 
+                  alt="Сергей Чурганов"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-serif font-semibold text-primary mb-2">
+                  Сергей Чурганов
+                </h3>
+                <p className="text-muted-foreground">
+                  Сооснователь компании Art Estate.<br />
+                  Опыт работы в сфере недвижимости с 2005 года.
+                </p>
+              </div>
+            </div>
+
+            {/* Konstantin */}
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-muted flex-shrink-0">
+                <img 
+                  src={founderKonstantin} 
+                  alt="Константин Назаров"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-serif font-semibold text-primary mb-2">
+                  Константин Назаров
+                </h3>
+                <p className="text-muted-foreground">
+                  Сооснователь компании Art Estate.<br />
+                  Опыт работы в сфере недвижимости с 2005 года.
+                </p>
               </div>
             </div>
           </div>
