@@ -60,29 +60,31 @@ export function ComplexNavigation({ activeSection }: ComplexNavigationProps) {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border py-4">
+    <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border py-5">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-center gap-6 lg:gap-12">
+        <div className="flex items-center justify-center">
           {tabs.map((tab, index) => (
-            <button
-              key={tab.id}
-              onClick={() => scrollToSection(tab.id)}
-              className={`relative text-[12px] lg:text-[13px] uppercase tracking-[0.12em] font-medium transition-colors whitespace-nowrap ${
-                active === tab.id 
-                  ? "text-foreground" 
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-              {/* Active indicator */}
-              {active === tab.id && (
-                <span className="absolute -bottom-4 left-0 right-0 h-0.5 bg-primary" />
+            <div key={tab.id} className="flex items-center">
+              {/* Connector Line Before (except first) */}
+              {index > 0 && (
+                <span className="w-8 lg:w-16 h-px bg-muted-foreground/30 mx-4 lg:mx-6" />
               )}
-              {/* Connector Line */}
-              {index < tabs.length - 1 && (
-                <span className="absolute left-full top-1/2 w-6 lg:w-12 h-px bg-border ml-3 hidden lg:block" />
-              )}
-            </button>
+              
+              <button
+                onClick={() => scrollToSection(tab.id)}
+                className={`relative text-[11px] lg:text-[12px] uppercase tracking-[0.15em] font-medium transition-colors whitespace-nowrap py-2 ${
+                  active === tab.id 
+                    ? "text-foreground" 
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+                {/* Active indicator */}
+                {active === tab.id && (
+                  <span className="absolute -bottom-5 left-0 right-0 h-0.5 bg-teal" />
+                )}
+              </button>
+            </div>
           ))}
         </div>
       </div>
