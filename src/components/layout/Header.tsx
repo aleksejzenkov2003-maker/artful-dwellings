@@ -3,10 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, Phone, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { CitySelector } from "./CitySelector";
 import { useCityContacts } from "@/hooks/useCityContacts";
 import { CallbackDialog } from "./CallbackDialog";
+import { PropertyMegaMenu } from "./PropertyMegaMenu";
 import logoImage from "@/assets/logo.png";
 const mainNavigation = [{
   name: "Услуги",
@@ -50,8 +50,8 @@ const Logo = () => <Link to="/" className="flex items-center">
   </Link>;
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
   const {
     data: contacts
   } = useCityContacts();
@@ -135,30 +135,20 @@ export function Header() {
       <div className="hidden lg:block bg-navy/80 backdrop-blur-sm text-white">
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
           <div className="flex items-center h-11">
-            {/* Category dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors outline-none">
-                  <Menu className="h-4 w-4" />
-                  <span className="text-xs font-medium uppercase tracking-wider">Вся недвижимость</span>
-                  <ChevronDown className="h-3 w-3 ml-1" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56 bg-white border-border shadow-lg z-[100]" sideOffset={0}>
-                <DropdownMenuItem onClick={() => navigate("/nedvizhimost")} className="cursor-pointer">
-                  Вся недвижимость
-                </DropdownMenuItem>
-                {propertyDropdownItems.map(item => <DropdownMenuItem key={item.href} onClick={() => navigate(item.href)} className="cursor-pointer">
-                    {item.name}
-                  </DropdownMenuItem>)}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Category button - opens mega menu */}
+            <button 
+              onClick={() => setIsMegaMenuOpen(true)}
+              className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors outline-none"
+            >
+              <Menu className="h-4 w-4" />
+              <span className="text-xs font-medium uppercase tracking-wider">Вся недвижимость</span>
+            </button>
 
             {/* Search */}
-            <button onClick={() => navigate("/nedvizhimost")} className="flex items-center gap-2 px-4 text-white/50 cursor-pointer hover:text-white/80 transition-colors">
+            <Link to="/novostroyki" className="flex items-center gap-2 px-4 text-white/50 cursor-pointer hover:text-white/80 transition-colors">
               <Search className="h-4 w-4" />
               <span className="text-xs uppercase tracking-wider">Поиск</span>
-            </button>
+            </Link>
 
             {/* Main navigation */}
             <nav className="flex items-center ml-auto">
@@ -169,5 +159,8 @@ export function Header() {
           </div>
         </div>
       </div>
+
+      {/* Property Mega Menu */}
+      <PropertyMegaMenu isOpen={isMegaMenuOpen} onClose={() => setIsMegaMenuOpen(false)} />
     </header>;
 }
