@@ -43,6 +43,7 @@ import AdminReviews from "./pages/admin/AdminReviews";
 import AdminLeads from "./pages/admin/AdminLeads";
 import AdminStats from "./pages/admin/AdminStats";
 import AdminCities from "./pages/admin/AdminCities";
+import AdminHomepage from "./pages/admin/AdminHomepage";
 import BrokerPage from "./pages/BrokerPage";
 
 const queryClient = new QueryClient();
@@ -90,22 +91,23 @@ const App = () => (
               {/* Auth */}
               <Route path="/auth" element={<Auth />} />
               
-              {/* Admin routes - open access for development */}
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/complexes" element={<AdminComplexes />} />
-              <Route path="/admin/complexes/:id" element={<AdminComplexEdit />} />
-              <Route path="/admin/complexes/:complexId/buildings" element={<AdminComplexBuildings />} />
-              <Route path="/admin/blog" element={<AdminBlog />} />
-              <Route path="/admin/blog/:id" element={<AdminBlogEdit />} />
-              <Route path="/admin/promotions" element={<AdminPromotions />} />
-              <Route path="/admin/services" element={<AdminServices />} />
-              <Route path="/admin/services/:id" element={<AdminServiceEdit />} />
-              <Route path="/admin/team" element={<AdminTeam />} />
-              <Route path="/admin/team/:id" element={<AdminTeamEdit />} />
-              <Route path="/admin/reviews" element={<AdminReviews />} />
-              <Route path="/admin/leads" element={<AdminLeads />} />
-              <Route path="/admin/stats" element={<AdminStats />} />
-              <Route path="/admin/cities" element={<AdminCities />} />
+              {/* Admin routes - protected with authentication */}
+              <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+              <Route path="/admin/homepage" element={<ProtectedRoute><AdminHomepage /></ProtectedRoute>} />
+              <Route path="/admin/complexes" element={<ProtectedRoute><AdminComplexes /></ProtectedRoute>} />
+              <Route path="/admin/complexes/:id" element={<ProtectedRoute><AdminComplexEdit /></ProtectedRoute>} />
+              <Route path="/admin/complexes/:complexId/buildings" element={<ProtectedRoute><AdminComplexBuildings /></ProtectedRoute>} />
+              <Route path="/admin/blog" element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
+              <Route path="/admin/blog/:id" element={<ProtectedRoute><AdminBlogEdit /></ProtectedRoute>} />
+              <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
+              <Route path="/admin/services" element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
+              <Route path="/admin/services/:id" element={<ProtectedRoute><AdminServiceEdit /></ProtectedRoute>} />
+              <Route path="/admin/team" element={<ProtectedRoute><AdminTeam /></ProtectedRoute>} />
+              <Route path="/admin/team/:id" element={<ProtectedRoute><AdminTeamEdit /></ProtectedRoute>} />
+              <Route path="/admin/reviews" element={<ProtectedRoute><AdminReviews /></ProtectedRoute>} />
+              <Route path="/admin/leads" element={<ProtectedRoute><AdminLeads /></ProtectedRoute>} />
+              <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
+              <Route path="/admin/cities" element={<ProtectedRoute><AdminCities /></ProtectedRoute>} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>

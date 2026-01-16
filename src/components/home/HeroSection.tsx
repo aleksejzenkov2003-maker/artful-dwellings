@@ -4,8 +4,17 @@ import { Link } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import heroTeamImage from "@/assets/hero-team.jpg";
+import { useHomepageContent } from "@/hooks/useHomepageContent";
+import { useCity } from "@/contexts/CityContext";
 
-const categories = [
+interface HeroCategory {
+  title: string;
+  subtitle: string;
+  image: string;
+  link: string;
+}
+
+const defaultCategories: HeroCategory[] = [
   {
     title: "Квартиры",
     subtitle: "от застройщиков",
@@ -28,6 +37,14 @@ const categories = [
 
 export function HeroSection() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const { currentCity } = useCity();
+  const { data: heroContent } = useHomepageContent("hero", currentCity?.id);
+
+  const heroImage = heroContent?.content?.hero_image || heroTeamImage;
+  const videoUrl = heroContent?.content?.video_url || "/videos/company-presentation.mp4";
+  const categories = heroContent?.content?.categories?.length 
+    ? heroContent.content.categories 
+    : defaultCategories;
 
   return (
     <>
@@ -36,7 +53,7 @@ export function HeroSection() {
         <div className="relative">
           {/* Hero Image - full display without cropping */}
           <img 
-            src={heroTeamImage}
+            src={heroImage}
             alt="Команда Art Estate"
             className="w-full h-auto"
           />
@@ -75,7 +92,7 @@ export function HeroSection() {
 
         {/* Category Cards - Full width, edge-to-edge */}
         <div className="relative z-10 flex flex-col md:flex-row">
-          {categories.map((category, index) => (
+          {categories.map((category: HeroCategory, index: number) => (
             <Link
               key={index}
               to={category.link}
@@ -83,7 +100,7 @@ export function HeroSection() {
             >
               {/* Card Image */}
               <img
-                src={category.image}
+                src={category.image || defaultCategories[index]?.image || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop"}
                 alt={`${category.title} ${category.subtitle}`}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
@@ -135,7 +152,7 @@ export function HeroSection() {
           </button>
           <div className="aspect-video">
             <video
-              src="/videos/company-presentation.mp4"
+              src={videoUrl}
               controls
               autoPlay
               className="w-full h-full"

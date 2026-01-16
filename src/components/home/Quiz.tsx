@@ -3,13 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, Check } from "lucide-react";
 import { useSubmitLead } from "@/hooks/useSubmitLead";
+import { useHomepageContent } from "@/hooks/useHomepageContent";
+import { useCity } from "@/contexts/CityContext";
 
 interface QuizStep {
   question: string;
   options: string[];
 }
 
-const quizSteps: QuizStep[] = [
+const defaultQuizSteps: QuizStep[] = [
   {
     question: "Какой тип недвижимости вас интересует?",
     options: ["Новостройка", "Вторичная недвижимость", "Переуступка", "Эксклюзив"],
@@ -38,6 +40,12 @@ export function Quiz() {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const submitLead = useSubmitLead();
+  const { currentCity } = useCity();
+  const { data: quizContent } = useHomepageContent("quiz", currentCity?.id);
+
+  const quizSteps: QuizStep[] = quizContent?.content?.steps?.length 
+    ? quizContent.content.steps 
+    : defaultQuizSteps;
 
   const isLastStep = currentStep === quizSteps.length;
   const progress = ((currentStep) / (quizSteps.length + 1)) * 100;
