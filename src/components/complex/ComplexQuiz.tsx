@@ -398,17 +398,21 @@ export function ComplexQuiz({ open, onOpenChange, complexName }: ComplexQuizProp
                 )}
               </div>
 
-              {/* Step counter */}
+              {/* Step counter - hide on contact step */}
               <div className="w-1/3 text-center">
-                <span className="font-serif text-white text-[48px] md:text-[64px] leading-none">
-                  {currentStep + 1}
-                </span>
-                <span className="font-serif text-white/60 text-[32px] md:text-[48px] leading-none mx-2">
-                  из
-                </span>
-                <span className="font-serif text-white/60 text-[48px] md:text-[64px] leading-none">
-                  {totalSteps}
-                </span>
+                {!isContactStep && (
+                  <>
+                    <span className="font-serif text-white text-[48px] md:text-[64px] leading-none">
+                      {currentStep + 1}
+                    </span>
+                    <span className="font-serif text-white/60 text-[32px] md:text-[48px] leading-none mx-2">
+                      из
+                    </span>
+                    <span className="font-serif text-white/60 text-[48px] md:text-[64px] leading-none">
+                      {totalSteps}
+                    </span>
+                  </>
+                )}
               </div>
 
               {/* Next button */}
