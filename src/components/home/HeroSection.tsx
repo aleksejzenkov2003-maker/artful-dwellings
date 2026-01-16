@@ -33,16 +33,16 @@ export function HeroSection() {
     <>
       <section className="relative">
         {/* Main Hero Area */}
-        <div className="relative min-h-[70vh] flex flex-col justify-center">
-          {/* Background Image - team photo for all cities */}
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url('${heroTeamImage}')`,
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--navy-dark))]/40 via-transparent to-[hsl(var(--navy-dark))]/60" />
-          </div>
+        <div className="relative">
+          {/* Hero Image - full display without cropping */}
+          <img 
+            src={heroTeamImage}
+            alt="Команда Art Estate"
+            className="w-full h-auto"
+          />
+          
+          {/* Gradient overlay at bottom for buttons */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[hsl(var(--navy-dark))]/80 to-transparent" />
 
           {/* Content - bottom buttons */}
           <div className="absolute bottom-8 left-0 right-0 z-10">
