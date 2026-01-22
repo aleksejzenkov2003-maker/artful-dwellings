@@ -231,7 +231,7 @@ export function PropertySearchSection() {
       
       <div className="container-wide relative z-10">
         {/* Title */}
-        <h2 className="text-3xl md:text-4xl font-serif text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-heading font-normal text-center mb-12">
           Подберем идеальное предложение от 300 застройщиков
         </h2>
 
@@ -239,7 +239,7 @@ export function PropertySearchSection() {
         <div className="max-w-5xl mx-auto mb-12">
           <div className="flex flex-wrap items-center justify-center gap-4 p-6 bg-card border border-border">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Комнат:</span>
+              <span className="text-ui-label text-muted-foreground">Комнат:</span>
               <div className="flex gap-1">
                 {["Ст", "1", "2", "3", "4+"].map((room) => (
                   <button
@@ -258,7 +258,7 @@ export function PropertySearchSection() {
             </div>
             
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">До</span>
+              <span className="text-ui-label text-muted-foreground">До</span>
               <Input 
                 type="text" 
                 placeholder="5 000 000" 
@@ -266,7 +266,7 @@ export function PropertySearchSection() {
                 onChange={(e) => setMaxPrice(e.target.value)}
                 className="w-32 text-right"
               />
-              <span className="text-sm text-muted-foreground">₽</span>
+              <span className="text-ui-label text-muted-foreground">₽</span>
             </div>
 
             <Input 
@@ -288,7 +288,7 @@ export function PropertySearchSection() {
             <Button 
               onClick={handleSubmit}
               disabled={mutation.isPending}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground uppercase text-xs tracking-wider"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase text-xs tracking-[0.08em]"
             >
               {mutation.isPending ? "..." : "Отправить заявку"}
             </Button>

@@ -82,7 +82,8 @@ export default {
         },
       },
       fontFamily: {
-        serif: ["'Aeroport'", "'Playfair Display'", "Georgia", "serif"],
+        serif: ["'Aeroport'", "system-ui", "sans-serif"],
+        heading: ["'Aeroport'", "system-ui", "sans-serif"],
         sans: ["'Montserrat'", "system-ui", "sans-serif"],
       },
       fontSize: {

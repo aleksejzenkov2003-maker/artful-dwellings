@@ -21,7 +21,7 @@ const TealButton = React.forwardRef<HTMLButtonElement, TealButtonProps>(
           ref={ref}
           className={cn(
             "relative inline-flex items-center justify-center gap-2 whitespace-nowrap",
-            "rounded-[4px] font-semibold uppercase tracking-[0.08em]",
+            "rounded-[4px] font-bold uppercase tracking-[0.08em] font-sans",
             "border-2 border-[#1CBCB4] overflow-hidden",
             "transition-colors duration-300 ease-out",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1CBCB4] focus-visible:ring-offset-2",
@@ -50,7 +50,7 @@ const TealButton = React.forwardRef<HTMLButtonElement, TealButtonProps>(
         ref={ref}
         className={cn(
           "relative inline-flex items-center justify-center gap-2 whitespace-nowrap",
-          "rounded-[4px] font-semibold uppercase tracking-[0.08em]",
+          "rounded-[4px] font-bold uppercase tracking-[0.08em] font-sans",
           "border-2 border-[#1CBCB4] overflow-hidden",
           "transition-colors duration-300 ease-out",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1CBCB4] focus-visible:ring-offset-2",

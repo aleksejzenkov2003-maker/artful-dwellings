@@ -167,14 +167,18 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Aeroport', 'Playfair Display', Georgia, serif;
+    font-family: 'Aeroport', system-ui, sans-serif;
     @apply font-normal tracking-tight;
   }
 }
 
 @layer utilities {
   .font-serif {
-    font-family: 'Aeroport', 'Playfair Display', Georgia, serif;
+    font-family: 'Aeroport', system-ui, sans-serif;
+  }
+  
+  .font-heading {
+    font-family: 'Aeroport', system-ui, sans-serif;
   }
   
   .font-sans {
@@ -216,13 +220,25 @@
   
   /* Typography utilities per specification */
   .text-hero {
-    font-family: 'Aeroport', 'Playfair Display', Georgia, serif;
+    font-family: 'Aeroport', system-ui, sans-serif;
     @apply text-4xl md:text-5xl lg:text-[3.5rem] font-normal leading-[1.2];
   }
   
   .text-block-heading {
-    font-family: 'Aeroport', 'Playfair Display', Georgia, serif;
+    font-family: 'Aeroport', system-ui, sans-serif;
     @apply text-2xl md:text-[2rem] font-normal leading-[1.25];
+  }
+  
+  /* CTA Button text - Montserrat Bold */
+  .text-cta {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    @apply font-bold uppercase tracking-[0.08em];
+  }
+  
+  /* UI Labels - Montserrat Medium */
+  .text-ui-label {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    @apply font-medium uppercase tracking-[0.1em] text-xs;
   }
   
   .text-cta {
