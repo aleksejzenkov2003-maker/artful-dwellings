@@ -46,7 +46,7 @@ const propertyDropdownItems = [{
 
 // Logo component using uploaded image
 const Logo = () => <Link to="/" className="flex items-center">
-    <img alt="Art Estate - Агентство недвижимости" className="h-23 w-auto" src="/lovable-uploads/0283c99c-7b5c-45dc-8920-cb5b09be1c84.png" />
+    <img alt="Art Estate - Агентство недвижимости" className="h-12 w-auto" src="/lovable-uploads/0283c99c-7b5c-45dc-8920-cb5b09be1c84.png" />
   </Link>;
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
