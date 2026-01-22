@@ -61,10 +61,12 @@ export function ConsultationBlock({
     : "border-white/30 text-white hover:bg-white/10";
 
   return (
-    <section className={`py-16 lg:py-24 relative overflow-hidden ${bgClass}`}>
-      {/* Decorative Pattern */}
-      <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 pointer-events-none">
-        <HexagonPattern className="w-full h-full text-current" />
+    <section className={`py-16 lg:py-24 relative ${bgClass}`}>
+      {/* Decorative Pattern - separate overflow container */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10">
+          <HexagonPattern className="w-full h-full text-current" />
+        </div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
