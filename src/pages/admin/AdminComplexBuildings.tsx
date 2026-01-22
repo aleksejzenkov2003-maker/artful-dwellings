@@ -41,7 +41,7 @@ const defaultColors = [
   "#22c55e", // green
   "#3b82f6", // blue
   "#ec4899", // pink
-  "#f97316", // orange
+  "#9a7b5c", // bronze/brown
 ];
 
 export default function AdminComplexBuildings() {
