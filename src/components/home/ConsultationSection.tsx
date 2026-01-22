@@ -47,7 +47,7 @@ export function ConsultationSection() {
 
   if (isSubmitted) {
     return (
-      <section className="py-20 lg:py-28 bg-zinc-900 text-white relative overflow-hidden">
+      <section className="py-20 lg:py-28 bg-zinc-900 text-white relative">
         <div className="container-wide text-center">
           <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
           <h3 className="text-2xl font-serif mb-2">Заявка отправлена!</h3>
@@ -58,10 +58,12 @@ export function ConsultationSection() {
   }
 
   return (
-    <section className="py-20 lg:py-28 bg-zinc-900 text-white relative overflow-hidden">
-      {/* Decorative Pattern */}
-      <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-20">
-        <HexagonPattern className="w-full h-full text-primary" />
+    <section className="py-20 lg:py-28 bg-zinc-900 text-white relative">
+      {/* Decorative Pattern - separate overflow container */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-20">
+          <HexagonPattern className="w-full h-full text-primary" />
+        </div>
       </div>
 
       <div className="container-wide relative z-10">
