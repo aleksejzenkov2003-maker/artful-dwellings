@@ -49,7 +49,7 @@ export function PropertyMegaMenu({ isOpen, onClose }: PropertyMegaMenuProps) {
       
       {/* Menu panel - opens below header */}
       <div 
-        className="fixed left-0 right-0 z-[55] bg-[#c4b5a3] animate-fade-in shadow-lg"
+        className="fixed left-0 right-0 z-[55] bg-coral animate-fade-in shadow-lg"
         style={{ top: '108px' }}
       >
         {/* Close button */}
