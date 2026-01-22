@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Plus, Trash2, Edit, Star, MessageSquare } from "lucide-react";
+import { MediaUploader } from "@/components/admin/MediaUploader";
 
 interface BrokerReview {
   id: string;
@@ -311,11 +312,14 @@ export function BrokerReviewsTab({ brokerId, isNew }: BrokerReviewsTabProps) {
             </div>
 
             <div className="space-y-2">
-              <Label>Фото (URL)</Label>
-              <Input
-                value={formData.author_photo}
-                onChange={(e) => setFormData({ ...formData, author_photo: e.target.value })}
-                placeholder="https://..."
+              <Label>Фото автора</Label>
+              <MediaUploader
+                value={formData.author_photo ? [{ url: formData.author_photo, type: "image", isMain: true }] : []}
+                onChange={(items) => setFormData({ ...formData, author_photo: items[0]?.url || "" })}
+                folder="broker-reviews"
+                maxFiles={1}
+                acceptImages={true}
+                acceptVideos={false}
               />
             </div>
 
