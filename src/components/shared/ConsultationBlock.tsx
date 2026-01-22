@@ -99,7 +99,7 @@ export function ConsultationBlock({
                   type="tel"
                   {...form.register("phone")}
                   placeholder="+7-987-654-32-10"
-                  className={`bg-transparent focus:outline-none w-44 sm:w-52 md:w-60 ${inputTextClass}`}
+                  className={`bg-transparent focus:outline-none w-52 sm:w-60 md:w-72 ${inputTextClass}`}
                 />
               </span>
             </h2>
