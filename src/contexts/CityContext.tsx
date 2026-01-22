@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface City {
@@ -12,6 +12,8 @@ export interface City {
 
 interface CityContextType {
   cities: City[];
+  citiesByCountry: Record<string, City[]>;
+  countries: string[];
   currentCity: City | null;
   setCurrentCity: (city: City) => void;
   isLoading: boolean;
@@ -20,6 +22,16 @@ interface CityContextType {
 const CityContext = createContext<CityContextType | undefined>(undefined);
 
 const CITY_STORAGE_KEY = "art-estate-city";
+
+// Country flags mapping
+export const countryFlags: Record<string, string> = {
+  "Россия": "🇷🇺",
+  "ОАЭ": "🇦🇪",
+  "Турция": "🇹🇷",
+  "Кипр": "🇨🇾",
+  "Таиланд": "🇹🇭",
+  "Грузия": "🇬🇪",
+};
 
 export function CityProvider({ children }: { children: ReactNode }) {
   const [cities, setCities] = useState<City[]>([]);
@@ -62,13 +74,36 @@ export function CityProvider({ children }: { children: ReactNode }) {
     fetchCities();
   }, []);
 
+  // Group cities by country
+  const citiesByCountry = useMemo(() => {
+    return cities.reduce((acc, city) => {
+      const country = city.country || "Другое";
+      if (!acc[country]) {
+        acc[country] = [];
+      }
+      acc[country].push(city);
+      return acc;
+    }, {} as Record<string, City[]>);
+  }, [cities]);
+
+  // Get unique countries in order
+  const countries = useMemo(() => {
+    const uniqueCountries = [...new Set(cities.map((c) => c.country || "Другое"))];
+    // Put Russia first if it exists
+    return uniqueCountries.sort((a, b) => {
+      if (a === "Россия") return -1;
+      if (b === "Россия") return 1;
+      return a.localeCompare(b);
+    });
+  }, [cities]);
+
   const setCurrentCity = (city: City) => {
     setCurrentCityState(city);
     localStorage.setItem(CITY_STORAGE_KEY, city.slug);
   };
 
   return (
-    <CityContext.Provider value={{ cities, currentCity, setCurrentCity, isLoading }}>
+    <CityContext.Provider value={{ cities, citiesByCountry, countries, currentCity, setCurrentCity, isLoading }}>
       {children}
     </CityContext.Provider>
   );

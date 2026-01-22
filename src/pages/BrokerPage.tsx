@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Phone, Mail, Send, Building2, MapPin, Maximize2 } from "lucide-react";
 import { toast } from "sonner";
 import { ComplexCard } from "@/components/novostroyki/ComplexCard";
+import { BrokerContactForm } from "@/components/broker/BrokerContactForm";
+import { BrokerReviews } from "@/components/broker/BrokerReviews";
 
 // Content block types matching AdminBlogEdit / AdminTeamEdit
 interface ContentBlock {
@@ -375,18 +377,31 @@ const BrokerPage = () => {
         </div>
       </section>
 
-      {/* Content blocks */}
-      {contentBlocks.length > 0 && (
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto space-y-6">
-              {contentBlocks.map((block) => (
-                <BlockRenderer key={block.id} block={block} />
-              ))}
+      {/* Contact Form */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* Content blocks on the left */}
+            {contentBlocks.length > 0 && (
+              <div className="space-y-6">
+                {contentBlocks.map((block) => (
+                  <BlockRenderer key={block.id} block={block} />
+                ))}
+              </div>
+            )}
+            
+            {/* Contact form on the right */}
+            <div className={contentBlocks.length === 0 ? "lg:col-span-2 max-w-lg mx-auto" : ""}>
+              <BrokerContactForm
+                brokerId={broker.id}
+                brokerName={broker.name.split(" ")[0]}
+                brokerSlug={broker.slug || slug || ""}
+              />
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
+
 
       {/* Broker's apartments */}
       {brokerApartments && brokerApartments.length > 0 && (
@@ -477,6 +492,9 @@ const BrokerPage = () => {
           </div>
         </section>
       )}
+
+      {/* Broker Reviews */}
+      <BrokerReviews brokerId={broker.id} />
 
       {/* Video section if available */}
       {broker.video_url && (
