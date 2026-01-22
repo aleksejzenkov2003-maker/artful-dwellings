@@ -203,6 +203,53 @@ export type Database = {
           },
         ]
       }
+      broker_reviews: {
+        Row: {
+          author_name: string
+          author_photo: string | null
+          author_role: string | null
+          broker_id: string
+          content: string
+          created_at: string | null
+          id: string
+          is_published: boolean | null
+          order_position: number | null
+          rating: number | null
+        }
+        Insert: {
+          author_name: string
+          author_photo?: string | null
+          author_role?: string | null
+          broker_id: string
+          content: string
+          created_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          order_position?: number | null
+          rating?: number | null
+        }
+        Update: {
+          author_name?: string
+          author_photo?: string | null
+          author_role?: string | null
+          broker_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          order_position?: number | null
+          rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broker_reviews_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cities: {
         Row: {
           country: string | null
@@ -429,6 +476,7 @@ export type Database = {
       }
       leads: {
         Row: {
+          broker_id: string | null
           created_at: string
           email: string | null
           form_source: string | null
@@ -447,6 +495,7 @@ export type Database = {
           utm_term: string | null
         }
         Insert: {
+          broker_id?: string | null
           created_at?: string
           email?: string | null
           form_source?: string | null
@@ -465,6 +514,7 @@ export type Database = {
           utm_term?: string | null
         }
         Update: {
+          broker_id?: string | null
           created_at?: string
           email?: string | null
           form_source?: string | null
@@ -482,7 +532,15 @@ export type Database = {
           utm_source?: string | null
           utm_term?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "leads_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

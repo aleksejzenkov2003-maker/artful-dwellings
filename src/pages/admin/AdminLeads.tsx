@@ -29,8 +29,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Eye, Trash2, Phone, Mail } from "lucide-react";
+import { Eye, Trash2, Phone, Mail, User } from "lucide-react";
 import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
+import { Link } from "react-router-dom";
 
 type Lead = Tables<"leads">;
 
@@ -53,7 +54,7 @@ export default function AdminLeads() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("leads")
-        .select("*")
+        .select("*, broker:team_members(id, name)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
@@ -127,12 +128,13 @@ export default function AdminLeads() {
                 <TableHead>Имя</TableHead>
                 <TableHead>Контакты</TableHead>
                 <TableHead>Тип формы</TableHead>
+                <TableHead>Брокер</TableHead>
                 <TableHead>Статус</TableHead>
                 <TableHead className="w-[100px]">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {leads?.map((lead) => (
+              {leads?.map((lead: any) => (
                 <TableRow key={lead.id}>
                   <TableCell className="text-muted-foreground">
                     {new Date(lead.created_at).toLocaleDateString("ru-RU", {
@@ -159,6 +161,19 @@ export default function AdminLeads() {
                     </div>
                   </TableCell>
                   <TableCell>{lead.form_type}</TableCell>
+                  <TableCell>
+                    {lead.broker ? (
+                      <Link 
+                        to={`/admin/team/${lead.broker.id}`}
+                        className="flex items-center gap-1 text-primary hover:underline"
+                      >
+                        <User className="h-3 w-3" />
+                        {lead.broker.name}
+                      </Link>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
                   <TableCell>{getStatusBadge(lead.status)}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">

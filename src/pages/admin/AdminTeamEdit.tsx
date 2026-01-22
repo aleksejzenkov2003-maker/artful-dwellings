@@ -33,11 +33,14 @@ import {
   MoveUp,
   MoveDown,
   Building2,
-  Home
+  Home,
+  Star,
+  MessageSquare
 } from "lucide-react";
 import type { Tables, TablesUpdate, Json } from "@/integrations/supabase/types";
 import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { BrokerReviewsTab } from "@/components/admin/BrokerReviewsTab";
 
 type TeamMember = Tables<"team_members">;
 type ResidentialComplex = Tables<"residential_complexes">;
@@ -651,6 +654,7 @@ export default function AdminTeamEdit() {
             <TabsTrigger value="main">Основное</TabsTrigger>
             <TabsTrigger value="contacts">Контакты</TabsTrigger>
             <TabsTrigger value="objects">Объекты</TabsTrigger>
+            <TabsTrigger value="reviews">Отзывы</TabsTrigger>
             <TabsTrigger value="content">Контент страницы</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
@@ -973,6 +977,11 @@ export default function AdminTeamEdit() {
                 )}
               </div>
             </div>
+          </TabsContent>
+
+          {/* Reviews Tab */}
+          <TabsContent value="reviews" className="space-y-6">
+            <BrokerReviewsTab brokerId={id} isNew={isNew} />
           </TabsContent>
 
           {/* SEO Tab */}
