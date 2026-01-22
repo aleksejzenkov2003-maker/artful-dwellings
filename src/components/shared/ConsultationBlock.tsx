@@ -57,8 +57,8 @@ export function ConsultationBlock({
     : "text-primary placeholder:text-primary/50";
 
   const buttonClass = variant === "primary"
-    ? "border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-    : "border-white/30 text-white hover:bg-white/10";
+    ? "border border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+    : "border border-white/30 text-white hover:bg-white/10";
 
   return (
     <section className={`py-16 lg:py-24 relative ${bgClass}`}>
@@ -99,7 +99,7 @@ export function ConsultationBlock({
                   type="tel"
                   {...form.register("phone")}
                   placeholder="+7-987-654-32-10"
-                  className={`bg-transparent focus:outline-none w-36 sm:w-44 md:w-52 ${inputTextClass}`}
+                  className={`bg-transparent focus:outline-none w-44 sm:w-52 md:w-60 ${inputTextClass}`}
                 />
               </span>
             </h2>
@@ -112,9 +112,8 @@ export function ConsultationBlock({
 
             <Button
               type="submit"
-              variant="outline"
               disabled={mutation.isPending}
-              className={`uppercase text-xs tracking-wider px-8 ${buttonClass}`}
+              className={`uppercase text-xs tracking-wider px-8 bg-transparent ${buttonClass}`}
             >
               {mutation.isPending ? "Отправка..." : "Отправить запрос"}
             </Button>
