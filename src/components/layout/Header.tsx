@@ -137,7 +137,7 @@ export function Header() {
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
           <div className="flex items-center h-11">
             {/* Category button - opens mega menu */}
-            <button onClick={() => setIsMegaMenuOpen(true)} className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral/90 transition-colors outline-none">
+            <button onClick={() => setIsMegaMenuOpen(true)} className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral-light transition-colors outline-none">
               <Menu className="h-4 w-4" />
               <span className="text-xs font-medium uppercase tracking-wider">Вся недвижимость</span>
             </button>
@@ -150,7 +150,7 @@ export function Header() {
 
             {/* Main navigation */}
             <nav className="flex items-center ml-auto">
-              {mainNavigation.map(item => <Link key={item.href + item.name} to={item.href} className={`px-4 h-11 flex items-center text-xs font-medium uppercase tracking-wider transition-colors hover:text-primary ${isActive(item.href) ? "text-primary" : "text-white/70"}`}>
+              {mainNavigation.map(item => <Link key={item.href + item.name} to={item.href} className={`px-4 h-11 flex items-center text-xs font-medium uppercase tracking-wider transition-colors hover:text-coral ${isActive(item.href) ? "text-coral" : "text-white/70"}`}>
                   {item.name}
                 </Link>)}
             </nav>
