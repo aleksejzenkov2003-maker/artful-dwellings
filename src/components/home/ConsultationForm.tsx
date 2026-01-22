@@ -89,7 +89,7 @@ export function ConsultationForm() {
               type="tel"
               {...form.register("phone")}
               placeholder="+7-987-654-32-10"
-              className="bg-transparent border-b border-primary text-primary placeholder:text-primary/50 focus:outline-none w-40 md:w-48"
+              className="bg-transparent border-b border-primary text-primary placeholder:text-primary/50 focus:outline-none w-52 sm:w-60 md:w-72"
             />
           </span>
         </h2>
