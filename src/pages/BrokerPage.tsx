@@ -377,26 +377,41 @@ const BrokerPage = () => {
         </div>
       </section>
 
-      {/* Contact Form */}
-      <section className="py-16">
+      {/* Content with Sidebar Form */}
+      <section className="py-12 lg:py-16">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Content blocks on the left */}
-            {contentBlocks.length > 0 && (
-              <div className="space-y-6">
-                {contentBlocks.map((block) => (
-                  <BlockRenderer key={block.id} block={block} />
-                ))}
-              </div>
-            )}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            {/* Main content area */}
+            <div className="flex-1 min-w-0">
+              {contentBlocks.length > 0 ? (
+                <div className="space-y-6">
+                  {contentBlocks.map((block) => (
+                    <BlockRenderer key={block.id} block={block} />
+                  ))}
+                </div>
+              ) : (
+                <div className="lg:hidden">
+                  {/* Show form inline on mobile if no content blocks */}
+                  <BrokerContactForm
+                    brokerId={broker.id}
+                    brokerName={broker.name.split(" ")[0]}
+                    brokerSlug={broker.slug || slug || ""}
+                    compact
+                  />
+                </div>
+              )}
+            </div>
             
-            {/* Contact form on the right */}
-            <div className={contentBlocks.length === 0 ? "lg:col-span-2 max-w-lg mx-auto" : ""}>
-              <BrokerContactForm
-                brokerId={broker.id}
-                brokerName={broker.name.split(" ")[0]}
-                brokerSlug={broker.slug || slug || ""}
-              />
+            {/* Sticky sidebar form */}
+            <div className={`w-full lg:w-80 flex-shrink-0 ${contentBlocks.length === 0 ? 'hidden lg:block' : ''}`}>
+              <div className="lg:sticky lg:top-24">
+                <BrokerContactForm
+                  brokerId={broker.id}
+                  brokerName={broker.name.split(" ")[0]}
+                  brokerSlug={broker.slug || slug || ""}
+                  compact
+                />
+              </div>
             </div>
           </div>
         </div>
