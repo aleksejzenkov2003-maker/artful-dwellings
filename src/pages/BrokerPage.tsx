@@ -508,8 +508,29 @@ const BrokerPage = () => {
         </section>
       )}
 
-      {/* Broker Reviews */}
-      <BrokerReviews brokerId={broker.id} />
+      {/* Broker Reviews - compact in sidebar-style section */}
+      <section className="py-12 lg:py-16">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            {/* Reviews */}
+            <div className="flex-1 min-w-0">
+              <BrokerReviews brokerId={broker.id} compact />
+            </div>
+            
+            {/* Sticky sidebar form (duplicate for this section) */}
+            <div className="w-full lg:w-80 flex-shrink-0 hidden lg:block">
+              <div className="lg:sticky lg:top-24">
+                <BrokerContactForm
+                  brokerId={broker.id}
+                  brokerName={broker.name.split(" ")[0]}
+                  brokerSlug={broker.slug || slug || ""}
+                  compact
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Video section if available */}
       {broker.video_url && (
