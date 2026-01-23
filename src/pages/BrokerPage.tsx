@@ -377,45 +377,20 @@ const BrokerPage = () => {
         </div>
       </section>
 
-      {/* Content with Sidebar Form */}
-      <section className="py-12 lg:py-16">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-            {/* Main content area */}
-            <div className="flex-1 min-w-0">
-              {contentBlocks.length > 0 ? (
-                <div className="space-y-6">
-                  {contentBlocks.map((block) => (
-                    <BlockRenderer key={block.id} block={block} />
-                  ))}
-                </div>
-              ) : (
-                <div className="lg:hidden">
-                  {/* Show form inline on mobile if no content blocks */}
-                  <BrokerContactForm
-                    brokerId={broker.id}
-                    brokerName={broker.name.split(" ")[0]}
-                    brokerSlug={broker.slug || slug || ""}
-                    compact
-                  />
-                </div>
-              )}
-            </div>
-            
-            {/* Sticky sidebar form */}
-            <div className={`w-full lg:w-80 flex-shrink-0 ${contentBlocks.length === 0 ? 'hidden lg:block' : ''}`}>
-              <div className="lg:sticky lg:top-24">
-                <BrokerContactForm
-                  brokerId={broker.id}
-                  brokerName={broker.name.split(" ")[0]}
-                  brokerSlug={broker.slug || slug || ""}
-                  compact
-                />
+      {/* Content blocks section (if any) */}
+      {contentBlocks.length > 0 && (
+        <section className="py-12 lg:py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl">
+              <div className="space-y-6">
+                {contentBlocks.map((block) => (
+                  <BlockRenderer key={block.id} block={block} />
+                ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
       {/* Broker's apartments */}
