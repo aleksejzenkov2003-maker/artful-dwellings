@@ -23,39 +23,39 @@ export function AboutServices() {
   return (
     <section className="py-16 lg:py-24 bg-secondary">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
-        {/* Header with line */}
-        <div className="flex items-center gap-8 mb-12">
-          <h2 className="text-3xl lg:text-4xl font-serif whitespace-nowrap">Услуги</h2>
-          <div className="flex-1 h-px bg-border" />
+        {/* Header with short line (matching reference) */}
+        <div className="flex items-center gap-6 mb-16">
+          <h2 className="text-4xl lg:text-5xl font-serif whitespace-nowrap">Услуги</h2>
+          <div className="w-24 h-px bg-foreground" />
         </div>
 
         {/* Services grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-12">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="space-y-4">
-                <Skeleton className="h-6 w-12" />
+                <Skeleton className="h-10 w-16" />
                 <Skeleton className="h-6 w-48" />
-                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-20 w-full" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-14">
             {items.map((service, index) => (
               <div key={service.id} className="group">
-                {/* Number */}
-                <span className="text-primary font-medium text-lg mb-3 block">
+                {/* Number - Large serif italic in teal */}
+                <span className="text-primary font-serif italic text-4xl lg:text-5xl mb-4 block leading-none">
                   {String(index + 1).padStart(2, '0')}/
                 </span>
                 
-                {/* Title */}
-                <h3 className="text-lg font-semibold uppercase tracking-wide mb-3">
+                {/* Title - uppercase, regular weight, tracking */}
+                <h3 className="text-sm font-medium uppercase tracking-[0.15em] mb-4 text-foreground">
                   {service.title}
                 </h3>
                 
-                {/* Description */}
-                <p className="text-muted-foreground italic leading-relaxed">
+                {/* Description - italic style */}
+                <p className="text-muted-foreground italic leading-relaxed text-[15px]">
                   {'short_description' in service ? service.short_description : (service as any).description}
                 </p>
               </div>

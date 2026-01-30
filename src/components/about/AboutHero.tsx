@@ -1,78 +1,121 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Hexagon decoration component
+// Hexagon decoration component - matching reference exactly
 function HexagonDecor() {
   return (
-    <div className="absolute right-0 top-0 h-full w-1/2 overflow-hidden pointer-events-none">
-      {/* Large gray hexagon - top right */}
+    <div className="absolute right-0 top-0 h-full w-2/3 overflow-hidden pointer-events-none hidden lg:block">
+      {/* Large gray wireframe hexagon - top right (complex geometry) */}
       <svg 
-        viewBox="0 0 120 140" 
-        className="absolute w-40 h-48 top-8 right-32 text-muted-foreground/15"
+        viewBox="0 0 200 230" 
+        className="absolute w-52 h-60 -top-4 right-24"
+        style={{ color: '#9ca3af' }}
       >
+        {/* Outer hexagon */}
         <path
-          d="M60 5L110 35V105L60 135L10 105V35L60 5Z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M60 20L95 42V98L60 120L25 98V42L60 20Z"
-          stroke="currentColor"
-          strokeWidth="0.75"
-          fill="none"
-        />
-      </svg>
-
-      {/* Medium orange hexagon - middle */}
-      <svg 
-        viewBox="0 0 100 116" 
-        className="absolute w-28 h-32 top-32 right-56 text-accent"
-      >
-        <path
-          d="M50 4L92 28V76L50 100L8 76V28L50 4Z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M50 16L80 34V70L50 88L20 70V34L50 16Z"
-          stroke="currentColor"
-          strokeWidth="0.75"
-          fill="none"
-        />
-      </svg>
-
-      {/* Small teal hexagon - bottom right */}
-      <svg 
-        viewBox="0 0 80 92" 
-        className="absolute w-20 h-24 bottom-16 right-16 text-primary"
-      >
-        <path
-          d="M40 4L72 24V64L40 84L8 64V24L40 4Z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M40 14L62 28V56L40 70L18 56V28L40 14Z"
-          stroke="currentColor"
-          strokeWidth="0.75"
-          fill="none"
-        />
-      </svg>
-
-      {/* Tiny gray hexagon - far right */}
-      <svg 
-        viewBox="0 0 60 70" 
-        className="absolute w-14 h-16 top-48 right-8 text-muted-foreground/20"
-      >
-        <path
-          d="M30 4L54 18V50L30 64L6 50V18L30 4Z"
+          d="M100 10L180 56V164L100 210L20 164V56L100 10Z"
           stroke="currentColor"
           strokeWidth="1"
           fill="none"
+          opacity="0.3"
         />
+        {/* Middle hexagon */}
+        <path
+          d="M100 30L160 65V155L100 190L40 155V65L100 30Z"
+          stroke="currentColor"
+          strokeWidth="0.8"
+          fill="none"
+          opacity="0.25"
+        />
+        {/* Inner hexagon */}
+        <path
+          d="M100 50L140 74V146L100 170L60 146V74L100 50Z"
+          stroke="currentColor"
+          strokeWidth="0.6"
+          fill="none"
+          opacity="0.2"
+        />
+        {/* Cross lines inside */}
+        <line x1="100" y1="10" x2="100" y2="210" stroke="currentColor" strokeWidth="0.5" opacity="0.15" />
+        <line x1="20" y1="110" x2="180" y2="110" stroke="currentColor" strokeWidth="0.5" opacity="0.15" />
+        <line x1="60" y1="56" x2="140" y2="164" stroke="currentColor" strokeWidth="0.5" opacity="0.15" />
+        <line x1="140" y1="56" x2="60" y2="164" stroke="currentColor" strokeWidth="0.5" opacity="0.15" />
+      </svg>
+
+      {/* Medium coral/orange hexagon with A logo - middle right */}
+      <svg 
+        viewBox="0 0 140 162" 
+        className="absolute w-36 h-40 top-16 right-0"
+      >
+        {/* Outer hexagon - coral color */}
+        <path
+          d="M70 6L130 40V122L70 156L10 122V40L70 6Z"
+          stroke="#C4A088"
+          strokeWidth="1.5"
+          fill="none"
+        />
+        {/* Inner hexagon */}
+        <path
+          d="M70 22L112 48V114L70 140L28 114V48L70 22Z"
+          stroke="#C4A088"
+          strokeWidth="0.8"
+          fill="none"
+          opacity="0.6"
+        />
+        {/* Letter A inside */}
+        <text
+          x="70"
+          y="95"
+          textAnchor="middle"
+          fill="#C4A088"
+          fontSize="42"
+          fontFamily="serif"
+          fontStyle="italic"
+        >
+          A
+        </text>
+      </svg>
+
+      {/* Small teal hexagon - bottom right corner */}
+      <svg 
+        viewBox="0 0 100 116" 
+        className="absolute w-28 h-32 bottom-0 right-8"
+      >
+        {/* Outer hexagon */}
+        <path
+          d="M50 6L90 30V86L50 110L10 86V30L50 6Z"
+          stroke="hsl(var(--primary))"
+          strokeWidth="1.5"
+          fill="none"
+        />
+        {/* Inner hexagon */}
+        <path
+          d="M50 18L78 38V78L50 98L22 78V38L50 18Z"
+          stroke="hsl(var(--primary))"
+          strokeWidth="0.8"
+          fill="none"
+          opacity="0.6"
+        />
+        {/* Cross lines */}
+        <line x1="50" y1="6" x2="50" y2="110" stroke="hsl(var(--primary))" strokeWidth="0.5" opacity="0.4" />
+        <line x1="10" y1="58" x2="90" y2="58" stroke="hsl(var(--primary))" strokeWidth="0.5" opacity="0.4" />
+      </svg>
+
+      {/* Additional tiny gray hexagon - far bottom right */}
+      <svg 
+        viewBox="0 0 80 92" 
+        className="absolute w-20 h-24 bottom-24 right-48"
+        style={{ color: '#9ca3af' }}
+      >
+        <path
+          d="M40 6L72 26V66L40 86L8 66V26L40 6Z"
+          stroke="currentColor"
+          strokeWidth="1"
+          fill="none"
+          opacity="0.2"
+        />
+        <line x1="40" y1="6" x2="40" y2="86" stroke="currentColor" strokeWidth="0.5" opacity="0.15" />
+        <line x1="8" y1="46" x2="72" y2="46" stroke="currentColor" strokeWidth="0.5" opacity="0.15" />
       </svg>
     </div>
   );
