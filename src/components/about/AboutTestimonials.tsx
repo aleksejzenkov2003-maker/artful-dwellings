@@ -1,6 +1,6 @@
 import { useReviews } from "@/hooks/useReviews";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState, useCallback } from "react";
@@ -58,84 +58,84 @@ export function AboutTestimonials() {
   return (
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
+        {/* Header - Centered */}
+        <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-serif">
             Слово нашим клиентам
           </h2>
-          
-          {/* Navigation arrows */}
-          <div className="flex gap-4">
-            <button 
-              onClick={scrollPrev}
-              className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button 
-              onClick={scrollNext}
-              className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
         </div>
 
-        {/* Carousel */}
+        {/* Carousel with side arrows */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-4">
-                <Skeleton className="aspect-video" />
-                <Skeleton className="h-6 w-32" />
-                <Skeleton className="h-16 w-full" />
+                <Skeleton className="aspect-[4/3]" />
               </div>
             ))}
           </div>
         ) : displayReviews.length > 0 ? (
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-6">
-              {displayReviews.map((review) => (
-                <div 
-                  key={review.id} 
-                  className="flex-shrink-0 w-[320px] md:w-[380px] bg-card rounded-lg overflow-hidden group"
-                >
-                  {/* Video thumbnail */}
+          <div className="relative">
+            {/* Arrow Left - minimal style */}
+            <button 
+              onClick={scrollPrev}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 lg:-translate-x-8 z-10 p-2 hover:text-primary transition-colors"
+            >
+              <ArrowLeft className="w-8 h-8" />
+            </button>
+            
+            {/* Carousel */}
+            <div className="overflow-hidden mx-8 lg:mx-12" ref={emblaRef}>
+              <div className="flex gap-6">
+                {displayReviews.map((review) => (
                   <div 
-                    className="aspect-video bg-muted relative cursor-pointer"
+                    key={review.id} 
+                    className="flex-shrink-0 w-[320px] md:w-[400px] relative aspect-[4/3] overflow-hidden group cursor-pointer"
                     onClick={() => review.source_url && handleVideoPlay(review.source_url)}
                   >
+                    {/* Background image/video thumbnail */}
                     {review.author_photo ? (
                       <img 
                         src={review.author_photo} 
                         alt={review.author_name}
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10" />
+                      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-primary/30 to-accent/30" />
                     )}
                     
-                    {/* Play button */}
+                    {/* Gradient overlay for text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                    
+                    {/* Content at bottom */}
+                    <div className="absolute bottom-0 left-0 right-16 p-6">
+                      <h3 className="text-2xl font-serif text-white mb-2">
+                        {review.author_name}
+                      </h3>
+                      <div className="w-10 h-0.5 bg-primary mb-3" />
+                      <p className="text-xs uppercase tracking-wider text-white/80 line-clamp-2">
+                        {review.author_role || review.content?.substring(0, 60)}
+                      </p>
+                    </div>
+                    
+                    {/* Play button - bottom right with teal border */}
                     {review.source_url && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
-                        <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
-                          <Play className="w-6 h-6 text-white fill-white ml-1" />
-                        </div>
-                      </div>
+                      <button className="absolute bottom-6 right-6 w-14 h-14 rounded-full border-2 border-primary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <Play className="w-5 h-5 text-primary fill-primary/30 ml-0.5" />
+                      </button>
                     )}
                   </div>
-                  
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-lg font-serif mb-2">{review.author_name}</h3>
-                    <div className="w-12 h-0.5 bg-primary mb-3" />
-                    <p className="text-muted-foreground text-sm line-clamp-3">
-                      {review.content}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+            
+            {/* Arrow Right - minimal style */}
+            <button 
+              onClick={scrollNext}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 lg:translate-x-8 z-10 p-2 hover:text-primary transition-colors"
+            >
+              <ArrowRight className="w-8 h-8" />
+            </button>
           </div>
         ) : (
           <div className="text-center py-12 bg-card rounded-lg">
