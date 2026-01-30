@@ -99,7 +99,7 @@
     --muted: 220 15% 96%;
     --muted-foreground: 220 10% 45%;
     
-    --accent: 15 60% 65%;
+    --accent: 17 41% 58%;
     --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84% 60%;
@@ -115,8 +115,8 @@
     --teal: 174 58% 50%;
     --teal-light: 174 58% 60%;
     --teal-dark: 174 58% 40%;
-    --coral: 30 26% 48%;
-    --coral-light: 30 26% 58%;
+    --coral: 17 41% 58%;
+    --coral-light: 17 41% 68%;
     --navy: 220 30% 15%;
     --navy-dark: 220 35% 10%;
     --navy-light: 220 25% 20%;
@@ -151,7 +151,7 @@
     --muted: 220 25% 18%;
     --muted-foreground: 220 10% 60%;
     
-    --accent: 15 60% 65%;
+    --accent: 17 41% 58%;
     --accent-foreground: 220 35% 10%;
     
     --destructive: 0 62% 50%;

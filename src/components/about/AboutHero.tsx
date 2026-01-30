@@ -47,17 +47,17 @@ function HexagonDecor() {
         viewBox="0 0 140 162" 
         className="absolute w-36 h-40 top-16 right-0"
       >
-        {/* Outer hexagon - coral color */}
+        {/* Outer hexagon - coral color #BA846E */}
         <path
           d="M70 6L130 40V122L70 156L10 122V40L70 6Z"
-          stroke="#C4A088"
+          stroke="#BA846E"
           strokeWidth="1.5"
           fill="none"
         />
         {/* Inner hexagon */}
         <path
           d="M70 22L112 48V114L70 140L28 114V48L70 22Z"
-          stroke="#C4A088"
+          stroke="#BA846E"
           strokeWidth="0.8"
           fill="none"
           opacity="0.6"
@@ -67,7 +67,7 @@ function HexagonDecor() {
           x="70"
           y="95"
           textAnchor="middle"
-          fill="#C4A088"
+          fill="#BA846E"
           fontSize="42"
           fontFamily="serif"
           fontStyle="italic"
