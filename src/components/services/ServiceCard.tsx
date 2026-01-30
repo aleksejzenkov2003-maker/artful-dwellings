@@ -51,7 +51,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         </h3>
         
         {/* Description */}
-      <p className="text-xs tracking-wider uppercase text-[#9a7b5c] leading-relaxed">
+      <p className="text-xs tracking-wider uppercase text-[#BA846E] leading-relaxed">
           {service.short_description?.toUpperCase() || "ПОДРОБНЕЕ ОБ УСЛУГЕ"}
         </p>
       </Link>
@@ -88,7 +88,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
       </h3>
       
       {/* Description - Orange/red uppercase */}
-      <p className="text-xs tracking-wider uppercase text-[#9a7b5c] leading-relaxed">
+      <p className="text-xs tracking-wider uppercase text-[#BA846E] leading-relaxed">
         {service.short_description?.toUpperCase() || "ПОДРОБНЕЕ ОБ УСЛУГЕ"}
       </p>
     </Link>
