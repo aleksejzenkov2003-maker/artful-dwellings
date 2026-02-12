@@ -21,6 +21,9 @@ export function AboutTeamCarousel() {
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header - Centered */}
         <div className="text-center mb-12">
+          <p className="text-xs uppercase tracking-[0.2em] text-white/50 mb-4">
+            ◆ СПЕЦИАЛИСТЫ ◆
+          </p>
           <h2 className="text-3xl lg:text-4xl font-serif mb-2">
             Команда экспертов
           </h2>

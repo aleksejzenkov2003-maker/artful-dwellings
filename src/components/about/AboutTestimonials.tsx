@@ -60,6 +60,7 @@ export function AboutTestimonials() {
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header - Centered */}
         <div className="text-center mb-12">
+          <span className="text-5xl lg:text-6xl font-serif text-primary/30 block mb-4">"</span>
           <h2 className="text-3xl lg:text-4xl font-serif">
             Слово нашим клиентам
           </h2>

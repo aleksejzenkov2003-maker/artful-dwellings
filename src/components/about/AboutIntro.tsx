@@ -1,5 +1,13 @@
 import heroTeam from "@/assets/hero-team.jpg";
 
+const stats = [
+  { value: "15+", label: "лет на рынке" },
+  { value: "850+", label: "объектов в базе" },
+  { value: "50", label: "специалистов" },
+  { value: "4200+", label: "успешных сделок" },
+  { value: "3500", label: "довольных клиентов" },
+];
+
 export function AboutIntro() {
   return (
     <section className="py-16 lg:py-24">
@@ -33,6 +41,24 @@ export function AboutIntro() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Stats section */}
+        <div className="mt-16">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
+            {stats.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <span className="text-3xl lg:text-4xl font-serif text-primary block mb-2">
+                  {stat.value}
+                </span>
+                <span className="text-sm text-muted-foreground uppercase tracking-wider">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* Coral separator line */}
+          <div className="w-full h-px bg-accent mt-12" />
         </div>
       </div>
     </section>

@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function AboutServices() {
   const { data: services, isLoading } = useServices();
 
-  // Use first 8 services or fallback data
   const displayServices = services?.slice(0, 8) || [];
 
   const fallbackServices = [
@@ -21,41 +20,41 @@ export function AboutServices() {
   const items = displayServices.length > 0 ? displayServices : fallbackServices;
 
   return (
-    <section className="py-16 lg:py-24 bg-secondary">
+    <section className="py-16 lg:py-24 bg-accent text-accent-foreground">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
-        {/* Header with short line (matching reference) */}
+        {/* Header */}
         <div className="flex items-center gap-6 mb-16">
-          <h2 className="text-4xl lg:text-5xl font-serif whitespace-nowrap">Услуги</h2>
-          <div className="w-24 h-px bg-foreground" />
+          <h2 className="text-4xl lg:text-5xl font-serif whitespace-nowrap text-white">Услуги</h2>
+          <div className="w-24 h-px bg-white/40" />
         </div>
 
-        {/* Services grid */}
+        {/* Services grid - 2 columns, 4 rows */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="space-y-4">
-                <Skeleton className="h-10 w-16" />
-                <Skeleton className="h-6 w-48" />
-                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-10 w-16 bg-white/20" />
+                <Skeleton className="h-6 w-48 bg-white/20" />
+                <Skeleton className="h-20 w-full bg-white/20" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-14">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-14">
             {items.map((service, index) => (
               <div key={service.id} className="group">
-                {/* Number - Large serif italic in teal */}
-                <span className="text-primary font-serif italic text-4xl lg:text-5xl mb-4 block leading-none">
+                {/* Number */}
+                <span className="text-white font-serif italic text-4xl lg:text-5xl mb-4 block leading-none">
                   {String(index + 1).padStart(2, '0')}/
                 </span>
                 
-                {/* Title - uppercase, regular weight, tracking */}
-                <h3 className="text-sm font-medium uppercase tracking-[0.15em] mb-4 text-foreground">
+                {/* Title */}
+                <h3 className="text-sm font-medium uppercase tracking-[0.15em] mb-4 text-white">
                   {service.title}
                 </h3>
                 
-                {/* Description - italic style */}
-                <p className="text-muted-foreground italic leading-relaxed text-[15px]">
+                {/* Description */}
+                <p className="text-white/70 italic leading-relaxed text-[15px]">
                   {'short_description' in service ? service.short_description : (service as any).description}
                 </p>
               </div>
