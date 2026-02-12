@@ -1,9 +1,12 @@
 export { AboutHero } from "./AboutHero";
 export { AboutIntro } from "./AboutIntro";
 export { AboutServices } from "./AboutServices";
+export { AboutAdditionalServices } from "./AboutAdditionalServices";
 export { AboutTimeline } from "./AboutTimeline";
 export { AboutFounders } from "./AboutFounders";
 export { AboutIdea } from "./AboutIdea";
 export { AboutAdvantages } from "./AboutAdvantages";
+export { AboutCertificates } from "./AboutCertificates";
 export { AboutTeamCarousel } from "./AboutTeamCarousel";
 export { AboutTestimonials } from "./AboutTestimonials";
+export { AboutConsultationForm } from "./AboutConsultationForm";

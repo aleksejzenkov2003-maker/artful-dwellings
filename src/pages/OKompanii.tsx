@@ -3,12 +3,15 @@ import {
   AboutHero,
   AboutIntro,
   AboutServices,
+  AboutAdditionalServices,
   AboutTimeline,
   AboutFounders,
   AboutIdea,
   AboutAdvantages,
+  AboutCertificates,
   AboutTeamCarousel,
   AboutTestimonials,
+  AboutConsultationForm,
 } from "@/components/about";
 
 const OKompanii = () => {
@@ -17,29 +20,38 @@ const OKompanii = () => {
       {/* 1. Hero with hexagons */}
       <AboutHero />
 
-      {/* 2. Company intro with team photo */}
+      {/* 2. Company intro with team photo + stats */}
       <AboutIntro />
 
-      {/* 3. Services grid (01/-08/) */}
+      {/* 3. Services grid on brown/coral background */}
       <AboutServices />
 
-      {/* 4. History timeline */}
+      {/* 4. Additional services (accordion) */}
+      <AboutAdditionalServices />
+
+      {/* 5. History timeline */}
       <AboutTimeline />
 
-      {/* 5. Founders */}
+      {/* 6. Founders */}
       <AboutFounders />
 
-      {/* 6. Idea + Partnership sections */}
+      {/* 7. Idea + Partnership sections */}
       <AboutIdea />
 
-      {/* 7. Advantages with icons + CTA */}
+      {/* 8. Advantages with icons + CTA */}
       <AboutAdvantages />
 
-      {/* 8. Team carousel on dark background */}
+      {/* 9. Certificates and awards */}
+      <AboutCertificates />
+
+      {/* 10. Team carousel on dark background */}
       <AboutTeamCarousel />
 
-      {/* 9. Video testimonials */}
+      {/* 11. Video testimonials */}
       <AboutTestimonials />
+
+      {/* 12. Consultation form */}
+      <AboutConsultationForm />
     </Layout>
   );
 };
