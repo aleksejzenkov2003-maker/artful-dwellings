@@ -1,14 +1,10 @@
 import { Layout } from "@/components/layout/Layout";
 import {
   AboutHero,
-  AboutIntro,
   AboutServices,
   AboutAdditionalServices,
-  AboutTimeline,
-  AboutFounders,
-  AboutIdea,
-  AboutAdvantages,
   AboutCertificates,
+  AboutAdvantages,
   AboutTeamCarousel,
   AboutTestimonials,
   AboutConsultationForm,
@@ -17,40 +13,28 @@ import {
 const OKompanii = () => {
   return (
     <Layout>
-      {/* 1. Hero with hexagons */}
+      {/* 1. Hero with title, team photo, stats */}
       <AboutHero />
 
-      {/* 2. Company intro with team photo + stats */}
-      <AboutIntro />
-
-      {/* 3. Services grid on brown/coral background */}
+      {/* 2. Services grid on brown background */}
       <AboutServices />
 
-      {/* 4. Additional services (accordion) */}
+      {/* 3. Additional services on brown background */}
       <AboutAdditionalServices />
 
-      {/* 5. History timeline */}
-      <AboutTimeline />
-
-      {/* 6. Founders */}
-      <AboutFounders />
-
-      {/* 7. Idea + Partnership sections */}
-      <AboutIdea />
-
-      {/* 8. Advantages with icons + CTA */}
-      <AboutAdvantages />
-
-      {/* 9. Certificates and awards */}
+      {/* 4. Certificates on dark background */}
       <AboutCertificates />
 
-      {/* 10. Team carousel on dark background */}
+      {/* 5. Advantages - Art Estate это */}
+      <AboutAdvantages />
+
+      {/* 6. Team grid on dark background */}
       <AboutTeamCarousel />
 
-      {/* 11. Video testimonials */}
+      {/* 7. Video testimonials */}
       <AboutTestimonials />
 
-      {/* 12. Consultation form */}
+      {/* 8. Consultation form */}
       <AboutConsultationForm />
     </Layout>
   );

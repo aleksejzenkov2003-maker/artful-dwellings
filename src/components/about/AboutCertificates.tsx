@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import awardBadge1 from "@/assets/award-badge-1.png";
 import awardBadge2 from "@/assets/award-badge-2.png";
@@ -7,50 +6,56 @@ export function AboutCertificates() {
   return (
     <section className="py-16 lg:py-24 bg-[#1a1a1a] text-white">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
-        {/* Section label */}
-        <div className="text-center mb-12">
-          <p className="text-xs uppercase tracking-[0.2em] text-white/50 mb-4">
-            ◆ СЕРТИФИКАТЫ ◆
-          </p>
-          <h2 className="text-3xl lg:text-4xl font-serif mb-6">
-            Сертификаты и награды
-          </h2>
-          <div className="w-20 h-0.5 bg-primary mx-auto" />
-        </div>
+        {/* Label */}
+        <p className="text-xs uppercase tracking-[0.2em] text-accent mb-8">
+          ◆ СЕРТИФИКАТЫ
+        </p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left - text */}
-          <div>
-            <p className="text-white/70 leading-relaxed mb-6 text-lg">
-              Art Estate — официальный партнёр ведущих застройщиков Санкт-Петербурга, 
-              Москвы и ОАЭ. Мы регулярно подтверждаем свой профессионализм и получаем 
-              награды за высокое качество работы.
-            </p>
-            <p className="text-white/50 leading-relaxed mb-8">
-              Наши сертификаты — это подтверждение надёжности и экспертности команды 
-              Art Estate. Мы гордимся доверием застройщиков и банков-партнёров.
-            </p>
-            <Button variant="teal" size="lg" asChild>
-              <Link to="/partneram">
-                СМОТРЕТЬ ВСЕ
-              </Link>
-            </Button>
-          </div>
+        {/* Main title with gold highlights */}
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif leading-tight mb-16 max-w-4xl">
+          Являемся <span className="text-accent">официальным партнером</span> ведущих застройщиков
+          и банков, что подтверждается <span className="text-accent">наградами и сертификатами</span>
+        </h2>
 
-          {/* Right - award badges */}
-          <div className="flex items-center justify-center gap-8 lg:gap-12">
-            <img 
-              src={awardBadge1} 
-              alt="Сертификат партнёра" 
-              className="w-40 h-auto lg:w-52 object-contain"
+        {/* Award images row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 mb-12">
+          <div className="aspect-square flex items-center justify-center">
+            <img
+              src={awardBadge1}
+              alt="Награда 1"
+              className="max-w-full max-h-full object-contain"
             />
-            <img 
-              src={awardBadge2} 
-              alt="Награда Art Estate" 
-              className="w-40 h-auto lg:w-52 object-contain"
+          </div>
+          <div className="aspect-square flex items-center justify-center">
+            <img
+              src={awardBadge2}
+              alt="Награда 2"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+          <div className="aspect-square flex items-center justify-center">
+            <img
+              src={awardBadge1}
+              alt="Награда 3"
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+          <div className="aspect-square flex items-center justify-center">
+            <img
+              src={awardBadge2}
+              alt="Награда 4"
+              className="max-w-full max-h-full object-contain"
             />
           </div>
         </div>
+
+        {/* Link */}
+        <Link
+          to="/partneram"
+          className="text-primary text-sm uppercase tracking-wider hover:underline"
+        >
+          СМОТРЕТЬ ВСЕ +
+        </Link>
       </div>
     </section>
   );
