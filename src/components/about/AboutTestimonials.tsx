@@ -60,7 +60,8 @@ export function AboutTestimonials() {
   const displayReviews = reviews?.filter(r => r.source_url || r.author_photo || fallbackPhotos[r.author_name]) || [];
 
   const getPhoto = (review: { author_name: string; author_photo: string | null }) => {
-    return review.author_photo || fallbackPhotos[review.author_name] || null;
+    // Prioritize local fallback photos over database URLs
+    return fallbackPhotos[review.author_name] || review.author_photo || null;
   };
 
   return (
