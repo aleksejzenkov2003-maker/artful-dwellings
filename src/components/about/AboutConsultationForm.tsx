@@ -97,8 +97,8 @@ export function AboutConsultationForm() {
               <img
                 src={consultationHouse}
                 alt="Жилой комплекс"
-                className="relative z-10 object-contain object-bottom -mt-16"
-                style={{ height: "calc(100% + 4rem)" }}
+                className="relative z-10 object-contain object-bottom -mt-24"
+                style={{ height: "calc(100% + 6rem)" }}
               />
             </div>
           </div>
