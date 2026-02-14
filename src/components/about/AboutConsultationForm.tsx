@@ -85,7 +85,7 @@ export function AboutConsultationForm() {
                 <Button
                   type="submit"
                   disabled={mutation.isPending}
-                  className="w-full sm:w-auto bg-foreground text-white hover:bg-foreground/90 uppercase text-sm tracking-wider px-10 py-6 rounded-none"
+                  className="w-full bg-foreground text-white hover:bg-foreground/90 uppercase text-sm tracking-wider px-10 py-6 rounded-none"
                 >
                   {mutation.isPending ? "Отправка..." : "ОСТАВИТЬ ЗАЯВКУ"}
                 </Button>
