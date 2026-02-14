@@ -32,7 +32,7 @@ export function AboutAdvantages() {
           {advantages.map((item) => (
             <div
               key={item.title}
-              className="border border-border rounded-2xl p-8 lg:p-10 flex flex-col min-h-[420px]"
+              className="border border-border rounded-lg p-8 lg:p-10 flex flex-col min-h-[420px]"
             >
               <h3 className="text-xl lg:text-2xl font-serif whitespace-pre-line mb-8 leading-tight">
                 {item.title}
