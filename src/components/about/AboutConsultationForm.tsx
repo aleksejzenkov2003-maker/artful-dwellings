@@ -35,7 +35,6 @@ export function AboutConsultationForm() {
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         <div className="relative">
-          {/* Background with pattern - contained */}
           <div
             className="absolute inset-0 z-0"
             style={{
@@ -46,7 +45,6 @@ export function AboutConsultationForm() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 relative">
-            {/* Left - Form */}
             <div className="p-8 lg:p-12 xl:p-16 text-white relative z-10">
               <h2 className="text-3xl lg:text-4xl font-serif mb-2">
                 Получите консультацию
@@ -92,7 +90,6 @@ export function AboutConsultationForm() {
               </form>
             </div>
 
-            {/* Right - Building image overflowing top */}
             <div className="hidden lg:flex relative items-end justify-center">
               <img
                 src={consultationHouse}

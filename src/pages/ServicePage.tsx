@@ -115,41 +115,7 @@ export default function ServicePage() {
       )}
 
       {/* Contact Form Section */}
-      <section className="py-16 lg:py-24 bg-muted/20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-serif mb-6">
-                Получить консультацию
-              </h2>
-              <p className="text-muted-foreground mb-8">
-                Оставьте заявку и наш специалист свяжется с вами для подробной консультации по услуге «{service.title}»
-              </p>
-              
-              {/* Features list */}
-              {features.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="text-sm font-medium uppercase tracking-wider text-muted-foreground mb-4">
-                    Что вы получите:
-                  </h3>
-                  <ul className="space-y-3">
-                    {features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <span className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
-                        <span className="text-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-            
-            <div className="bg-background p-8 shadow-lg">
-              <ServiceContactForm serviceTitle={service.title} serviceSlug={service.slug} />
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServiceContactForm serviceTitle={service.title} serviceSlug={service.slug} />
     </Layout>
   );
 }

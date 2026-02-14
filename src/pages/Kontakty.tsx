@@ -1,66 +1,13 @@
 import { Layout } from "@/components/layout/Layout";
-import { Phone, Mail, MapPin, Clock, MessageCircle, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Phone, Mail, MapPin, Clock, MessageCircle } from "lucide-react";
 import { useCityContacts } from "@/hooks/useCityContacts";
 import { useCity } from "@/contexts/CityContext";
-import { useSubmitLead } from "@/hooks/useSubmitLead";
-import { useState } from "react";
-import { z } from "zod";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Минимум 2 символа").max(100),
-  phone: z.string().trim().min(10, "Введите корректный номер").max(20),
-  message: z.string().trim().max(1000).optional(),
-});
+import { UnifiedConsultationForm } from "@/components/shared/UnifiedConsultationForm";
 
 const Kontakty = () => {
   const { currentCity } = useCity();
   const { data: contacts, isLoading } = useCityContacts();
-  const { mutate: submitLead, isPending } = useSubmitLead();
-  
-  const [formData, setFormData] = useState({ name: "", phone: "", message: "" });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrors({});
-
-    const result = contactSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
-    submitLead({
-      name: formData.name.trim(),
-      phone: formData.phone.trim(),
-      message: formData.message?.trim() || null,
-      form_type: "contact",
-      form_source: "/kontakty",
-    }, {
-      onSuccess: () => {
-        setFormData({ name: "", phone: "", message: "" });
-      }
-    });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
 
   const phoneHref = contacts?.phone ? `tel:${contacts.phone.replace(/[^\d+]/g, "")}` : "#";
   const whatsappHref = contacts?.whatsapp ? `https://wa.me/${contacts.whatsapp.replace(/[^\d]/g, "")}` : null;
@@ -194,64 +141,13 @@ const Kontakty = () => {
             </div>
             
             {/* Contact Form */}
-            <div className="bg-card border border-border rounded-xl p-6 lg:p-8">
-              <h2 className="text-2xl font-serif font-bold mb-6">
-                Напишите нам
-              </h2>
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Ваше имя *</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Иван Иванов"
-                    className={errors.name ? "border-destructive" : ""}
-                  />
-                  {errors.name && <p className="text-destructive text-sm">{errors.name}</p>}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Телефон *</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="+7 (999) 999-99-99"
-                    className={errors.phone ? "border-destructive" : ""}
-                  />
-                  {errors.phone && <p className="text-destructive text-sm">{errors.phone}</p>}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="message">Сообщение</Label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Ваш вопрос или сообщение..."
-                    rows={4}
-                  />
-                </div>
-                
-                <Button type="submit" className="w-full" disabled={isPending}>
-                  {isPending ? "Отправка..." : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Отправить сообщение
-                    </>
-                  )}
-                </Button>
-                
-                <p className="text-muted-foreground text-xs text-center">
-                  Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-                </p>
-              </form>
-            </div>
+            <UnifiedConsultationForm
+              variant="compact"
+              title="Напишите нам"
+              subtitle="Оставьте заявку и мы свяжемся с вами"
+              formSource="/kontakty"
+              formType="contact"
+            />
           </div>
           
           {/* Map */}
