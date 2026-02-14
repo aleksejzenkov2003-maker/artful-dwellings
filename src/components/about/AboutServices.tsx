@@ -40,9 +40,9 @@ const services = [
 
 export function AboutServices() {
   return (
-    <section className="py-16 lg:py-24" style={{ backgroundColor: '#BA846E' }}>
+    <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
-        <h2 className="text-4xl lg:text-5xl font-serif text-white mb-12">Услуги</h2>
+        <h2 className="text-4xl lg:text-5xl font-serif italic text-foreground mb-12">Услуги</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {services.map((service, index) => {
@@ -50,7 +50,7 @@ export function AboutServices() {
             return (
               <div
                 key={index}
-                className="bg-white rounded-xl p-6 flex flex-col justify-between min-h-[220px]"
+                className="bg-white border border-[#e5e0db] rounded-xl p-6 flex flex-col justify-between min-h-[240px]"
               >
                 {/* Top: title + icon */}
                 <div className="flex items-start justify-between gap-3">
@@ -74,10 +74,10 @@ export function AboutServices() {
 
           {/* CTA card */}
           <div
-            className="rounded-xl p-6 flex flex-col justify-between min-h-[220px] text-white"
-            style={{ backgroundColor: '#BA846E', border: '1px solid rgba(255,255,255,0.2)' }}
+            className="rounded-xl p-6 flex flex-col justify-between min-h-[240px] text-white"
+            style={{ backgroundColor: '#BA846E' }}
           >
-            <h3 className="font-semibold text-lg">Заинтересовали?</h3>
+            <h3 className="font-serif italic text-xl lg:text-2xl">Заинтересовали?</h3>
             <div className="flex items-end justify-between gap-3 mt-auto">
               <p className="text-white/80 text-[13px] leading-relaxed max-w-[75%]">
                 Оставьте заявку, мы с&nbsp;вами свяжемся и&nbsp;расскажем подробнее
