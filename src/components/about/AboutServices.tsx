@@ -55,7 +55,7 @@ export function AboutServices() {
           {services.map((service, index) => (
             <div
               key={index}
-              className="bg-white border border-[#e5e0db] rounded-xl p-6 flex flex-col justify-between min-h-[240px]"
+              className="bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 flex flex-col justify-between min-h-[240px]"
             >
               <div className="flex items-start justify-between gap-3">
                 <h3 className="font-bold text-[18px] leading-snug text-foreground max-w-[70%]">
@@ -63,17 +63,15 @@ export function AboutServices() {
                 </h3>
                 <img src={service.icon} alt="" className="w-10 h-10 flex-shrink-0 object-contain" />
               </div>
-              <div className="border-t border-[#e5e0db] mt-auto pt-4">
-                <p className="text-[13px] text-muted-foreground leading-relaxed italic">
-                  {service.description}
-                </p>
-              </div>
+              <p className="text-[13px] text-muted-foreground leading-relaxed italic mt-auto pt-4">
+                {service.description}
+              </p>
             </div>
           ))}
 
           {/* CTA card */}
           <div
-            className="rounded-xl p-6 flex flex-col justify-between min-h-[240px] text-white"
+            className="p-6 flex flex-col justify-between min-h-[240px] text-white"
             style={{ backgroundColor: '#BA846E' }}
           >
             <h3 className="font-aeroport font-normal text-[24px] leading-[26px]">Заинтересовали?</h3>
