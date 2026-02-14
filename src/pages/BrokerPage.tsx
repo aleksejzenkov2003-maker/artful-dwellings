@@ -10,6 +10,18 @@ import { ComplexCard } from "@/components/novostroyki/ComplexCard";
 import { BrokerContactForm } from "@/components/broker/BrokerContactForm";
 import { BrokerReviews } from "@/components/broker/BrokerReviews";
 
+import teamMember1 from "@/assets/team-member-1.png";
+import teamMember2 from "@/assets/team-member-2.png";
+import teamMember3 from "@/assets/team-member-3.png";
+import teamMember4 from "@/assets/team-member-4.png";
+
+const brokerFallbackPhotos: Record<string, string> = {
+  "ivan": teamMember1,
+  "aleksandr-volkov": teamMember2,
+  "mariya-andreeva": teamMember3,
+  "aleksey-morozov": teamMember4,
+};
+
 // Content block types matching AdminBlogEdit / AdminTeamEdit
 interface ContentBlock {
   id: string;
@@ -289,19 +301,22 @@ const BrokerPage = () => {
           <div className="flex flex-col lg:flex-row gap-12 items-start">
             {/* Photo */}
             <div className="lg:w-80 flex-shrink-0">
-              {broker.photo_url ? (
-                <img 
-                  src={broker.photo_url} 
-                  alt={broker.name}
-                  className="w-full aspect-[3/4] object-cover rounded-lg shadow-lg"
-                />
-              ) : (
-                <div className="w-full aspect-[3/4] bg-muted rounded-lg flex items-center justify-center">
-                  <span className="text-6xl font-serif text-muted-foreground">
-                    {broker.name.charAt(0)}
-                  </span>
-                </div>
-              )}
+              {(() => {
+                const photo = broker.photo_url || brokerFallbackPhotos[broker.slug || ""] || null;
+                return photo ? (
+                  <img 
+                    src={photo} 
+                    alt={broker.name}
+                    className="w-full aspect-[3/4] object-cover rounded-lg shadow-lg"
+                  />
+                ) : (
+                  <div className="w-full aspect-[3/4] bg-muted rounded-lg flex items-center justify-center">
+                    <span className="text-6xl font-serif text-muted-foreground">
+                      {broker.name.charAt(0)}
+                    </span>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Info */}
