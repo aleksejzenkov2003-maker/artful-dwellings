@@ -1,6 +1,6 @@
 import { useReviews } from "@/hooks/useReviews";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import {
@@ -113,8 +113,10 @@ export function AboutTestimonials() {
 
                       {/* Play button - top right, teal circle */}
                       {review.source_url && (
-                        <button className="absolute top-4 right-4 w-12 h-12 rounded-full bg-[#00C9CE] flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+                        <button className="absolute top-4 right-4 w-12 h-12 rounded-full bg-[#00C9CE] flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                          <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 2L18 11L2 20V2Z" stroke="white" strokeWidth="2" strokeLinejoin="round" fill="none" />
+                          </svg>
                         </button>
                       )}
 
@@ -148,7 +150,7 @@ export function AboutTestimonials() {
               </button>
               <button
                 onClick={scrollNext}
-                className="w-11 h-11 rounded-full bg-[#00C9CE] flex items-center justify-center hover:bg-[#00b5b9] transition-colors"
+                className="w-11 h-11 rounded-full bg-[#BA846E] flex items-center justify-center hover:bg-[#a0725d] transition-colors"
               >
                 <ChevronRight className="w-5 h-5 text-white" />
               </button>
