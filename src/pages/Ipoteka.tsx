@@ -120,11 +120,7 @@ const Ipoteka = () => {
       </section>
 
       {/* Contact Form */}
-      <section className="py-12 lg:py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <MortgageContactForm />
-        </div>
-      </section>
+      <MortgageContactForm />
     </Layout>
   );
 };
