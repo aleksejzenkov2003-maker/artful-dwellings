@@ -1,37 +1,41 @@
 
 
-## Update "Дополнительные услуги" Section to Match Reference
+## Обновление блока "Сертификаты" по макету
 
-### Current vs Reference Differences
+### Что нужно сделать
 
-1. **Background color**: Currently `bg-accent` (terracotta/brown) -- reference shows a light/white background
-2. **Title**: Currently white text with `font-serif` -- reference shows dark text, Aeroport font
-3. **Cards**: Currently `bg-white/90 rounded-lg` on brown bg -- reference shows white cards with a thin border on a light background
-4. **Plus button**: Currently dark icon in a bordered circle -- reference shows a teal/cyan colored `+` icon in a light circle with subtle border
-5. **Card layout**: Title and description on the left, plus button on the right, aligned vertically centered
+**1. Скопировать 4 фотографии наград в проект**
+- `user-uploads://1.png` → `src/assets/award-1.png` (звезда "1 место")
+- `user-uploads://2.png` → `src/assets/award-2.png` (Legenda Best Agency)
+- `user-uploads://3.png` → `src/assets/award-3.png` (Renaissance Development)
+- `user-uploads://4.png` → `src/assets/award-4.png` (RBI партнер года)
 
-### Changes to `src/components/about/AboutAdditionalServices.tsx`
+**2. Обновить `src/components/about/AboutCertificates.tsx`**
 
-**Section wrapper:**
-- Change `bg-accent` to light background (white or very light gray)
+По макету:
+- **Фон**: темно-серый `#2a2a2a` / `#333` (текущий `#1a1a1a` близок, можно оставить или чуть осветлить)
+- **Лейбл** `◆ СЕРТИФИКАТЫ`: мелкий, бежевый/accent, слева вверху
+- **Ссылка** `СМОТРЕТЬ ВСЕ +`: справа вверху на одной строке с лейблом (сейчас внизу)
+- **Заголовок**: крупный шрифт Aeroport (font-serif), белый текст, слова "официальным партнером" и "наградами и сертификатами" выделены бежевым/accent
+- **Фотографии наград**: 4 штуки в ряд, без квадратных контейнеров -- просто фото с прозрачным фоном на темном фоне, равномерно распределены
+- Убрать `aspect-square` обертки, показать фото в естественных пропорциях
 
-**Title:**
-- Remove `text-white`, use `text-foreground`
-- Use Aeroport font (`font-serif`) with proper sizing (~36px)
+### Технические детали
 
-**Cards:**
-- Use white background with thin border (`border border-gray-200`)
-- Sharp corners (no `rounded-lg`)
-- Remove hover effects that change background
+```text
+Структура верхней части:
+[◆ СЕРТИФИКАТЫ]                    [СМОТРЕТЬ ВСЕ +]
 
-**Plus icon:**
-- Change icon color to teal (`text-teal` / `#00C9CE`)
-- Keep circular border but make it subtle gray
+Являемся официальным партнером ведущих застройщиков
+и банков, что подтверждается наградами и сертификатами
 
-**Text colors:**
-- Title: dark/foreground, bold
-- Description: muted gray, normal weight
+[award-1]    [award-2]    [award-3]    [award-4]
+```
 
-### Single file change
-- `src/components/about/AboutAdditionalServices.tsx`
+- Лейбл и ссылка размещаются в `flex justify-between` контейнере
+- Заголовок: `text-3xl md:text-4xl lg:text-5xl font-serif`, max-width ~4xl
+- Сетка наград: `grid grid-cols-2 md:grid-cols-4`, элементы центрированы по нижнему краю (`items-end`), фото высотой ~280-320px
+- Ссылка: бежевый цвет, uppercase, tracking-wider
 
+### Файлы для изменения
+- `src/components/about/AboutCertificates.tsx` -- единственный файл
