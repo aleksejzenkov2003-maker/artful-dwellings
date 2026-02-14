@@ -15,7 +15,7 @@ export function AboutTeamCarousel() {
   const displayMembers = teamMembers?.slice(0, 4) || [];
 
   return (
-    <section className="py-16 lg:py-24 bg-[#2d2d2d] text-white">
+    <section className="py-16 lg:py-24 bg-[#262626] text-white">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header */}
         <div className="text-center mb-12">
@@ -47,7 +47,7 @@ export function AboutTeamCarousel() {
               const content = (
                 <div className="group text-center">
                   {/* Photo — cutout on dark bg, grayscale → color on hover */}
-                  <div className="flex items-end justify-center mb-4 h-[350px] lg:h-[420px]">
+                  <div className="flex items-end justify-center mb-4 h-[400px] lg:h-[520px]">
                     <img
                       src={photo}
                       alt={member.name}
