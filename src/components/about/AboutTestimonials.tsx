@@ -10,6 +10,7 @@ import {
 import testimonial1 from "@/assets/testimonial-1.png";
 import testimonial2 from "@/assets/testimonial-2.png";
 import testimonial3 from "@/assets/testimonial-3.png";
+import quoteMark from "@/assets/quote-mark.svg";
 
 const fallbackPhotos: Record<string, string> = {
   "Лера Кудрявцева": testimonial1,
@@ -67,7 +68,7 @@ export function AboutTestimonials() {
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header */}
         <div className="relative mb-12">
-          <span className="text-6xl lg:text-7xl font-serif text-[#BA846E] absolute -top-8 left-0 leading-none">"</span>
+          <img src={quoteMark} alt="quote" className="absolute -top-2 left-0 w-10 lg:w-12" />
           <h2 className="text-3xl lg:text-4xl font-serif text-center">
             Слово нашим клиентам
           </h2>
