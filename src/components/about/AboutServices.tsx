@@ -74,7 +74,7 @@ export function AboutServices() {
             className="rounded-xl p-6 flex flex-col justify-between min-h-[240px] text-white"
             style={{ backgroundColor: '#BA846E' }}
           >
-            <h3 className="font-serif italic text-xl lg:text-2xl">Заинтересовали?</h3>
+            <h3 className="font-aeroport font-normal text-[24px] leading-[26px]">Заинтересовали?</h3>
             <div className="flex items-end justify-between gap-3 mt-auto">
               <p className="text-white/80 text-[13px] leading-relaxed max-w-[75%]">
                 Оставьте заявку, мы с&nbsp;вами свяжемся и&nbsp;расскажем подробнее
