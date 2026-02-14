@@ -22,7 +22,7 @@ export function AboutCertificates() {
         </div>
 
         {/* Main title */}
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif leading-tight mb-16 max-w-4xl">
+        <h2 className="text-2xl md:text-3xl lg:text-[38px] font-serif leading-tight mb-16 max-w-4xl">
           Являемся <span className="text-accent">официальным партнером</span> ведущих застройщиков
           и банков, что подтверждается <span className="text-accent">наградами и сертификатами</span>
         </h2>
@@ -30,16 +30,16 @@ export function AboutCertificates() {
         {/* Award images */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 items-end">
           <div className="flex items-end justify-center">
-            <img src={award1} alt="1 место" className="max-h-[300px] object-contain" />
+            <img src={award1} alt="1 место" className="max-h-[300px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
           </div>
           <div className="flex items-end justify-center">
-            <img src={award2} alt="Legenda Best Agency" className="max-h-[300px] object-contain" />
+            <img src={award2} alt="Legenda Best Agency" className="max-h-[300px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
           </div>
           <div className="flex items-end justify-center">
-            <img src={award3} alt="Renaissance Development" className="max-h-[300px] object-contain" />
+            <img src={award3} alt="Renaissance Development" className="max-h-[300px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
           </div>
           <div className="flex items-end justify-center">
-            <img src={award4} alt="RBI партнер года" className="max-h-[300px] object-contain" />
+            <img src={award4} alt="RBI партнер года" className="max-h-[300px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
           </div>
         </div>
       </div>
