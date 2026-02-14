@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useSubmitLead } from "@/hooks/useSubmitLead";
 import { User, Phone } from "lucide-react";
-import promoBuilding from "@/assets/promo-apartment-building.jpg";
+import consultationBg from "@/assets/consultation-bg.png";
+import consultationHouse from "@/assets/consultation-house.png";
 
 const formSchema = z.object({
   name: z.string().min(2, "Введите имя"),
@@ -34,10 +34,17 @@ export function AboutConsultationForm() {
   return (
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
-        <div className="bg-accent rounded-2xl overflow-hidden">
+        <div
+          className="overflow-hidden relative"
+          style={{
+            backgroundImage: `url(${consultationBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left - Form */}
-            <div className="p-8 lg:p-12 xl:p-16 text-white">
+            <div className="p-8 lg:p-12 xl:p-16 text-white relative z-10">
               <h2 className="text-3xl lg:text-4xl font-serif mb-2">
                 Получите консультацию
               </h2>
@@ -52,7 +59,7 @@ export function AboutConsultationForm() {
                     type="text"
                     {...form.register("name")}
                     placeholder="Ваше имя"
-                    className="w-full bg-white rounded-lg pl-12 pr-4 py-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full bg-white pl-12 pr-4 py-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
 
@@ -62,7 +69,7 @@ export function AboutConsultationForm() {
                     type="tel"
                     {...form.register("phone")}
                     placeholder="+7 (XXX) XXX XX XX"
-                    className="w-full bg-white rounded-lg pl-12 pr-4 py-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full bg-white pl-12 pr-4 py-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
 
@@ -75,7 +82,7 @@ export function AboutConsultationForm() {
                 <Button
                   type="submit"
                   disabled={mutation.isPending}
-                  className="w-full sm:w-auto bg-foreground text-white hover:bg-foreground/90 uppercase text-sm tracking-wider px-10 py-6"
+                  className="w-full sm:w-auto bg-foreground text-white hover:bg-foreground/90 uppercase text-sm tracking-wider px-10 py-6 rounded-none"
                 >
                   {mutation.isPending ? "Отправка..." : "ОСТАВИТЬ ЗАЯВКУ"}
                 </Button>
@@ -83,11 +90,11 @@ export function AboutConsultationForm() {
             </div>
 
             {/* Right - Building image */}
-            <div className="hidden lg:block relative">
+            <div className="hidden lg:flex relative items-end justify-center">
               <img
-                src={promoBuilding}
+                src={consultationHouse}
                 alt="Жилой комплекс"
-                className="absolute inset-0 w-full h-full object-cover"
+                className="relative z-10 h-full max-h-[420px] object-contain object-bottom"
               />
             </div>
           </div>
