@@ -39,11 +39,11 @@ export function AboutHero() {
 
           {/* Right - Team photo with pattern and play button */}
           <div className="relative">
-            {/* Geometric pattern top-right */}
+            {/* Geometric pattern top-right — large, flush in corner */}
             <img
               src={maskPattern}
               alt=""
-              className="absolute -top-8 -right-4 w-[240px] lg:w-[300px] xl:w-[340px] opacity-100 pointer-events-none select-none z-0"
+              className="absolute -top-16 -right-16 w-[360px] lg:w-[440px] xl:w-[500px] opacity-100 pointer-events-none select-none z-0"
             />
             <div className="relative z-10 aspect-[16/10] overflow-hidden rounded-sm">
               <img
