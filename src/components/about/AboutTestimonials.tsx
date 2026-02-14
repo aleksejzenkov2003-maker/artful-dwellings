@@ -1,12 +1,21 @@
 import { useReviews } from "@/hooks/useReviews";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
+import testimonial1 from "@/assets/testimonial-1.png";
+import testimonial2 from "@/assets/testimonial-2.png";
+import testimonial3 from "@/assets/testimonial-3.png";
+
+const fallbackPhotos: Record<string, string> = {
+  "Лера Кудрявцева": testimonial1,
+  "Джузеппе": testimonial2,
+  "Татьяна Буланова": testimonial3,
+};
 
 const getVideoEmbed = (url: string) => {
   if (!url) return null;
@@ -26,24 +35,39 @@ export function AboutTestimonials() {
   });
   const [videoOpen, setVideoOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onScroll = () => {
+      const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
+      setScrollProgress(progress * 100);
+    };
+    emblaApi.on("scroll", onScroll);
+    onScroll();
+    return () => { emblaApi.off("scroll", onScroll); };
+  }, [emblaApi]);
 
   const handleVideoPlay = (videoUrl: string) => {
     setSelectedVideo(videoUrl);
     setVideoOpen(true);
   };
 
-  const displayReviews = reviews?.filter(r => r.source_url || r.author_photo) || [];
+  const displayReviews = reviews?.filter(r => r.source_url || r.author_photo || fallbackPhotos[r.author_name]) || [];
+
+  const getPhoto = (review: { author_name: string; author_photo: string | null }) => {
+    return review.author_photo || fallbackPhotos[review.author_name] || null;
+  };
 
   return (
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header */}
         <div className="relative mb-12">
-          {/* Decorative quotation mark - top left */}
-          <span className="text-6xl lg:text-7xl font-serif text-muted-foreground/30 absolute -top-8 left-0 leading-none">"</span>
+          <span className="text-6xl lg:text-7xl font-serif text-[#BA846E] absolute -top-8 left-0 leading-none">"</span>
           <h2 className="text-3xl lg:text-4xl font-serif text-center">
             Слово нашим клиентам
           </h2>
@@ -60,64 +84,70 @@ export function AboutTestimonials() {
           <div className="relative">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex gap-6">
-                {displayReviews.map((review) => (
-                  <div
-                    key={review.id}
-                    className="flex-shrink-0 w-[300px] md:w-[380px] relative aspect-[4/3] overflow-hidden rounded-lg group cursor-pointer"
-                    onClick={() => review.source_url && handleVideoPlay(review.source_url)}
-                  >
-                    {review.author_photo ? (
-                      <img
-                        src={review.author_photo}
-                        alt={review.author_name}
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/50" />
-                    )}
+                {displayReviews.map((review) => {
+                  const photo = getPhoto(review);
+                  return (
+                    <div
+                      key={review.id}
+                      className="flex-shrink-0 w-[320px] md:w-[420px] relative aspect-[4/3] overflow-hidden rounded-2xl group cursor-pointer"
+                      onClick={() => review.source_url && handleVideoPlay(review.source_url)}
+                    >
+                      {photo ? (
+                        <img
+                          src={photo}
+                          alt={review.author_name}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/50" />
+                      )}
 
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-                    {/* Name top-left */}
-                    <div className="absolute top-4 left-4">
-                      <h3 className="text-white font-serif text-lg">{review.author_name}</h3>
+                      {/* Name top-left */}
+                      <div className="absolute top-4 left-4">
+                        <h3 className="text-white font-serif text-lg">{review.author_name}</h3>
+                      </div>
+
+                      {/* Play button - top right, teal circle */}
+                      {review.source_url && (
+                        <button className="absolute top-4 right-4 w-12 h-12 rounded-full bg-[#00C9CE] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+                        </button>
+                      )}
+
+                      {/* Caption bottom */}
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <p className="text-white/80 text-xs">
+                          {review.author_role || review.content?.substring(0, 50)}
+                        </p>
+                      </div>
                     </div>
-
-                    {/* Play button - top right, teal circle */}
-                    {review.source_url && (
-                      <button className="absolute top-4 right-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Play className="w-5 h-5 text-white fill-white ml-0.5" />
-                      </button>
-                    )}
-
-                    {/* Caption bottom */}
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-white/80 text-xs">
-                        {review.author_role || review.content?.substring(0, 50)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
-            {/* Progress bar */}
-            <div className="mt-6 w-32 h-1 bg-muted rounded-full overflow-hidden">
-              <div className="h-full w-1/3 bg-accent rounded-full" />
+            {/* Full-width progress bar */}
+            <div className="mt-10 w-full h-[2px] bg-[#e5e5e5] rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#BA846E] rounded-full transition-all duration-150"
+                style={{ width: `${scrollProgress}%` }}
+              />
             </div>
 
             {/* Navigation arrows */}
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-3 mt-6">
               <button
                 onClick={scrollPrev}
-                className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:border-foreground transition-colors"
+                className="w-11 h-11 rounded-full border border-[#d0d0d0] flex items-center justify-center hover:border-foreground transition-colors"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={scrollNext}
-                className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors"
+                className="w-11 h-11 rounded-full bg-[#00C9CE] flex items-center justify-center hover:bg-[#00b5b9] transition-colors"
               >
                 <ChevronRight className="w-5 h-5 text-white" />
               </button>
