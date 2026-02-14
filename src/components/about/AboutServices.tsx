@@ -1,40 +1,47 @@
-import { Plus, Home, BarChart3, Flame, FileText, Bus, Percent, Calculator } from "lucide-react";
+import { Plus } from "lucide-react";
+import iconHome from "@/assets/service-icon-home.png";
+import iconChart from "@/assets/service-icon-chart.png";
+import iconPromo from "@/assets/service-icon-promo.png";
+import iconDocs from "@/assets/service-icon-docs.png";
+import iconBus from "@/assets/service-icon-bus.png";
+import iconMortgage from "@/assets/service-icon-mortgage.png";
+import iconCalc from "@/assets/service-icon-calc.png";
 
 const services = [
   {
     title: "Подбор недвижимости",
     description: "Подбор недвижимости из всех жилых комплексов на рынке, в одном месте. Без комиссии.",
-    Icon: Home,
+    icon: iconHome,
   },
   {
     title: "Расчет инвестиционной привлекательности",
     description: "По каждому из проектов. Профессионально, на высоком уровне",
-    Icon: BarChart3,
+    icon: iconChart,
   },
   {
     title: "Спецпредложения и акции в одном месте",
     description: "Скидки, подарки для клиентов, розыгрыши призов и другое",
-    Icon: Flame,
+    icon: iconPromo,
   },
   {
     title: "Объективная информация по каждому из застройщиков",
     description: "Опыт компании, построенные дома, точность в исполнении обязательств, возможные риски",
-    Icon: FileText,
+    icon: iconDocs,
   },
   {
     title: "Организация экскурсии",
     description: "Организация экскурсии по готовым и строящимся жилым комплексам",
-    Icon: Bus,
+    icon: iconBus,
   },
   {
     title: "Одобрение ипотеки – от 1 часа",
     description: "Благодаря нашему сотрудничеству с банками и ипотечными брокерами",
-    Icon: Percent,
+    icon: iconMortgage,
   },
   {
     title: "Расчет вариантов платежей",
     description: "Рассрочка, ипотека, зачет и др.",
-    Icon: Calculator,
+    icon: iconCalc,
   },
 ];
 
@@ -45,32 +52,22 @@ export function AboutServices() {
         <h2 className="text-[36px] leading-[48px] font-montserrat font-medium text-foreground mb-12">Услуги</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {services.map((service, index) => {
-            const { Icon } = service;
-            return (
-              <div
-                key={index}
-                className="bg-white border border-[#e5e0db] rounded-xl p-6 flex flex-col justify-between min-h-[240px]"
-              >
-                {/* Top: title + icon */}
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="font-semibold text-[15px] leading-tight text-foreground max-w-[75%]">
-                    {service.title}
-                  </h3>
-                  <Icon
-                    className="w-7 h-7 flex-shrink-0"
-                    style={{ color: '#BA846E' }}
-                    strokeWidth={1.5}
-                  />
-                </div>
-
-                {/* Bottom: description */}
-                <p className="text-[13px] text-muted-foreground leading-relaxed mt-auto pt-6">
-                  {service.description}
-                </p>
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="bg-white border border-[#e5e0db] rounded-xl p-6 flex flex-col justify-between min-h-[240px]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="font-semibold text-[15px] leading-tight text-foreground max-w-[75%]">
+                  {service.title}
+                </h3>
+                <img src={service.icon} alt="" className="w-8 h-8 flex-shrink-0 object-contain" />
               </div>
-            );
-          })}
+              <p className="text-[13px] text-muted-foreground leading-relaxed mt-auto pt-6">
+                {service.description}
+              </p>
+            </div>
+          ))}
 
           {/* CTA card */}
           <div
