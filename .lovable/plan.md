@@ -1,22 +1,31 @@
 
 
-## Доработка блока "Сертификаты"
+## Обновление блока "Art Estate — это" по макету
 
-### Что нужно изменить
+### Что нужно сделать
 
-**1. Уменьшить размер заголовка** -- чтобы текст помещался в 2 строки, как на макете
-- Уменьшить с `text-3xl md:text-4xl lg:text-5xl` до примерно `text-2xl md:text-3xl lg:text-[38px]`
+**1. Скопировать 3 иконки 3D в проект**
+- `user-uploads://Frame_33186_1.png` → `src/assets/advantage-icon-1.png` (сертификат)
+- `user-uploads://Frame_33186_2.png` → `src/assets/advantage-icon-2.png` (мишень)
+- `user-uploads://Frame_33186_3.png` → `src/assets/advantage-icon-3.png` (блокнот)
 
-**2. Добавить эффект тени при наведении на награды**
-- На каждое изображение награды добавить `transition` и `hover:drop-shadow` с мягким свечением (например, золотистый/белый glow)
-- Также можно добавить легкий `hover:scale-105` для плавного увеличения
+**2. Обновить `src/components/about/AboutAdvantages.tsx`**
+
+По макету:
+- Заменить эмодзи на 3D-иконки (импортировать как изображения)
+- Карточки: светлый фон, тонкая граница, скругленные углы -- текущее оформление близко, оставляем
+- Порядок внутри карточки: заголовок сверху → картинка по центру → описание внизу (как сейчас, только картинка вместо эмодзи)
+- Иконки: примерно 140-160px высота, `object-contain`, по центру карточки
 
 ### Технические детали
 
-Изменения только в `src/components/about/AboutCertificates.tsx`:
-
-- Заголовок: `text-2xl md:text-3xl lg:text-[38px]`
-- Изображения: добавить классы `transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105`
+Изменения в `src/components/about/AboutAdvantages.tsx`:
+- Убрать поле `emoji` из массива, заменить на `icon` с импортированным изображением
+- Заменить `<div className="text-6xl">` на `<img src={item.icon} className="h-[140px] object-contain mx-auto" />`
+- Остальная структура и стили остаются
 
 ### Файлы
-- `src/components/about/AboutCertificates.tsx` -- единственный файл
+- `src/assets/advantage-icon-1.png` -- новый файл
+- `src/assets/advantage-icon-2.png` -- новый файл
+- `src/assets/advantage-icon-3.png` -- новый файл
+- `src/components/about/AboutAdvantages.tsx` -- обновление
