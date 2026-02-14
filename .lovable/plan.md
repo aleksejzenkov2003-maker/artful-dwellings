@@ -1,24 +1,37 @@
 
 
-## Fix Service Cards to Match Reference
+## Update "Дополнительные услуги" Section to Match Reference
 
-### Current Issues
-1. Cards have a horizontal divider line (`border-t`) between title and description -- reference has none
-2. Cards have rounded corners (`rounded-xl`) -- reference shows sharp/square corners
-3. Cards lack a shadow -- reference shows a subtle shadow behind cards
+### Current vs Reference Differences
 
-### Changes to `src/components/about/AboutServices.tsx`
+1. **Background color**: Currently `bg-accent` (terracotta/brown) -- reference shows a light/white background
+2. **Title**: Currently white text with `font-serif` -- reference shows dark text, Aeroport font
+3. **Cards**: Currently `bg-white/90 rounded-lg` on brown bg -- reference shows white cards with a thin border on a light background
+4. **Plus button**: Currently dark icon in a bordered circle -- reference shows a teal/cyan colored `+` icon in a light circle with subtle border
+5. **Card layout**: Title and description on the left, plus button on the right, aligned vertically centered
 
-**Service cards:**
-- Remove `rounded-xl` -- use sharp corners (no border-radius)
-- Remove `border-t border-[#e5e0db]` divider wrapper from description area
-- Remove the visible border `border border-[#e5e0db]` from cards
-- Add a subtle shadow: `shadow-md` or `shadow-[0_2px_12px_rgba(0,0,0,0.08)]`
-- Keep description as a simple `<p>` without the `<div>` wrapper
+### Changes to `src/components/about/AboutAdditionalServices.tsx`
 
-**CTA card:**
-- Also remove `rounded-xl` for consistency
+**Section wrapper:**
+- Change `bg-accent` to light background (white or very light gray)
+
+**Title:**
+- Remove `text-white`, use `text-foreground`
+- Use Aeroport font (`font-serif`) with proper sizing (~36px)
+
+**Cards:**
+- Use white background with thin border (`border border-gray-200`)
+- Sharp corners (no `rounded-lg`)
+- Remove hover effects that change background
+
+**Plus icon:**
+- Change icon color to teal (`text-teal` / `#00C9CE`)
+- Keep circular border but make it subtle gray
+
+**Text colors:**
+- Title: dark/foreground, bold
+- Description: muted gray, normal weight
 
 ### Single file change
-- `src/components/about/AboutServices.tsx`
+- `src/components/about/AboutAdditionalServices.tsx`
 
