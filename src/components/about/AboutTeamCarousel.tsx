@@ -47,7 +47,7 @@ export function AboutTeamCarousel() {
               const content = (
                 <div className="group text-center">
                   {/* Photo — cutout on dark bg, grayscale → color on hover */}
-                  <div className="flex items-end justify-center mb-4 h-[400px] lg:h-[520px]">
+                  <div className="flex items-end justify-center mb-4 h-[600px] lg:h-[780px]">
                     <img
                       src={photo}
                       alt={member.name}

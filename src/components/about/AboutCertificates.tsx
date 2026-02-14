@@ -30,16 +30,16 @@ export function AboutCertificates() {
         {/* Award images */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 items-end">
           <div className="flex items-end justify-center">
-            <img src={award1} alt="1 место" className="max-h-[300px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
+            <img src={award1} alt="1 место" className="max-h-[450px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
           </div>
           <div className="flex items-end justify-center">
-            <img src={award2} alt="Legenda Best Agency" className="max-h-[300px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
+            <img src={award2} alt="Legenda Best Agency" className="max-h-[450px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
           </div>
           <div className="flex items-end justify-center">
-            <img src={award3} alt="Renaissance Development" className="max-h-[300px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
+            <img src={award3} alt="Renaissance Development" className="max-h-[450px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
           </div>
           <div className="flex items-end justify-center">
-            <img src={award4} alt="RBI партнер года" className="max-h-[300px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
+            <img src={award4} alt="RBI партнер года" className="max-h-[450px] object-contain transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 cursor-pointer" />
           </div>
         </div>
       </div>
