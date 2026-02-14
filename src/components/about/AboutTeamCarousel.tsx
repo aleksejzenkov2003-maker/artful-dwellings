@@ -18,7 +18,7 @@ export function AboutTeamCarousel() {
     <section className="py-16 lg:py-24 bg-[#262626] text-white">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <p className="text-xs uppercase tracking-[0.2em] text-[#C4956A] mb-4">
             ◆ специалисты ◆
           </p>
