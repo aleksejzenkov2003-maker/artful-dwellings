@@ -48,7 +48,7 @@ export function AboutAdditionalServices() {
                     <h3 className="text-foreground font-bold text-[18px] leading-snug mb-1">
                       {service.title}
                     </h3>
-                    <p className="text-muted-foreground text-[13px] italic">
+                    <p className="text-muted-foreground text-[13px]">
                       {service.description}
                     </p>
                   </div>
