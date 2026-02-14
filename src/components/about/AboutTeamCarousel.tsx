@@ -15,11 +15,11 @@ export function AboutTeamCarousel() {
   const displayMembers = teamMembers?.slice(0, 4) || [];
 
   return (
-    <section className="py-16 lg:py-24 bg-[#1a1a1a] text-white">
+    <section className="py-16 lg:py-24 bg-[#2d2d2d] text-white">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header */}
         <div className="text-center mb-12">
-          <p className="text-xs uppercase tracking-[0.2em] text-accent mb-4">
+          <p className="text-xs uppercase tracking-[0.2em] text-[#C4956A] mb-4">
             ◆ специалисты ◆
           </p>
           <h2 className="text-3xl lg:text-4xl font-serif">
@@ -55,8 +55,8 @@ export function AboutTeamCarousel() {
                     />
                   </div>
                   {/* Name + role */}
-                  <h3 className="text-lg font-semibold text-white mb-1">{member.name}</h3>
-                  <p className="text-white/50 text-sm">{member.role}</p>
+                  <h3 className="text-lg font-serif font-bold text-[#C4956A] mb-1">{member.name}</h3>
+                  <p className="text-white/60 text-sm">{member.role}</p>
                 </div>
               );
 
