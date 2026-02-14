@@ -1,30 +1,105 @@
 
 
-## Redesign Consultation Form on About Page
+# Unified Consultation Form Design Across All Pages
 
-### What changes
+## Overview
 
-The consultation form block on the About page will be redesigned to match the reference exactly:
+Replace all contact/consultation forms across the site with a unified design matching the reference: brown/copper background with hexagon pattern, building image overflowing on the right, white input fields with icons (user + phone), and a full-width dark "ОСТАВИТЬ ЗАЯВКУ" button.
 
-1. **Background**: Replace the current `bg-accent` with the copper/nude background image (`Frame_33178.png`) which has subtle hexagon geometric patterns and diagonal lines
-2. **Building photo**: Replace the current `promo-apartment-building.jpg` with the provided night-lit twin towers image (`house_1.png`) -- positioned on the right side, overlapping/overlaying the background
-3. **Form styling**: 
-   - White input fields with icons (User, Phone) -- already close, keep
-   - Sharp corners (no `rounded-2xl` on container, no `rounded-lg` on inputs) per the page's design standard
-   - Black "ОСТАВИТЬ ЗАЯВКУ" button with uppercase text
-4. **Layout**: Two-column grid stays -- left side has the form text + inputs, right side shows the building image with transparent/cutout background (PNG with no background)
+## Design Specification (from reference)
 
-### Technical steps
+- Brown/copper background (using `consultation-bg.png`)
+- Building image on right side overflowing the top (using `consultation-house.png`)
+- Hexagon geometric pattern overlay
+- Title: "Получите консультацию" (customizable per page)
+- Subtitle: "И наши специалисты ответят на все ваши вопросы"
+- White input fields with User and Phone icons on the left
+- Full-width dark button "ОСТАВИТЬ ЗАЯВКУ"
+- Sharp corners (no border-radius) on all elements
 
-**Assets to copy:**
-- `user-uploads://Frame_33178.png` -> `src/assets/consultation-bg.png` (copper background with hexagon pattern)
-- `user-uploads://house_1.png` -> `src/assets/consultation-house.png` (twin towers PNG)
+## Forms to Update
 
-**File to modify:** `src/components/about/AboutConsultationForm.tsx`
+The following 9 form components/instances will be unified:
 
-- Replace the outer container background from `bg-accent rounded-2xl` to use the copper background image (`consultation-bg.png`) with no rounded corners
-- Replace the right-side image from `promo-apartment-building.jpg` to `consultation-house.png` 
-- Change image styling from `object-cover` to `object-contain` since it's a cutout PNG that should show naturally
-- Remove `rounded-lg` from inputs (use sharp corners)
-- Ensure button is dark/black with white text, uppercase "ОСТАВИТЬ ЗАЯВКУ"
-- Keep the HexagonPattern or remove it since the background image already contains the pattern
+1. **AboutConsultationForm** (`src/components/about/AboutConsultationForm.tsx`) -- already matches, will be the template
+2. **ConsultationSection** (`src/components/home/ConsultationSection.tsx`) -- used on Index page
+3. **ConsultationBlock** (`src/components/shared/ConsultationBlock.tsx`) -- used on Novostroyki & PropertyCatalog pages
+4. **ConsultationForm** (`src/components/home/ConsultationForm.tsx`) -- inline sentence-style form
+5. **ComplexExcursionForm** (`src/components/complex/ComplexExcursionForm.tsx`) -- single-line form on complex page
+6. **ComplexContactForm** (`src/components/complex/ComplexContactForm.tsx`) -- sidebar form on complex page
+7. **ServiceContactForm** (`src/components/services/ServiceContactForm.tsx`) -- sidebar form on service pages
+8. **MortgageContactForm** (`src/components/ipoteka/MortgageContactForm.tsx`) -- two-column form on mortgage page
+9. **Kontakty page form** (`src/pages/Kontakty.tsx`) -- inline form on contacts page
+10. **Partneram page form** (`src/pages/Partneram.tsx`) -- partner application form
+
+**Excluded from unification** (different purpose/context):
+- `CallbackDialog` -- modal dialog, stays as-is
+- `ComplexPresentationButton` -- PDF download dialog, stays as-is
+- `BrokerContactForm` -- broker-specific sidebar form with message field, stays as-is
+- `ComplexQuiz` / `ComplexQuizBanner` -- quiz, not a form
+
+## Technical Approach
+
+### Step 1: Create a Universal ConsultationForm Component
+
+Create `src/components/shared/UnifiedConsultationForm.tsx` -- a reusable component with props:
+
+```text
+Props:
+  - title: string (default: "Получите консультацию")
+  - subtitle: string (default: "И наши специалисты ответят на все ваши вопросы")
+  - formSource: string (for lead tracking)
+  - formType: string (default: "consultation")
+  - variant: "full" | "compact"
+    - "full": full-width section with building image (for standalone sections)
+    - "compact": card-style without building image (for sidebars)
+  - buttonText: string (default: "ОСТАВИТЬ ЗАЯВКУ")
+```
+
+The component will:
+- Use `consultation-bg.png` as background
+- Show `consultation-house.png` overflowing on the right (full variant only)
+- White inputs with User and Phone icons
+- Full-width dark button
+- Zod validation for name and phone
+- `useSubmitLead` hook integration
+- Success state with checkmark
+
+### Step 2: Replace Each Form
+
+| Component | Variant | Custom Props |
+|-----------|---------|-------------|
+| AboutConsultationForm | full | formSource="about_page" |
+| ConsultationSection | full | formSource="Главная страница" |
+| ConsultationBlock | full | title/subtitle from props, formSource from props |
+| ConsultationForm | full | formSource="Главная страница" |
+| ComplexExcursionForm | full | title="Запишитесь на экскурсию", formType="excursion" |
+| ComplexContactForm | compact | title="Записаться на просмотр", formType="complex_inquiry" |
+| ServiceContactForm | compact | title="Заказать услугу", formType="service" |
+| MortgageContactForm | full | title="Получите консультацию по ипотеке", formType="mortgage" |
+| Kontakty form | compact | title="Напишите нам", formType="contact" |
+| Partneram form | compact | title="Оставить заявку", formType="partner" |
+
+### Step 3: Update Parent Pages
+
+Update imports in all parent pages/components to use the new unified component:
+- `src/pages/Index.tsx`
+- `src/pages/OKompanii.tsx`
+- `src/pages/Novostroyki.tsx`
+- `src/pages/PropertyCatalog.tsx`
+- `src/pages/Ipoteka.tsx`
+- `src/pages/Kontakty.tsx`
+- `src/pages/Partneram.tsx`
+- `src/pages/ServicePage.tsx`
+- `src/pages/ResidentialComplex.tsx`
+
+### Compact Variant Details
+
+For sidebar/card forms (ServiceContactForm, ComplexContactForm, Kontakty, Partneram), the compact variant will use the same visual style but without the building image: brown background, white inputs with icons, dark button, contained within a card.
+
+## Files Changed
+
+- **New**: `src/components/shared/UnifiedConsultationForm.tsx`
+- **Modified**: 10+ files (parent pages and existing form components updated to use new unified component)
+- **Potentially removed**: Old form components that become unused
+
