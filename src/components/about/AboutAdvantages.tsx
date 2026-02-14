@@ -32,17 +32,17 @@ export function AboutAdvantages() {
           {advantages.map((item) => (
             <div
               key={item.title}
-              className="border border-border rounded-lg p-8 lg:p-10"
+              className="border border-border rounded-2xl p-8 lg:p-10 flex flex-col min-h-[420px]"
             >
-              <h3 className="text-xl lg:text-2xl font-serif whitespace-pre-line mb-6 leading-tight">
+              <h3 className="text-xl lg:text-2xl font-serif whitespace-pre-line mb-8 leading-tight">
                 {item.title}
               </h3>
 
-              <div className="mb-6 flex items-center justify-center">
-                <img src={item.icon} alt="" className="h-[140px] object-contain" />
+              <div className="flex-1 flex items-center justify-center mb-8">
+                <img src={item.icon} alt="" className="h-[180px] object-contain" />
               </div>
 
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-foreground text-sm leading-relaxed font-semibold">
                 {item.description}
               </p>
             </div>
