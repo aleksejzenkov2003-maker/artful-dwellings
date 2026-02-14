@@ -113,9 +113,9 @@ export function AboutTestimonials() {
 
                       {/* Play button - top right, teal circle */}
                       {review.source_url && (
-                        <button className="absolute top-4 right-4 w-12 h-12 rounded-full bg-[#00C9CE] flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                          <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 2L18 11L2 20V2Z" stroke="white" strokeWidth="2" strokeLinejoin="round" fill="none" />
+                        <button className="absolute top-4 right-4 w-12 h-12 rounded-full bg-[#00C9CE] flex items-center justify-center group-hover:scale-110 transition-transform" style={{ boxShadow: '0 4px 12px rgba(0,201,206,0.4)' }}>
+                          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 1.5L16 10L2 18.5V1.5Z" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                           </svg>
                         </button>
                       )}
