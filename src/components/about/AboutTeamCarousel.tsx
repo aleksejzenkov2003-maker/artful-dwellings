@@ -42,7 +42,7 @@ export function AboutTeamCarousel() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {displayMembers.map((member, index) => {
               const hasPage = !!member.slug;
-              const photo = member.photo_url || fallbackPhotos[index] || fallbackPhotos[0];
+              const photo = fallbackPhotos[index] || member.photo_url || fallbackPhotos[0];
 
               const content = (
                 <div className="group text-center">
