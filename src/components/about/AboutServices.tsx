@@ -58,14 +58,16 @@ export function AboutServices() {
               className="bg-white border border-[#e5e0db] rounded-xl p-6 flex flex-col justify-between min-h-[240px]"
             >
               <div className="flex items-start justify-between gap-3">
-                <h3 className="font-semibold text-[15px] leading-tight text-foreground max-w-[75%]">
+                <h3 className="font-bold text-[18px] leading-snug text-foreground max-w-[70%]">
                   {service.title}
                 </h3>
-                <img src={service.icon} alt="" className="w-8 h-8 flex-shrink-0 object-contain" />
+                <img src={service.icon} alt="" className="w-10 h-10 flex-shrink-0 object-contain" />
               </div>
-              <p className="text-[13px] text-muted-foreground leading-relaxed mt-auto pt-6">
-                {service.description}
-              </p>
+              <div className="border-t border-[#e5e0db] mt-auto pt-4">
+                <p className="text-[13px] text-muted-foreground leading-relaxed italic">
+                  {service.description}
+                </p>
+              </div>
             </div>
           ))}
 
