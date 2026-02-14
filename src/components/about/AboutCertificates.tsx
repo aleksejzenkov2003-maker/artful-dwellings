@@ -22,7 +22,7 @@ export function AboutCertificates() {
         </div>
 
         {/* Main title */}
-        <h2 className="text-2xl md:text-3xl lg:text-[38px] font-serif leading-tight mb-16 max-w-4xl">
+        <h2 className="text-2xl md:text-3xl lg:text-[38px] font-serif leading-tight mb-16 max-w-5xl">
           Являемся <span className="text-accent">официальным партнером</span> ведущих застройщиков
           и банков, что подтверждается <span className="text-accent">наградами и сертификатами</span>
         </h2>
