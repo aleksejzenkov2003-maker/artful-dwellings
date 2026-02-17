@@ -1,15 +1,34 @@
 import { Layout } from "@/components/layout/Layout";
-import { 
-  Building2, 
-  Users, 
-  Handshake, 
-  TrendingUp, 
-  Shield, 
-  Clock,
-  CheckCircle,
-} from "lucide-react";
 import { UnifiedConsultationForm } from "@/components/shared/UnifiedConsultationForm";
 import { PartneramHero } from "@/components/partneram/PartneramHero";
+import top3Badge from "@/assets/top3-badge.png";
+
+const pillars = [
+  {
+    num: "01",
+    title: "ОПЫТ В НЕДВИЖИМОСТИ",
+    text: "Компания основана в феврале 2016 года. В команде сотрудники с 13-летним опытом работы на рынке недвижимости.",
+  },
+  {
+    num: "02",
+    title: "АМБИЦИОЗНОСТЬ",
+    text: "Наша ближайшая цель — стать лидером на рынке агентств недвижимости Санкт-Петербурга, Москвы и Дубая.",
+  },
+  {
+    num: "03",
+    title: "ПОСТОЯННЫЙ РОСТ",
+    text: "Ежемесячно обрабатываем около 2 500 новых заявок, проводим десятки сделок в месяц и постоянно растем.",
+  },
+];
+
+const bulletPoints = [
+  <>Ежемесячно обрабатываем около <strong>2 500 новых заявок</strong>, проводим десятки сделок в месяц и постоянно растем.</>,
+  <>Art Estate входит в <strong>ТОП-3 ведущих агентств</strong> по продажам элитных и респектабельных клубных домов крупнейших застройщиков.</>,
+  <>В Московском портфеле Art Estate <em>более 160 объектов Business, Premium и DeLuxe</em> классов.</>,
+  <>Ежемесячно брокеры агентства получают более <strong>800 новых целевых клиентов</strong>.</>,
+  <>Средний <strong>чек сделок</strong> на уровне <strong>80 000 000 ₽</strong>.</>,
+  <>Благодаря отличной репутации и высоким результатам, Art Estate включено в список партнеров на закрытых продажах.</>,
+];
 
 const partners = [
   { name: "Группа ЛСР", logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200&h=100&fit=crop&auto=format" },
@@ -20,128 +39,56 @@ const partners = [
   { name: "Эталон", logo: "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=200&h=100&fit=crop&auto=format" },
 ];
 
-const advantages = [
-  {
-    icon: Users,
-    title: "Доступ к базе клиентов",
-    description: "Более 5000 активных покупателей в нашей базе с подтверждённой платёжеспособностью",
-  },
-  {
-    icon: TrendingUp,
-    title: "Высокая конверсия",
-    description: "Конверсия в сделку до 15% благодаря качественной квалификации клиентов",
-  },
-  {
-    icon: Shield,
-    title: "Прозрачные условия",
-    description: "Чёткие договорённости и своевременные выплаты партнёрского вознаграждения",
-  },
-  {
-    icon: Clock,
-    title: "Оперативность",
-    description: "Быстрое согласование условий и оформление документов в течение 1-2 дней",
-  },
-  {
-    icon: Handshake,
-    title: "Индивидуальный подход",
-    description: "Персональный менеджер для каждого партнёра и гибкие условия сотрудничества",
-  },
-  {
-    icon: Building2,
-    title: "Опыт 8+ лет",
-    description: "Профессиональная команда с глубоким знанием рынка недвижимости Санкт-Петербурга",
-  },
-];
-
-const partnerTypes = [
-  {
-    title: "Застройщикам",
-    description: "Эффективные продажи ваших объектов через нашу сеть агентов и маркетинговые каналы",
-    features: ["Продвижение объектов", "Квалифицированные лиды", "Отчётность по продажам"],
-  },
-  {
-    title: "Риелторам",
-    description: "Совместные сделки и доступ к эксклюзивным объектам нашего портфеля",
-    features: ["Доступ к базе объектов", "Совместные сделки", "Обучение и поддержка"],
-  },
-  {
-    title: "Банкам и страховым",
-    description: "Направление клиентов на ипотеку и страхование недвижимости",
-    features: ["Клиентский поток", "Интеграция процессов", "Партнёрские программы"],
-  },
-];
-
 const Partneram = () => {
-
   return (
     <Layout>
-      {/* Hero Section */}
       <PartneramHero />
 
-      {/* Partner Types */}
+      {/* Three Pillars */}
       <section className="py-16 lg:py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">
-            Кого мы приглашаем
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {partnerTypes.map((type, index) => (
-              <div
-                key={index}
-                className="group bg-card border border-border rounded-2xl p-8 hover:border-primary/50 hover:shadow-lg transition-all duration-300"
-              >
-                <h3 className="text-2xl font-serif font-semibold mb-4 group-hover:text-primary transition-colors">
-                  {type.title}
-                </h3>
-                <p className="text-muted-foreground mb-6">{type.description}</p>
-                <ul className="space-y-3">
-                  {type.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-3 text-sm">
-                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+        <div className="container mx-auto px-6 lg:px-12 max-w-[1800px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
+            {pillars.map((p) => (
+              <div key={p.num} className="flex gap-3">
+                <span className="font-serif text-[3rem] lg:text-[4rem] leading-none text-[#00C9CE]">
+                  {p.num}<span className="text-primary">/</span>
+                </span>
+                <div>
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-3">
+                    {p.title}
+                  </h3>
+                  <p className="text-muted-foreground italic text-[15px] leading-relaxed">
+                    {p.text}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Advantages */}
-      <section className="py-16 lg:py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-4">
-            Преимущества сотрудничества
-          </h2>
-          <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">
-            Мы предлагаем выгодные условия и комплексную поддержку для наших партнёров
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {advantages.map((advantage, index) => {
-              const Icon = advantage.icon;
-              return (
-                <div
-                  key={index}
-                  className="group bg-card border border-border rounded-xl p-6 hover:border-primary/50 hover:shadow-md transition-all duration-300"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                    <Icon className="w-7 h-7 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{advantage.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {advantage.description}
-                  </p>
-                </div>
-              );
-            })}
+      {/* Bullet Points + Badge */}
+      <section className="py-12 lg:py-16">
+        <div className="container mx-auto px-6 lg:px-12 max-w-[1800px]">
+          <div className="border border-border rounded-sm p-8 lg:p-12 flex flex-col lg:flex-row items-start gap-8">
+            <ul className="flex-1 space-y-4">
+              {bulletPoints.map((point, i) => (
+                <li key={i} className="flex items-start gap-3 text-[15px] leading-relaxed text-foreground">
+                  <span className="mt-1.5 w-2.5 h-2.5 bg-primary/60 rotate-45 flex-shrink-0" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex-shrink-0 self-center">
+              <img src={top3Badge} alt="ТОП 3 ведущих агентств" className="w-[120px] lg:w-[150px] h-auto" />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Partners Logos */}
       <section className="py-16 lg:py-20">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-6 lg:px-12 max-w-[1800px]">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-4">
             Наши партнёры
           </h2>
@@ -170,7 +117,6 @@ const Partneram = () => {
         </div>
       </section>
 
-      {/* Partnership Form */}
       <UnifiedConsultationForm
         title="Стать партнёром"
         subtitle={"Заполните заявку и мы свяжемся\nдля обсуждения условий сотрудничества"}
