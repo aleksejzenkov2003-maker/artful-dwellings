@@ -24,11 +24,11 @@ const Index = () => {
       {/* Real Estate as Art - Light background */}
       <RealEstateAsArtSection />
 
-      {/* Consultation Form - Dark */}
-      <ConsultationSection />
-
       {/* Team of Experts */}
       <AboutTeamCarousel />
+
+      {/* Consultation Form - Dark */}
+      <ConsultationSection />
 
       {/* Services Strip & After Sale */}
       <ServicesStrip />
