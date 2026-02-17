@@ -7,6 +7,7 @@ import { ConsultationSection } from "@/components/home/ConsultationSection";
 import { ExpertsSection } from "@/components/home/ExpertsSection";
 import { ServicesStrip } from "@/components/home/ServicesStrip";
 import { VideoTestimonialsSection } from "@/components/home/VideoTestimonialsSection";
+import { AboutTeamCarousel } from "@/components/about/AboutTeamCarousel";
 
 const Index = () => {
   return (
@@ -28,6 +29,9 @@ const Index = () => {
 
       {/* Team of Experts */}
       <ExpertsSection />
+
+      {/* Team from About page */}
+      <AboutTeamCarousel />
 
       {/* Services Strip & After Sale */}
       <ServicesStrip />
