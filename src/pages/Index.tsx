@@ -27,14 +27,14 @@ const Index = () => {
       {/* Team of Experts */}
       <AboutTeamCarousel />
 
-      {/* Consultation Form - Dark */}
-      <ConsultationSection />
-
       {/* Services Strip & After Sale */}
       <ServicesStrip />
 
       {/* Video Testimonials */}
       <VideoTestimonialsSection />
+
+      {/* Consultation Form */}
+      <ConsultationSection />
     </Layout>
   );
 };
