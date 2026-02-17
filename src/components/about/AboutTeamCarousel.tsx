@@ -15,7 +15,7 @@ export function AboutTeamCarousel() {
   const displayMembers = teamMembers?.slice(0, 4) || [];
 
   return (
-    <section className="py-16 lg:py-24 bg-[#262626] text-white">
+    <section className="py-16 lg:py-16 xl:py-24 bg-[#262626] text-white">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header */}
         <div className="text-center mb-6">
@@ -51,7 +51,7 @@ export function AboutTeamCarousel() {
                     <img
                       src={photo}
                       alt={member.name}
-                      className="w-full h-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
+                      className="w-full h-auto max-h-[400px] xl:max-h-none object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
                     />
                   </div>
                   {/* Name + role */}

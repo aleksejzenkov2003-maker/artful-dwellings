@@ -22,7 +22,7 @@ const advantages = [
 
 export function AboutAdvantages() {
   return (
-    <section className="py-16 lg:py-24">
+    <section className="py-16 lg:py-16 xl:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         <h2 className="text-3xl lg:text-4xl font-serif mb-12">
           Art Estate — это
@@ -32,14 +32,14 @@ export function AboutAdvantages() {
           {advantages.map((item) => (
             <div
               key={item.title}
-              className="border border-border rounded-lg p-8 lg:p-10 flex flex-col min-h-[420px]"
+              className="border border-border rounded-lg p-8 lg:p-10 flex flex-col min-h-[360px] xl:min-h-[420px]"
             >
               <h3 className="text-xl lg:text-2xl font-serif whitespace-pre-line mb-8 leading-tight">
                 {item.title}
               </h3>
 
               <div className="flex-1 flex items-center justify-center mb-8">
-                <img src={item.icon} alt="" className="h-[180px] object-contain" />
+                <img src={item.icon} alt="" className="h-[140px] xl:h-[180px] object-contain" />
               </div>
 
               <p className="text-foreground text-sm leading-relaxed font-semibold">

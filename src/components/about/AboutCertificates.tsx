@@ -6,7 +6,7 @@ import award4 from "@/assets/award-4.png";
 
 export function AboutCertificates() {
   return (
-    <section className="py-16 lg:py-24 bg-[#1a1a1a] text-white">
+    <section className="py-16 lg:py-16 xl:py-24 bg-[#1a1a1a] text-white">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Label + Link row */}
         <div className="flex items-center justify-between mb-8">
@@ -22,7 +22,7 @@ export function AboutCertificates() {
         </div>
 
         {/* Main title */}
-        <h2 className="text-2xl md:text-3xl lg:text-[38px] font-serif leading-tight mb-16">
+        <h2 className="text-2xl md:text-3xl lg:text-[32px] xl:text-[38px] font-serif leading-tight mb-12 xl:mb-16">
           Являемся <span className="text-accent">официальным партнером</span> ведущих застройщиков
           и банков, что подтверждается <span className="text-accent">наградами и сертификатами</span>
         </h2>

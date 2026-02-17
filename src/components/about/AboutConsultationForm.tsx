@@ -32,7 +32,7 @@ export function AboutConsultationForm() {
   };
 
   return (
-    <section className="py-16 lg:py-24">
+    <section className="py-16 lg:py-16 xl:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         <div className="relative">
           <div
