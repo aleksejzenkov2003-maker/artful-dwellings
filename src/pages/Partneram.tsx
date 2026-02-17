@@ -33,14 +33,6 @@ const bulletPoints = [
   <>Благодаря отличной репутации и высоким результатам, Art Estate включено в список партнеров на закрытых продажах.</>,
 ];
 
-const partners = [
-  { name: "Группа ЛСР", logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200&h=100&fit=crop&auto=format" },
-  { name: "Setl Group", logo: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=100&fit=crop&auto=format" },
-  { name: "ПИК", logo: "https://images.unsplash.com/photo-1554469384-e58fac16e23a?w=200&h=100&fit=crop&auto=format" },
-  { name: "Группа ЦДС", logo: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=200&h=100&fit=crop&auto=format" },
-  { name: "ЮИТ", logo: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=200&h=100&fit=crop&auto=format" },
-  { name: "Эталон", logo: "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=200&h=100&fit=crop&auto=format" },
-];
 
 const Partneram = () => {
   return (
