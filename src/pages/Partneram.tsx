@@ -2,6 +2,9 @@ import { Layout } from "@/components/layout/Layout";
 import { UnifiedConsultationForm } from "@/components/shared/UnifiedConsultationForm";
 import { PartneramHero } from "@/components/partneram/PartneramHero";
 import top3Badge from "@/assets/top3-badge.png";
+import geoPattern1 from "@/assets/geo-pattern-1.png";
+import geoPattern2 from "@/assets/geo-pattern-2.png";
+import logoIconLight from "@/assets/logo-icon-light.png";
 
 const pillars = [
   {
@@ -86,33 +89,73 @@ const Partneram = () => {
         </div>
       </section>
 
-      {/* Partners Logos */}
+      {/* Кому подойдет программа */}
       <section className="py-16 lg:py-20">
         <div className="container mx-auto px-6 lg:px-12 max-w-[1800px]">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-4">
-            Наши партнёры
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-center mb-12">
+            Кому подойдет программа?
           </h2>
-          <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">
-            Мы сотрудничаем с ведущими застройщиками и компаниями рынка недвижимости
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {partners.map((partner, index) => (
-              <div
-                key={index}
-                className="group bg-card border border-border rounded-xl p-4 flex flex-col items-center justify-center aspect-[3/2] hover:border-primary/50 hover:shadow-md transition-all duration-300"
-              >
-                <div className="w-full h-12 mb-3 overflow-hidden rounded-lg">
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                  />
-                </div>
-                <span className="text-xs text-muted-foreground text-center font-medium">
-                  {partner.name}
-                </span>
+
+          <div className="border border-border">
+            {/* Row 1 */}
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              <div className="border-b border-r border-border p-6 lg:p-8 flex items-center">
+                <p className="text-[15px] italic leading-relaxed text-foreground">
+                  Частным брокерам или агентствам недвижимости из любого региона России, если Ваш клиент ищет элитную недвижимость в Москве, Санкт-Петербурге или в ОАЭ
+                </p>
               </div>
-            ))}
+              <div className="border-b border-r border-border bg-[#BA846E] p-6 lg:p-8 flex items-center justify-center relative overflow-hidden">
+                <img src={geoPattern1} alt="" className="w-16 lg:w-20 h-auto opacity-60 relative z-10" />
+              </div>
+              <div className="border-b border-border p-6 lg:p-8 flex items-center">
+                <p className="text-[15px] italic leading-relaxed text-foreground">
+                  Маркетологам, блогерам, коучам
+                </p>
+              </div>
+            </div>
+
+            {/* Row 2 */}
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              <div className="border-b border-r border-border p-6 lg:p-8 flex items-center">
+                <p className="text-[15px] italic leading-relaxed text-foreground">
+                  Ипотечным<br />или страховым агентам/брокерам
+                </p>
+              </div>
+              <div className="border-b border-r border-border bg-[#BA846E] p-6 lg:p-8 flex items-center justify-center relative overflow-hidden">
+                <img src={logoIconLight} alt="" className="w-12 lg:w-16 h-auto opacity-80 relative z-10" />
+              </div>
+              <div className="border-b border-border bg-[#BA846E] p-6 lg:p-8 flex items-center">
+                <p className="text-[15px] italic leading-relaxed text-white">
+                  Владельцам и сотрудникам автосалонов, яхт-клубов, авиа-парков, гольф-клубов, консьерж-сервиса и прочего сервиса для VIP-клиентов
+                </p>
+              </div>
+            </div>
+
+            {/* Row 3 */}
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              <div className="border-b border-r border-border bg-[#BA846E] p-6 lg:p-8 flex items-center col-span-1 md:col-span-2">
+                <p className="text-[15px] italic leading-relaxed text-white">
+                  Владельцам и сотрудникам финансового рынка, Private Banking, Multi-Family-Office, Investment companies
+                </p>
+              </div>
+              <div className="border-b border-border p-6 lg:p-8 flex items-center">
+                <p className="text-[15px] italic leading-relaxed text-foreground">
+                  Персональным ассистентам, которые помогают руководителям с поиском недвижимости
+                </p>
+              </div>
+            </div>
+
+            {/* Row 4 */}
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              <div className="border-r border-border p-6 lg:p-8 flex items-center col-span-1 md:col-span-2">
+                <p className="text-[15px] italic leading-relaxed text-foreground">
+                  Любому желающему, который планирует<br />купить элитную недвижимость в России и ОАЭ
+                </p>
+              </div>
+              <div className="bg-[#BA846E] p-6 lg:p-8 flex items-center justify-center relative overflow-hidden">
+                <img src={geoPattern2} alt="" className="w-16 lg:w-20 h-auto opacity-60 relative z-10" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
