@@ -24,25 +24,15 @@ export function PartneramHero() {
           ПАРТНЕРАМ
         </p>
 
-        {/* Title + Building in one row */}
-        <div className="relative">
-          <h1 className="font-serif text-[3rem] md:text-[4rem] lg:text-[5rem] xl:text-[6rem] leading-[1] tracking-[-0.02em]">
-            Партнёрам
-          </h1>
+        {/* Title */}
+        <h1 className="font-serif text-[3rem] md:text-[4rem] lg:text-[5rem] xl:text-[6rem] leading-[1] tracking-[-0.02em] mb-6">
+          Партнёрам
+        </h1>
 
-          {/* Building image - positioned absolutely on the right */}
-          <div className="hidden lg:block absolute right-0 bottom-0 translate-y-[30%]">
-            <img
-              src={consultationHouse}
-              alt="Жилой комплекс"
-              className="h-[360px] xl:h-[440px] object-contain"
-            />
-          </div>
-        </div>
-
-        {/* Copper banner - overlaps title bottom */}
-        <div className="relative z-10 mt-4 lg:mt-6">
-          <div className="bg-[#BA846E] p-8 lg:p-10 xl:p-12 max-w-[650px]">
+        {/* Banner + Building row */}
+        <div className="relative flex items-end">
+          {/* Copper banner - left side */}
+          <div className="bg-[#BA846E] p-8 lg:p-10 xl:p-12 w-full lg:w-[55%] xl:w-[50%] relative z-10">
             <h2 className="font-serif text-white text-[1.5rem] lg:text-[1.75rem] xl:text-[2rem] leading-tight mb-3">
               Зарабатывайте с Art Estate
             </h2>
@@ -53,6 +43,15 @@ export function PartneramHero() {
               Мы продаем недвижимость от лучших застройщиков<br className="hidden md:inline" />{" "}
               Санкт-Петербурга, Москвы и Дубая.
             </p>
+          </div>
+
+          {/* Building image - right side, overflowing top */}
+          <div className="hidden lg:block lg:w-[45%] xl:w-[50%] relative">
+            <img
+              src={consultationHouse}
+              alt="Жилой комплекс"
+              className="w-full h-auto object-contain object-bottom -mt-[200px] xl:-mt-[260px]"
+            />
           </div>
         </div>
 
