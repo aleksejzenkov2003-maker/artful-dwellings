@@ -70,7 +70,7 @@ const Partneram = () => {
       {/* Bullet Points + Badge */}
       <section className="py-12 lg:py-16">
         <div className="container mx-auto px-6 lg:px-12 max-w-[1800px]">
-          <div className="border border-border rounded-sm p-8 lg:p-12 flex flex-col lg:flex-row items-start gap-8">
+          <div className="border border-border rounded-sm p-8 lg:p-12 flex flex-col lg:flex-row items-start gap-8 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.08)]">
             <ul className="flex-1 space-y-4">
               {bulletPoints.map((point, i) => (
                 <li key={i} className="flex items-start gap-3 text-[15px] leading-relaxed text-foreground">
