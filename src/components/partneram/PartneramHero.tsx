@@ -9,7 +9,7 @@ export function PartneramHero() {
         {/* Breadcrumb */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2 mb-8 group"
+          className="inline-flex items-center gap-2 mb-6 group"
         >
           <span className="w-10 h-10 rounded-sm bg-[#BA846E] flex items-center justify-center group-hover:bg-[#a0725d] transition-colors">
             <ChevronLeft className="w-5 h-5 text-white" />
@@ -19,31 +19,30 @@ export function PartneramHero() {
           </span>
         </Link>
 
-        {/* Title + Building image */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-end">
-          {/* Left - Title */}
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
-              ПАРТНЕРАМ
-            </p>
-            <h1 className="font-serif text-[3rem] md:text-[4rem] lg:text-[5rem] xl:text-[6rem] leading-[1] tracking-[-0.02em]">
-              Партнёрам
-            </h1>
-          </div>
+        {/* Label */}
+        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+          ПАРТНЕРАМ
+        </p>
 
-          {/* Right - Building rendering */}
-          <div className="hidden lg:flex justify-end items-end">
+        {/* Title + Building in one row */}
+        <div className="relative">
+          <h1 className="font-serif text-[3rem] md:text-[4rem] lg:text-[5rem] xl:text-[6rem] leading-[1] tracking-[-0.02em]">
+            Партнёрам
+          </h1>
+
+          {/* Building image - positioned absolutely on the right */}
+          <div className="hidden lg:block absolute right-0 bottom-0 translate-y-[30%]">
             <img
               src={consultationHouse}
               alt="Жилой комплекс"
-              className="h-[320px] xl:h-[400px] object-contain object-bottom"
+              className="h-[360px] xl:h-[440px] object-contain"
             />
           </div>
         </div>
 
-        {/* Copper banner */}
-        <div className="mt-[-40px] lg:mt-[-60px] relative z-10">
-          <div className="bg-[#BA846E] p-8 lg:p-10 xl:p-12 max-w-[700px]">
+        {/* Copper banner - overlaps title bottom */}
+        <div className="relative z-10 mt-4 lg:mt-6">
+          <div className="bg-[#BA846E] p-8 lg:p-10 xl:p-12 max-w-[650px]">
             <h2 className="font-serif text-white text-[1.5rem] lg:text-[1.75rem] xl:text-[2rem] leading-tight mb-3">
               Зарабатывайте с Art Estate
             </h2>
