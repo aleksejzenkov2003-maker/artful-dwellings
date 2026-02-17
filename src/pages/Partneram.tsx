@@ -9,6 +9,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { UnifiedConsultationForm } from "@/components/shared/UnifiedConsultationForm";
+import { PartneramHero } from "@/components/partneram/PartneramHero";
 
 const partners = [
   { name: "Группа ЛСР", logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=200&h=100&fit=crop&auto=format" },
@@ -75,19 +76,7 @@ const Partneram = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-br from-background to-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
-              Партнёрская программа
-            </h1>
-            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed">
-              Приглашаем к сотрудничеству застройщиков, риелторов и финансовые организации. 
-              Вместе мы создаём успешные сделки и развиваем рынок недвижимости.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PartneramHero />
 
       {/* Partner Types */}
       <section className="py-16 lg:py-20">
