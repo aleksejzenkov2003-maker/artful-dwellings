@@ -159,7 +159,7 @@ export function RealEstateAsArtSection() {
           </div>
           
           {/* Content grid */}
-          <div className="flex-1 max-w-5xl">
+          <div className="flex-1 max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Row 1 */}
               <FlipCard 
