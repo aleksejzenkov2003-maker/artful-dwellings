@@ -28,9 +28,6 @@ const Index = () => {
       <ConsultationSection />
 
       {/* Team of Experts */}
-      <ExpertsSection />
-
-      {/* Team from About page */}
       <AboutTeamCarousel />
 
       {/* Services Strip & After Sale */}
