@@ -42,11 +42,11 @@ const Partneram = () => {
         <div className="container mx-auto px-6 lg:px-12 max-w-[1800px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
             {pillars.map((p) =>
-            <div key={p.num} className="flex gap-3">
-                <span className="font-serif text-[3rem] lg:text-[4rem] leading-none text-[#00C9CE]">
+            <div key={p.num} className="flex gap-4 items-start">
+                <span className="flex-shrink-0 min-w-[70px] lg:min-w-[90px] font-serif text-[2.5rem] lg:text-[3.5rem] leading-none text-[#00C9CE]">
                   {p.num}<span className="text-primary">/</span>
                 </span>
-                <div>
+                <div className="pt-1">
                   <h3 className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-3">
                     {p.title}
                   </h3>
