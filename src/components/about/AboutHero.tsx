@@ -12,13 +12,13 @@ const stats = [
 
 export function AboutHero() {
   return (
-    <section className="pt-8 pb-0 lg:pt-16 lg:pb-0">
+    <section className="pt-8 pb-0 lg:pt-12 xl:pt-16 lg:pb-0">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Main content: title + photo */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-16 items-start">
           {/* Left - Title and text */}
           <div className="pt-4">
-            <h1 className="font-serif text-[2.5rem] md:text-[3rem] lg:text-[3.25rem] xl:text-[3.75rem] leading-[1.1] tracking-[-0.01em] mb-8">
+            <h1 className="font-serif text-[2.5rem] md:text-[3rem] lg:text-[2.75rem] xl:text-[3.75rem] leading-[1.1] tracking-[-0.01em] mb-8">
               ART ESTATE —<br />
               ваш надежный партнёр<br />
               в сфере недвижимости
@@ -60,7 +60,7 @@ export function AboutHero() {
         </div>
 
         {/* Stats row */}
-        <div className="mt-14 lg:mt-20 border-t border-border pt-10 pb-10">
+        <div className="mt-14 lg:mt-14 xl:mt-20 border-t border-border pt-10 pb-10">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-y-8">
             {stats.map((stat, index) => (
               <div

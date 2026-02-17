@@ -47,7 +47,7 @@ const services = [
 
 export function AboutServices() {
   return (
-    <section className="py-16 lg:py-24">
+    <section className="py-16 lg:py-16 xl:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         <h2 className="text-[36px] leading-[48px] font-montserrat font-medium text-foreground mb-12">Услуги</h2>
 
@@ -55,7 +55,7 @@ export function AboutServices() {
           {services.map((service, index) => (
             <div
               key={index}
-              className="bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 flex flex-col justify-between min-h-[240px]"
+              className="bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 flex flex-col justify-between min-h-[200px] xl:min-h-[240px]"
             >
               <div className="flex items-start justify-between gap-3">
                 <h3 className="font-bold text-[18px] leading-snug text-foreground max-w-[70%]">
@@ -71,7 +71,7 @@ export function AboutServices() {
 
           {/* CTA card */}
           <div
-            className="p-6 flex flex-col justify-between min-h-[240px] text-white"
+            className="p-6 flex flex-col justify-between min-h-[200px] xl:min-h-[240px] text-white"
             style={{ backgroundColor: '#BA846E' }}
           >
             <h3 className="font-aeroport font-normal text-[24px] leading-[26px]">Заинтересовали?</h3>

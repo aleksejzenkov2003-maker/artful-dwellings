@@ -65,7 +65,7 @@ export function AboutTestimonials() {
   };
 
   return (
-    <section className="py-16 lg:py-24">
+    <section className="py-16 lg:py-16 xl:py-24">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         {/* Header */}
         <div className="relative mb-12">
@@ -91,7 +91,7 @@ export function AboutTestimonials() {
                   return (
                     <div
                       key={review.id}
-                      className="flex-shrink-0 w-[320px] md:w-[420px] relative aspect-[4/3] overflow-hidden rounded-sm group cursor-pointer"
+                      className="flex-shrink-0 w-[320px] md:w-[380px] xl:w-[420px] relative aspect-[4/3] overflow-hidden rounded-sm group cursor-pointer"
                       onClick={() => review.source_url && handleVideoPlay(review.source_url)}
                     >
                       {photo ? (

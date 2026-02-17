@@ -28,7 +28,7 @@ export function AboutAdditionalServices() {
   };
 
   return (
-    <section className="py-16 lg:py-24 bg-background">
+    <section className="py-16 lg:py-16 xl:py-24 bg-background">
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
         <h2 className="text-[36px] leading-[48px] font-montserrat font-medium text-foreground mb-12">
           Дополнительные услуги
