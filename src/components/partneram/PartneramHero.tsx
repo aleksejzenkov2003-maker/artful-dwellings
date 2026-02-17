@@ -29,28 +29,30 @@ export function PartneramHero() {
           Партнёрам
         </h1>
 
-        {/* Banner + Building row */}
-        <div className="relative flex items-end">
-          {/* Copper banner - left side */}
-          <div className="bg-[#BA846E] p-8 lg:p-10 xl:p-12 w-full lg:w-[55%] xl:w-[50%] relative z-10">
-            <h2 className="font-serif text-white text-[1.5rem] lg:text-[1.75rem] xl:text-[2rem] leading-tight mb-3">
-              Зарабатывайте с Art Estate
-            </h2>
-            <p className="text-white font-bold text-[15px] lg:text-base mb-2">
-              Приведите клиента и получите до 30% комиссии!
-            </p>
-            <p className="text-white/80 text-[14px] lg:text-[15px] leading-relaxed">
-              Мы продаем недвижимость от лучших застройщиков<br className="hidden md:inline" />{" "}
-              Санкт-Петербурга, Москвы и Дубая.
-            </p>
+        {/* Banner + Building wrapper */}
+        <div className="relative">
+          {/* Copper banner - full width */}
+          <div className="bg-[#BA846E] p-8 lg:p-10 xl:p-12 w-full">
+            <div className="lg:w-[55%] xl:w-[50%]">
+              <h2 className="font-serif text-white text-[1.5rem] lg:text-[1.75rem] xl:text-[2rem] leading-tight mb-3">
+                Зарабатывайте с Art Estate
+              </h2>
+              <p className="text-white font-bold text-[15px] lg:text-base mb-2">
+                Приведите клиента и получите до 30% комиссии!
+              </p>
+              <p className="text-white/80 text-[14px] lg:text-[15px] leading-relaxed">
+                Мы продаем недвижимость от лучших застройщиков<br className="hidden md:inline" />{" "}
+                Санкт-Петербурга, Москвы и Дубая.
+              </p>
+            </div>
           </div>
 
-          {/* Building image - right side, overflowing top */}
-          <div className="hidden lg:block lg:w-[45%] xl:w-[50%] relative">
+          {/* Building image - absolute, ON TOP of banner */}
+          <div className="hidden lg:block absolute right-0 bottom-0 z-10 pointer-events-none">
             <img
               src={consultationHouse}
               alt="Жилой комплекс"
-              className="w-full h-auto object-contain object-bottom -mt-[200px] xl:-mt-[260px]"
+              className="h-[340px] xl:h-[420px] object-contain object-bottom"
             />
           </div>
         </div>
