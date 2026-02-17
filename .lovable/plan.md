@@ -1,105 +1,53 @@
 
+# Responsive Adaptation for Mac Screens (About Company Page)
 
-# Unified Consultation Form Design Across All Pages
+## Problem
+On Mac screens (1280px-1536px), the About Company page has excessive vertical gaps between sections, oversized elements, and doesn't look polished. The design was optimized for 1800px-wide screens and mobile, but the intermediate Mac resolutions (MacBook Air 13" at 1280px, MacBook Pro 14" at 1512px, MacBook Pro 15"/16" at 1536px) are neglected.
 
-## Overview
+## What Will Change
 
-Replace all contact/consultation forms across the site with a unified design matching the reference: brown/copper background with hexagon pattern, building image overflowing on the right, white input fields with icons (user + phone), and a full-width dark "ОСТАВИТЬ ЗАЯВКУ" button.
+### 1. Reduce Section Spacing on Mac Screens
+All sections currently use `py-16 lg:py-24` which creates too much vertical breathing room on 1280-1536px screens. Add an `xl` breakpoint for tighter spacing:
+- Change from `py-16 lg:py-24` to `py-16 lg:py-16 xl:py-24` across all About page sections
+- This reduces the gap on Mac-sized screens while keeping the generous spacing on ultra-wide displays
 
-## Design Specification (from reference)
+### 2. Hero Section Refinements
+- Reduce gap between columns: `gap-10 lg:gap-12 xl:gap-16`
+- Slightly reduce hero title font size for the `lg` range so it doesn't dominate on smaller Macs
+- Reduce stats spacing: `mt-14 lg:mt-14 xl:mt-20`
 
-- Brown/copper background (using `consultation-bg.png`)
-- Building image on right side overflowing the top (using `consultation-house.png`)
-- Hexagon geometric pattern overlay
-- Title: "Получите консультацию" (customizable per page)
-- Subtitle: "И наши специалисты ответят на все ваши вопросы"
-- White input fields with User and Phone icons on the left
-- Full-width dark button "ОСТАВИТЬ ЗАЯВКУ"
-- Sharp corners (no border-radius) on all elements
+### 3. Certificates Section Title
+- Keep the two-line title layout by adjusting font size: use `lg:text-[32px] xl:text-[38px]` so it stays on 2 lines at 1280px without overflowing
 
-## Forms to Update
+### 4. Advantage Cards
+- Reduce `min-h-[420px]` to `min-h-[360px] xl:min-h-[420px]` so cards are more proportional on Mac screens
+- Reduce icon height from `h-[180px]` to `h-[140px] xl:h-[180px]`
 
-The following 9 form components/instances will be unified:
+### 5. Team Photos
+- Add `max-h-[400px] xl:max-h-none` constraint to keep photos from getting excessively tall on 1280-1536px screens
 
-1. **AboutConsultationForm** (`src/components/about/AboutConsultationForm.tsx`) -- already matches, will be the template
-2. **ConsultationSection** (`src/components/home/ConsultationSection.tsx`) -- used on Index page
-3. **ConsultationBlock** (`src/components/shared/ConsultationBlock.tsx`) -- used on Novostroyki & PropertyCatalog pages
-4. **ConsultationForm** (`src/components/home/ConsultationForm.tsx`) -- inline sentence-style form
-5. **ComplexExcursionForm** (`src/components/complex/ComplexExcursionForm.tsx`) -- single-line form on complex page
-6. **ComplexContactForm** (`src/components/complex/ComplexContactForm.tsx`) -- sidebar form on complex page
-7. **ServiceContactForm** (`src/components/services/ServiceContactForm.tsx`) -- sidebar form on service pages
-8. **MortgageContactForm** (`src/components/ipoteka/MortgageContactForm.tsx`) -- two-column form on mortgage page
-9. **Kontakty page form** (`src/pages/Kontakty.tsx`) -- inline form on contacts page
-10. **Partneram page form** (`src/pages/Partneram.tsx`) -- partner application form
+### 6. Testimonial Cards
+- Adjust card width: `w-[320px] md:w-[380px] xl:w-[420px]` for better proportion
 
-**Excluded from unification** (different purpose/context):
-- `CallbackDialog` -- modal dialog, stays as-is
-- `ComplexPresentationButton` -- PDF download dialog, stays as-is
-- `BrokerContactForm` -- broker-specific sidebar form with message field, stays as-is
-- `ComplexQuiz` / `ComplexQuizBanner` -- quiz, not a form
+### 7. Services Grid Cards
+- Reduce `min-h-[240px]` to `min-h-[200px] xl:min-h-[240px]`
 
-## Technical Approach
+## Files to Modify
 
-### Step 1: Create a Universal ConsultationForm Component
+| File | Change |
+|------|--------|
+| `src/components/about/AboutHero.tsx` | Reduce spacing, font sizes for lg/xl breakpoints |
+| `src/components/about/AboutServices.tsx` | Reduce section padding, card min-height |
+| `src/components/about/AboutAdditionalServices.tsx` | Reduce section padding |
+| `src/components/about/AboutCertificates.tsx` | Reduce section padding, title font size for 2-line preservation |
+| `src/components/about/AboutAdvantages.tsx` | Reduce card min-height, icon size |
+| `src/components/about/AboutTeamCarousel.tsx` | Reduce section padding, constrain photo height |
+| `src/components/about/AboutTestimonials.tsx` | Reduce section padding, card width |
+| `src/components/about/AboutConsultationForm.tsx` | Reduce section padding |
 
-Create `src/components/shared/UnifiedConsultationForm.tsx` -- a reusable component with props:
+## Technical Details
 
-```text
-Props:
-  - title: string (default: "Получите консультацию")
-  - subtitle: string (default: "И наши специалисты ответят на все ваши вопросы")
-  - formSource: string (for lead tracking)
-  - formType: string (default: "consultation")
-  - variant: "full" | "compact"
-    - "full": full-width section with building image (for standalone sections)
-    - "compact": card-style without building image (for sidebars)
-  - buttonText: string (default: "ОСТАВИТЬ ЗАЯВКУ")
-```
-
-The component will:
-- Use `consultation-bg.png` as background
-- Show `consultation-house.png` overflowing on the right (full variant only)
-- White inputs with User and Phone icons
-- Full-width dark button
-- Zod validation for name and phone
-- `useSubmitLead` hook integration
-- Success state with checkmark
-
-### Step 2: Replace Each Form
-
-| Component | Variant | Custom Props |
-|-----------|---------|-------------|
-| AboutConsultationForm | full | formSource="about_page" |
-| ConsultationSection | full | formSource="Главная страница" |
-| ConsultationBlock | full | title/subtitle from props, formSource from props |
-| ConsultationForm | full | formSource="Главная страница" |
-| ComplexExcursionForm | full | title="Запишитесь на экскурсию", formType="excursion" |
-| ComplexContactForm | compact | title="Записаться на просмотр", formType="complex_inquiry" |
-| ServiceContactForm | compact | title="Заказать услугу", formType="service" |
-| MortgageContactForm | full | title="Получите консультацию по ипотеке", formType="mortgage" |
-| Kontakty form | compact | title="Напишите нам", formType="contact" |
-| Partneram form | compact | title="Оставить заявку", formType="partner" |
-
-### Step 3: Update Parent Pages
-
-Update imports in all parent pages/components to use the new unified component:
-- `src/pages/Index.tsx`
-- `src/pages/OKompanii.tsx`
-- `src/pages/Novostroyki.tsx`
-- `src/pages/PropertyCatalog.tsx`
-- `src/pages/Ipoteka.tsx`
-- `src/pages/Kontakty.tsx`
-- `src/pages/Partneram.tsx`
-- `src/pages/ServicePage.tsx`
-- `src/pages/ResidentialComplex.tsx`
-
-### Compact Variant Details
-
-For sidebar/card forms (ServiceContactForm, ComplexContactForm, Kontakty, Partneram), the compact variant will use the same visual style but without the building image: brown background, white inputs with icons, dark button, contained within a card.
-
-## Files Changed
-
-- **New**: `src/components/shared/UnifiedConsultationForm.tsx`
-- **Modified**: 10+ files (parent pages and existing form components updated to use new unified component)
-- **Potentially removed**: Old form components that become unused
-
+All changes use Tailwind's responsive prefixes (`lg:` for 1024px+, `xl:` for 1280px+). No new breakpoints or config changes needed. The approach:
+- `lg:` values become the "Mac" sizes (tighter)
+- `xl:` values restore the original "wide desktop" sizes
+- Mobile values remain unchanged
