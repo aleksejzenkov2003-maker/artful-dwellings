@@ -1,19 +1,27 @@
 
-## Fix: Number/Text Overlap in Services Section
 
-The large serif numbers (01/, 02/, etc.) in the "Three Pillars" section are overlapping with the adjacent text because of tight spacing and large font sizes.
+## Fix: Number/Text Overlap on Services Page (/uslugi)
+
+The same overlap issue from the Partners page exists here -- the large serif numbers (01/, 02/, etc.) collide with the adjacent text due to insufficient gap and no fixed width on the number element.
 
 ### Changes
 
-**File: `src/pages/Partneram.tsx`** (lines 44-57)
+**File: `src/pages/Uslugi.tsx`** (line 64-66)
 
-1. Reduce the number font size slightly on smaller screens (from `text-[3rem]` to `text-[2.5rem]`)
-2. Add `flex-shrink-0` to the number span so it doesn't compress
-3. Increase the gap between number and text (from `gap-3` to `gap-4`)
-4. Ensure the number container has a minimum width so text doesn't wrap into it
+1. Increase gap from `gap-1` to `gap-4`
+2. Add `flex-shrink-0` and `min-w-[70px] lg:min-w-[90px]` to the number span so it never compresses into the text
+3. Reduce font size from `text-5xl md:text-6xl lg:text-7xl` to `text-[2.5rem] lg:text-[3.5rem]` for better fit -- matching the fix already applied on the Partners page
 
 ### Technical Detail
 
-- Change the pillar item layout from `flex gap-3` to `flex gap-4 items-start`
-- Wrap the number in a `flex-shrink-0` container with a set `min-w` so the "01/" text never wraps or collides
-- Adjust font size to `text-[2.5rem] lg:text-[3.5rem]` for better fit
+```tsx
+// Before (line 64-66):
+<div className="flex items-start gap-1">
+  <span className="text-5xl md:text-6xl lg:text-7xl font-serif italic text-primary leading-none">
+
+// After:
+<div className="flex items-start gap-4">
+  <span className="flex-shrink-0 min-w-[70px] lg:min-w-[90px] text-[2.5rem] lg:text-[3.5rem] font-serif italic text-primary leading-none">
+```
+
+This mirrors the exact same fix already applied to `src/pages/Partneram.tsx`.
