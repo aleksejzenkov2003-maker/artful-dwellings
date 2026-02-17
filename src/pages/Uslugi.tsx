@@ -61,8 +61,8 @@ const Uslugi = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-16">
             {numberedServices.map((service) => (
-              <div key={service.number} className="flex items-start gap-1">
-                <span className="text-5xl md:text-6xl lg:text-7xl font-serif italic text-primary leading-none">
+              <div key={service.number} className="flex items-start gap-4">
+                <span className="flex-shrink-0 min-w-[70px] lg:min-w-[90px] text-[2.5rem] lg:text-[3.5rem] font-serif italic text-primary leading-none">
                   {service.number}/
                 </span>
                 <div className="pt-1">
