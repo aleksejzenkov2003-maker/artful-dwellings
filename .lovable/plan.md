@@ -1,38 +1,19 @@
 
+## Fix: Number/Text Overlap in Services Section
 
-# Fix Partners Hero: Banner Behind Building Image
+The large serif numbers (01/, 02/, etc.) in the "Three Pillars" section are overlapping with the adjacent text because of tight spacing and large font sizes.
 
-## What's Wrong Now
-Currently the copper banner and building image are side-by-side in a flex row. In the reference, the copper banner spans the full width and the building image overlaps ON TOP of the banner from the right, extending upward above it.
+### Changes
 
-## Layout Structure (from reference)
+**File: `src/pages/Partneram.tsx`** (lines 44-57)
 
-```text
-+--------------------------------------------------+
-| < ГЛАВНАЯ                                        |
-| ПАРТНЕРАМ                                        |
-| Партнёрам                    [Building Image]    |
-|                              [sits ON TOP of     |
-+================================[the banner]======+
-| Copper Banner (full width)   [overlapping up]    |
-| "Зарабатывайте с Art Estate"                     |
-| Text content here...                             |
-+--------------------------------------------------+
-```
+1. Reduce the number font size slightly on smaller screens (from `text-[3rem]` to `text-[2.5rem]`)
+2. Add `flex-shrink-0` to the number span so it doesn't compress
+3. Increase the gap between number and text (from `gap-3` to `gap-4`)
+4. Ensure the number container has a minimum width so text doesn't wrap into it
 
-Key observations:
-- The copper banner spans the FULL WIDTH of the container
-- The building image is absolutely positioned on the right, sitting ON TOP of the banner
-- The building image extends upward above the banner (into the title area)
-- The banner text content stays on the left ~50%
+### Technical Detail
 
-## Technical Changes
-
-**File: `src/components/partneram/PartneramHero.tsx`**
-
-1. Make the banner+image wrapper `relative` with full width
-2. The copper banner becomes full-width (`w-full`)
-3. The building image becomes `absolute`, positioned `right-0 bottom-0` with upward overflow via negative top or `h` larger than parent
-4. Banner text gets a `max-w` or `lg:w-[55%]` to stay on the left side only
-5. The image gets a higher `z-index` than the banner (image ON TOP of banner)
-
+- Change the pillar item layout from `flex gap-3` to `flex gap-4 items-start`
+- Wrap the number in a `flex-shrink-0` container with a set `min-w` so the "01/" text never wraps or collides
+- Adjust font size to `text-[2.5rem] lg:text-[3.5rem]` for better fit
