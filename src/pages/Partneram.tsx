@@ -9,6 +9,7 @@ import { PartneramGrid } from "@/components/partneram/PartneramGrid";
 import { PartneramProcess } from "@/components/partneram/PartneramProcess";
 import { PartneramStats } from "@/components/partneram/PartneramStats";
 import { PartneramGuarantee } from "@/components/partneram/PartneramGuarantee";
+import { PartneramTelegram } from "@/components/partneram/PartneramTelegram";
 
 const Partneram = () => {
   return (
@@ -40,6 +41,8 @@ const Partneram = () => {
           buttonText="СТАТЬ ПАРТНЁРОМ"
         />
       </div>
+
+      <PartneramTelegram />
     </Layout>
   );
 };
