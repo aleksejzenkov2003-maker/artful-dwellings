@@ -61,9 +61,9 @@ export function Header() {
   };
   const phoneNumber = contacts?.phone || "8 (812) 389-33-56";
   const phoneHref = `tel:${phoneNumber.replace(/[^\d+]/g, "")}`;
-  return <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+  return <header className="fixed top-0 left-0 right-0 z-50 bg-black shadow-sm">
       {/* Top bar - white solid background */}
-      <div className="border-b border-border">
+      <div className="border-b border-white/10">
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -71,17 +71,17 @@ export function Header() {
 
             {/* Right side */}
             <div className="hidden lg:flex items-center gap-6">
-              <div className="flex items-center gap-1 text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+              <div className="flex items-center gap-1 text-sm text-white/70 cursor-pointer hover:text-white transition-colors">
                 <span>RU</span>
                 <ChevronDown className="h-3 w-3" />
               </div>
               <CitySelector />
-              <a href={phoneHref} className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-2">
+              <a href={phoneHref} className="text-sm font-medium text-white hover:text-primary transition-colors flex items-center gap-2">
                 <Phone className="h-4 w-4 text-primary" />
                 {phoneNumber}
               </a>
               <CallbackDialog>
-                <Button variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-white uppercase text-xs tracking-wider px-6 font-medium">
+                <Button variant="outline" className="border-white text-white hover:bg-white hover:text-black uppercase text-xs tracking-wider px-6 font-medium">
                   Заказать звонок
                 </Button>
               </CallbackDialog>
@@ -90,11 +90,11 @@ export function Header() {
             {/* Mobile menu button */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[350px] bg-navy text-white">
+              <SheetContent side="right" className="w-[300px] sm:w-[350px] bg-black text-white">
                 <nav className="flex flex-col gap-4 mt-8">
                   <div className="mb-4">
                     <CitySelector />
@@ -133,7 +133,7 @@ export function Header() {
       </div>
 
       {/* Secondary navigation - solid background */}
-      <div className="hidden lg:block bg-[hsl(var(--navy-dark))] text-white">
+      <div className="hidden lg:block bg-black text-white border-t border-white/10">
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
           <div className="flex items-center h-11">
             {/* Category button - opens mega menu */}
