@@ -24,7 +24,7 @@ export function PartneramHero() {
           {/* Button overlaid on the SVG, bottom-left */}
           <div className="absolute bottom-[6%] left-0">
             <a href="#partner-form">
-              <TealButton size="xl" className="text-base tracking-wider px-[43px] py-[28px] mx-[55px]">СТАТЬ ПАРТНЁРОМ</TealButton>
+              <TealButton size="xl" className="text-base tracking-wider py-[32px] px-[50px] mx-[67px]">СТАТЬ ПАРТНЁРОМ</TealButton>
             </a>
           </div>
         </div>
