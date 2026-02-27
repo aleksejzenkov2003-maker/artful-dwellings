@@ -50,9 +50,7 @@ export function PartneramGrid() {
                 <h3 className="font-bold text-[18px] leading-snug text-foreground max-w-[70%]">
                   {card.title}
                 </h3>
-                <div className="w-10 h-10 rounded-full bg-[#BA846E] flex items-center justify-center flex-shrink-0">
-                  <img src={peopleIcon} alt="" className="w-5 h-5" />
-                </div>
+                <img src={peopleIcon} alt="" className="w-10 h-10 flex-shrink-0" />
               </div>
               <p className="text-[13px] text-muted-foreground leading-relaxed italic mt-auto pt-4">
                 {card.description}
