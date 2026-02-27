@@ -1,52 +1,36 @@
 
 
-## Plan: Awards carousel with admin management
+## Plan: Interactive Timeline "История компании"
 
-### 1. Database — create `awards` table
+Add an interactive horizontal timeline below the team section on /o-kompanii. When the user hovers/moves the mouse along the year markers, the timeline line highlights up to that year in accent color, and a detail card appears below showing a title, image, and description for that year.
 
-New table `awards` with columns:
-- `id` (uuid, PK)
-- `title` (text, not null) — alt text / name
-- `image_url` (text, not null) — award image URL
-- `order_position` (integer, default 0)
-- `is_published` (boolean, default true)
-- `created_at`, `updated_at` (timestamps)
+### Data structure
 
-RLS: public SELECT where `is_published = true`, full ALL access for admins via `is_admin()`.
+Timeline entries with fields: `year`, `title`, `image` (optional placeholder for now), `description`. Data from the existing `timelineYears` array, expanded with titles and descriptions.
 
-Seed existing 4 awards from static assets into the table (upload manually or keep as initial data).
+### Component — `AboutTimeline.tsx` (rewrite)
 
-### 2. Hook — `useAwards.ts`
+**Desktop (md+):**
+- Title "История компании" left-aligned, Aeroport font
+- Horizontal row of years (2016–2026, plus "..." at the end)
+- Dashed/dotted line connecting years
+- On hover/click a year: that year text turns accent color, the dotted line from start to that year turns accent, a card appears below with:
+  - Title (e.g. "Основание компании")
+  - Image placeholder (gray box with mountain icon)
+  - Description paragraph
+- State: `activeYear` controlled by `onMouseEnter` on each year label
+- Line coloring: use a gradient or two overlapping lines — one gray full width, one accent up to the active year's position
 
-Fetch published awards ordered by `order_position`. Simple `useQuery` hook querying the `awards` table.
+**Mobile:**
+- Vertical scrollable timeline, tap to select year
 
-### 3. Update `AboutCertificates.tsx` — carousel
+### Integration
 
-Replace static 4-image grid with Embla carousel (already installed):
-- Show 4 items per slide on desktop, 2 on mobile
-- Left/right navigation arrows (copper/accent outline circles as in reference)
-- Dot pagination below
-- Dark background preserved, same hover effects on images
-- Fallback to existing static images if no DB data
-
-### 4. Admin page — `AdminAwards.tsx`
-
-CRUD interface for awards:
-- Table listing all awards with thumbnail, title, order, published status
-- Add/edit dialog with `SingleImageUploader` for image, text input for title, number for order
-- Delete with confirmation
-- Toggle publish status
-
-### 5. Wire into admin navigation and routing
-
-- Add `{ href: "/admin/awards", label: "Награды", icon: Award }` to `AdminLayout.tsx` nav items
-- Add route `/admin/awards` in `App.tsx`
+- Add `AboutTimeline` to `OKompanii.tsx` after `AboutTeamCarousel` (before `AboutTestimonials`)
+- Export from `src/components/about/index.ts`
 
 ### Files changed
-- `supabase/migrations/` — new migration for `awards` table + seed data
-- `src/hooks/useAwards.ts` — new hook
-- `src/components/about/AboutCertificates.tsx` — carousel implementation
-- `src/pages/admin/AdminAwards.tsx` — new admin page
-- `src/components/admin/AdminLayout.tsx` — add nav item
-- `src/App.tsx` — add admin route
+- `src/components/about/AboutTimeline.tsx` — full rewrite with interactive hover logic
+- `src/components/about/index.ts` — add export
+- `src/pages/OKompanii.tsx` — add `<AboutTimeline />` after team section
 
