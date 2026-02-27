@@ -1,28 +1,32 @@
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
-import { icons } from "lucide-react";
 import { useServices } from "@/hooks/useServices";
-import type { LucideProps } from "lucide-react";
 
 import iconDesign from "@/assets/service-icon-design.svg";
 import iconOtdelka from "@/assets/service-icon-otdelka.svg";
 import iconPereplanirovka from "@/assets/service-icon-pereplanirovka.svg";
 import iconPriemka from "@/assets/service-icon-priemka.svg";
+import iconPodbor from "@/assets/service-icon-podbor.svg";
+import iconInvesticii from "@/assets/service-icon-investicii.svg";
+import iconAkcii from "@/assets/service-icon-akcii.svg";
+import iconInfo from "@/assets/service-icon-info.svg";
+import iconEkskursii from "@/assets/service-icon-ekskursii.svg";
+import iconIpoteka from "@/assets/service-icon-ipoteka.svg";
+import iconPlatezhi from "@/assets/service-icon-platezhi.svg";
 
-const featuredIcons: Record<string, string> = {
+const slugIcons: Record<string, string> = {
   dizain: iconDesign,
   otdelka: iconOtdelka,
   pereplanirovka: iconPereplanirovka,
   "priemka-kvartir": iconPriemka,
+  "podbor-nedvizhimosti": iconPodbor,
+  "raschet-investicionnoy-privlekatelnosti": iconInvesticii,
+  "specpredlozheniya-i-akcii": iconAkcii,
+  "ob-ektivnaya-informaciya": iconInfo,
+  "organizaciya-ekskursii": iconEkskursii,
+  "odobrenie-ipoteki": iconIpoteka,
+  "raschet-variantov-platezhey": iconPlatezhi,
 };
-
-function LucideIcon({ name, ...props }: { name: string } & LucideProps) {
-  const IconComponent = icons[name as keyof typeof icons];
-  if (!IconComponent || typeof IconComponent !== "function") {
-    return null;
-  }
-  return <IconComponent {...props} />;
-}
 
 export function AboutServices() {
   const { data: services } = useServices();
@@ -47,17 +51,11 @@ export function AboutServices() {
         }`}>
           {service.title}
         </h3>
-        {isFeatured && featuredIcons[service.slug] ? (
+        {slugIcons[service.slug] && (
           <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
-            <img src={featuredIcons[service.slug]} alt="" className="w-10 h-10" />
+            <img src={slugIcons[service.slug]} alt="" className="w-10 h-10" />
           </div>
-        ) : service.icon ? (
-          <div className={`w-10 h-10 flex-shrink-0 flex items-center justify-center ${
-            isFeatured ? "text-white" : "text-[#BA846E]"
-          }`}>
-            <LucideIcon name={service.icon} className="w-8 h-8" />
-          </div>
-        ) : null}
+        )}
       </div>
       <div className="mt-auto pt-4">
         <p className={`text-[13px] leading-relaxed ${
