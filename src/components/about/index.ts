@@ -5,3 +5,4 @@ export { AboutAdvantages } from "./AboutAdvantages";
 export { AboutTeamCarousel } from "./AboutTeamCarousel";
 export { AboutTestimonials } from "./AboutTestimonials";
 export { AboutConsultationForm } from "./AboutConsultationForm";
+export { AboutTimeline } from "./AboutTimeline";

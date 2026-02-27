@@ -7,6 +7,7 @@ import {
   AboutTeamCarousel,
   AboutTestimonials,
   AboutConsultationForm,
+  AboutTimeline,
 } from "@/components/about";
 
 const OKompanii = () => {
@@ -17,6 +18,7 @@ const OKompanii = () => {
       <AboutCertificates />
       <AboutAdvantages />
       <AboutTeamCarousel />
+      <AboutTimeline />
       <AboutTestimonials />
       <AboutConsultationForm />
     </Layout>
