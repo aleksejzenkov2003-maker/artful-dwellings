@@ -49,6 +49,11 @@ export function AboutServices() {
         }`}>
           {service.short_description || service.description}
         </p>
+        {isFeatured && (
+          <span className="text-[13px] text-white/70 mt-2 block underline underline-offset-2">
+            Подробнее
+          </span>
+        )}
       </div>
     </Link>
   );
