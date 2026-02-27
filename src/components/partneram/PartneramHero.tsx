@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { TealButton } from "@/components/ui/teal-button";
 import foundersDuo from "@/assets/founders-duo.png";
+import labelKonstantin from "@/assets/label-konstantin.png";
+import labelSergey from "@/assets/label-sergey.png";
 
 export function PartneramHero() {
   return (
@@ -61,22 +63,8 @@ export function PartneramHero() {
             />
             {/* Name labels */}
             <div className="absolute bottom-0 left-0 right-0 flex">
-              <div className="flex-1 bg-foreground/70 backdrop-blur-sm px-4 py-3">
-                <p className="text-white text-xs lg:text-sm font-bold uppercase tracking-wider">
-                  Константин Назаров
-                </p>
-                <p className="text-white/70 text-[11px] lg:text-xs">
-                  Основатель Art Estate
-                </p>
-              </div>
-              <div className="flex-1 bg-foreground/70 backdrop-blur-sm px-4 py-3 border-l border-white/10">
-                <p className="text-white text-xs lg:text-sm font-bold uppercase tracking-wider">
-                  Сергей Чурганов
-                </p>
-                <p className="text-white/70 text-[11px] lg:text-xs">
-                  Основатель Art Estate
-                </p>
-              </div>
+              <img src={labelKonstantin} alt="Константин Назаров — Основатель Art Estate" className="flex-1 w-1/2 object-contain object-bottom" />
+              <img src={labelSergey} alt="Сергей Чурганов — Основатель Art Estate" className="flex-1 w-1/2 object-contain object-bottom" />
             </div>
           </div>
         </div>
