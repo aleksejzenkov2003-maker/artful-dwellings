@@ -16,22 +16,19 @@ export function PartneramTelegram() {
   const { data } = useHomepageContent("telegram_partner");
   const c = { ...defaults, ...(data?.content as Record<string, string>) };
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(c.telegram_url)}&size=160x160&color=ffffff&bgcolor=333333`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(c.telegram_url)}&size=160x160&color=000000&bgcolor=ffffff`;
 
   return (
     <section className="py-16 lg:py-24" style={{ backgroundColor: "#262626" }}>
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-0 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-4 lg:gap-6 items-stretch">
           {/* Left card */}
-          <div
-            className="p-8 lg:p-10 flex flex-col justify-between"
-            style={{ backgroundColor: "#333333" }}
-          >
+          <div className="p-8 lg:p-10 bg-white flex flex-col justify-between">
             <div>
-              <h3 className="text-white text-2xl lg:text-3xl font-bold leading-tight mb-4 font-serif">
+              <h3 className="text-2xl lg:text-3xl font-bold leading-tight mb-4 font-serif">
                 {c.left_title}
               </h3>
-              <p className="text-white/70 text-sm lg:text-base mb-8">
+              <p className="text-muted-foreground text-sm lg:text-base mb-8">
                 {c.left_description}
               </p>
             </div>
@@ -46,7 +43,7 @@ export function PartneramTelegram() {
                 href={c.telegram_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0 hover:scale-105 transition-transform"
+                className="w-12 h-12 rounded-full border border-black/20 flex items-center justify-center shrink-0 hover:scale-105 transition-transform"
               >
                 <ArrowUpRight className="w-5 h-5 text-black" />
               </a>
@@ -54,7 +51,7 @@ export function PartneramTelegram() {
           </div>
 
           {/* Center phone */}
-          <div className="hidden lg:flex items-stretch overflow-hidden" style={{ backgroundColor: "#262626" }}>
+          <div className="hidden lg:flex items-stretch overflow-hidden">
             <img
               src={phoneImage}
               alt="Telegram на телефоне"
