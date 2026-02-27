@@ -1,51 +1,46 @@
 
 
-## Блок Telegram-канала после формы партнёра
+## План: Перенос услуг на блок «О компании» + удаление страницы /uslugi
 
 ### Что делаем
 
-Создаём трёхколоночный блок на фоне `#262626` с:
-- **Левая карточка** (тёмная, `#333`): заголовок «Закрытый Telegram-канал для наших партнёров», описание, QR-код (генерируется автоматически из ссылки), иконка-стрелка
-- **Центр**: загруженное SVG-изображение телефона (копируем в `src/assets/partneram-phone.svg`)
-- **Правая карточка** (белая): заголовок «Наш Telegram-канал», описание, кнопка «TELEGRAM-КАНАЛ» (чёрная)
+1. **Переделываем `AboutServices`** — вместо захардкоженных данных, грузим услуги из БД через `useServices()`. Карточки в сетке 4 колонки. При наведении — инверсия (фон становится `#BA846E`, текст и иконка белые). При клике — переход на `/uslugi/{slug}`. Последняя карточка «Заинтересовали?» остаётся как CTA.
 
-QR-код генерируется динамически через API `https://api.qrserver.com/v1/create-qr-code/?data={URL}&size=120x120` — меняется автоматически при смене ссылки в админке.
+2. **Объединяем `AboutAdditionalServices` с `AboutServices`** — первые 4 услуги из референса (Дизайн, Отделка, Перепланировка, Приемка квартир) — это «дополнительные услуги», которые сейчас отдельным блоком. Добавляем их тоже в БД `services` (или оставляем как есть если они уже в таблице) и показываем все в одной сетке. Блок `AboutAdditionalServices` убираем.
 
-### Хранение данных
+3. **Убираем «Услуги» из хедера** — удаляем `{ name: "Услуги", href: "/uslugi" }` из `mainNavigation` в `Header.tsx`.
 
-Используем существующую таблицу `homepage_content` с `section_key = "telegram_partner"`. Контент:
-```json
-{
-  "telegram_url": "https://t.me/artestate_channel",
-  "left_title": "Закрытый Telegram-канал для наших партнёров",
-  "left_description": "Будьте первыми в курсе новостей...",
-  "right_title": "Наш Telegram-канал",
-  "right_description": "Подпишитесь на наш telegram-канал..."
-}
-```
+4. **Убираем роут `/uslugi`** — удаляем `<Route path="/uslugi" element={<Uslugi />} />` из `App.tsx`. Роут `/uslugi/:slug` (детальная страница услуги) **остаётся**.
+
+5. **Иконки** — в БД уже есть поле `icon` (текстовое, хранит имя иконки lucide типа `home`, `shield`). В компоненте маппим их на реальные lucide-иконки. В админке (`AdminServices`) добавляем выбор иконки.
 
 ### Шаги реализации
 
-1. **Скопировать SVG** телефона в `src/assets/partneram-phone.svg`
+1. **`src/components/about/AboutServices.tsx`** — полностью переписать:
+   - Загружаем данные через `useServices()`
+   - Рендерим сетку `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4`
+   - Каждая карточка — `Link to={/uslugi/${slug}}`
+   - Обычное состояние: белый фон, чёрный текст, терракотовая иконка
+   - Hover: фон `#BA846E`, белый текст, белая иконка, подпись «Подробнее» внизу
+   - Transition 300ms
+   - Последняя карточка CTA «Заинтересовали?» — всегда терракотовая
 
-2. **Создать компонент** `src/components/partneram/PartneramTelegram.tsx`:
-   - Загружает контент через `useHomepageContent("telegram_partner")`
-   - Фоллбэк на дефолтные значения если нет данных в БД
-   - Три колонки на десктопе, стек на мобильном
-   - QR через `<img src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(telegramUrl)}&size=120x120`} />`
-   - Контейнер `max-w-[1800px]`, фон секции `#262626`, скруглённые карточки
+2. **`src/components/about/AboutAdditionalServices.tsx`** — удалить компонент
 
-3. **Добавить в страницу** `src/pages/Partneram.tsx` после `</div>` формы
+3. **`src/components/about/index.ts`** — убрать экспорт `AboutAdditionalServices`
 
-4. **Добавить вкладку в админку** `src/pages/admin/AdminHomepage.tsx`:
-   - Новая вкладка «Telegram» в TabsList
-   - Поля: ссылка на Telegram, заголовки и описания для левой и правой карточек
-   - Превью QR-кода прямо в админке
-   - Сохранение через `handleSave("telegram_partner", ...)`
+4. **`src/pages/OKompanii.tsx`** — убрать `<AboutAdditionalServices />`
+
+5. **`src/components/layout/Header.tsx`** — убрать `{ name: "Услуги", href: "/uslugi" }` из массива `mainNavigation`
+
+6. **`src/App.tsx`** — убрать импорт `Uslugi` и роут `/uslugi`
+
+7. **`src/pages/admin/AdminServiceEdit.tsx`** — убедиться что поле `icon` редактируется (оно уже есть в таблице). Добавить селектор иконки если его нет.
 
 ### Технические детали
 
-- QR генерируется через внешний API `api.qrserver.com` — бесплатный, без ключей
-- Никаких миграций БД не нужно — используем существующую `homepage_content`
-- Все тексты редактируемые из админки, дефолтные значения зашиты в компонент
+- Иконки из lucide-react: маппинг строки `icon` на компонент через объект `{ home: Home, shield: Shield, ... }`
+- Hover-инверсия через CSS group-hover: `group-hover:bg-[#BA846E] group-hover:text-white`
+- Данные грузятся из `services` таблицы, `is_published = true`, сортировка по `order_position`
+- Детальные страницы `/uslugi/:slug` продолжают работать — убираем только листинговую страницу
 
