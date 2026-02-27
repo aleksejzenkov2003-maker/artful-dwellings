@@ -19,7 +19,10 @@ export function PartneramHero() {
           <img
             src={partneramHero}
             alt="Зарабатывайте с Art Estate — партнёрская программа"
-            className="w-full h-auto" />
+            className="w-full h-auto"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high" />
 
           {/* Button overlaid on the SVG, bottom-left */}
           <div className="absolute bottom-[6%] left-0">
