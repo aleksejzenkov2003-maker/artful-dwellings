@@ -8,6 +8,7 @@ import { PartneramAbout } from "@/components/partneram/PartneramAbout";
 import { PartneramGrid } from "@/components/partneram/PartneramGrid";
 import { PartneramProcess } from "@/components/partneram/PartneramProcess";
 import { PartneramStats } from "@/components/partneram/PartneramStats";
+import { PartneramGuarantee } from "@/components/partneram/PartneramGuarantee";
 
 const Partneram = () => {
   return (
@@ -27,6 +28,8 @@ const Partneram = () => {
       <PartneramProcess />
 
       <PartneramStats />
+
+      <PartneramGuarantee />
 
       <div id="partner-form">
         <UnifiedConsultationForm
