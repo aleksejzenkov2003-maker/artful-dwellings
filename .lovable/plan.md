@@ -1,41 +1,52 @@
 
 
-## Plan: Replace services data + update AboutServices component
+## Plan: Awards carousel with admin management
 
-### 1. Database migration — replace all 8 old services with 11 from reference
+### 1. Database — create `awards` table
 
-Delete all existing rows from `services` and insert 11 new ones:
+New table `awards` with columns:
+- `id` (uuid, PK)
+- `title` (text, not null) — alt text / name
+- `image_url` (text, not null) — award image URL
+- `order_position` (integer, default 0)
+- `is_published` (boolean, default true)
+- `created_at`, `updated_at` (timestamps)
 
-**Row 1 — Featured (is_featured=true, terracotta background):**
-| # | Title | Slug | Icon | Short Description |
-|---|-------|------|------|-------------------|
-| 1 | Дизайн | dizain | Paintbrush | Дизайн-проект и ремонт высшего класса |
-| 2 | Отделка | otdelka | PaintRoller | С нашей помощью вы получаете квартиру готовую к заселению |
-| 3 | Перепланировка | pereplanirovka | LayoutDashboard | Согласуем и узаконим любую перепланировку |
-| 4 | Приемка квартир | priemka-kvartir | Search | Экспертная помощь во время приема объекта у застройщика |
+RLS: public SELECT where `is_published = true`, full ALL access for admins via `is_admin()`.
 
-**Row 2 — Regular (white background):**
-| # | Title | Slug | Icon | Short Description |
-|---|-------|------|------|-------------------|
-| 5 | Подбор недвижимости | podbor-nedvizhimosti | MousePointer2 | Подбор недвижимости из всех жилых комплексов на рынке, в одном месте. Без комиссии. |
-| 6 | Расчет инвестиционной привлекательности | raschet-investicionnoy-privlekatelnosti | BarChart3 | По каждому из проектов. Профессионально, на высоком уровне |
-| 7 | Спецпредложения и акции в одном месте | specpredlozheniya-i-akcii | Gift | Скидки, подарки для клиентов, розыгрыши призов и другое |
-| 8 | Объективная информация по каждому из застройщиков | ob-ektivnaya-informaciya | FileText | Опыт компании, построенные дома, точность в исполнении обязательств, возможные риски |
+Seed existing 4 awards from static assets into the table (upload manually or keep as initial data).
 
-**Row 3 — Regular (white background):**
-| # | Title | Slug | Icon | Short Description |
-|---|-------|------|------|-------------------|
-| 9 | Организация экскурсии | organizaciya-ekskursii | Bus | Организация экскурсии по готовым и строящимся жилым комплексам |
-| 10 | Одобрение ипотеки – от 1 часа | odobrenie-ipoteki | Percent | Благодаря нашему сотрудничеству с банками и ипотечными брокерами |
-| 11 | Расчет вариантов платежей | raschet-variantov-platezhey | Calculator | Рассрочка, ипотека, зачет и др. |
+### 2. Hook — `useAwards.ts`
 
-12th cell = CTA «Заинтересовали?» (hardcoded in component).
+Fetch published awards ordered by `order_position`. Simple `useQuery` hook querying the `awards` table.
 
-### 2. Update `src/components/about/AboutServices.tsx`
+### 3. Update `AboutCertificates.tsx` — carousel
 
-Add **«Подробнее»** underlined text at the bottom of featured cards only (as shown in reference). Everything else stays as-is — featured cards have `#BA846E` background, regular cards white with shadow, hover adds shadow only, no inversion, no italic.
+Replace static 4-image grid with Embla carousel (already installed):
+- Show 4 items per slide on desktop, 2 on mobile
+- Left/right navigation arrows (copper/accent outline circles as in reference)
+- Dot pagination below
+- Dark background preserved, same hover effects on images
+- Fallback to existing static images if no DB data
+
+### 4. Admin page — `AdminAwards.tsx`
+
+CRUD interface for awards:
+- Table listing all awards with thumbnail, title, order, published status
+- Add/edit dialog with `SingleImageUploader` for image, text input for title, number for order
+- Delete with confirmation
+- Toggle publish status
+
+### 5. Wire into admin navigation and routing
+
+- Add `{ href: "/admin/awards", label: "Награды", icon: Award }` to `AdminLayout.tsx` nav items
+- Add route `/admin/awards` in `App.tsx`
 
 ### Files changed
-- `supabase/migrations/` — new migration to DELETE + INSERT 11 services
-- `src/components/about/AboutServices.tsx` — add «Подробнее» to featured cards
+- `supabase/migrations/` — new migration for `awards` table + seed data
+- `src/hooks/useAwards.ts` — new hook
+- `src/components/about/AboutCertificates.tsx` — carousel implementation
+- `src/pages/admin/AdminAwards.tsx` — new admin page
+- `src/components/admin/AdminLayout.tsx` — add nav item
+- `src/App.tsx` — add admin route
 
