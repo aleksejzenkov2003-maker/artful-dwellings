@@ -11,7 +11,6 @@ import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import Index from "./pages/Index";
 import PropertyCatalog from "./pages/PropertyCatalog";
 import ResidentialComplex from "./pages/ResidentialComplex";
-import Uslugi from "./pages/Uslugi";
 import ServicePage from "./pages/ServicePage";
 import Ipoteka from "./pages/Ipoteka";
 import OKompanii from "./pages/OKompanii";
@@ -71,7 +70,6 @@ const App = () => (
               <Route path="/novostroyki/:slug" element={<ResidentialComplex />} />
               
               {/* Services */}
-              <Route path="/uslugi" element={<Uslugi />} />
               <Route path="/uslugi/:slug" element={<ServicePage />} />
               <Route path="/ipoteka" element={<Ipoteka />} />
               

@@ -9,9 +9,6 @@ import { CallbackDialog } from "./CallbackDialog";
 import { PropertyMegaMenu } from "./PropertyMegaMenu";
 import logoImage from "@/assets/logo.png";
 const mainNavigation = [{
-  name: "Услуги",
-  href: "/uslugi"
-}, {
   name: "Ипотека",
   href: "/ipoteka"
 }, {
