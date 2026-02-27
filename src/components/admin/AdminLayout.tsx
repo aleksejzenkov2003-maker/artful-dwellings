@@ -18,6 +18,7 @@ import {
   BarChart3,
   MapPin,
   Home,
+  Award,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -36,6 +37,7 @@ const navItems = [
   { href: "/admin/leads", label: "Заявки", icon: MessageSquare },
   { href: "/admin/stats", label: "Статистика", icon: BarChart3 },
   { href: "/admin/cities", label: "Города", icon: MapPin },
+  { href: "/admin/awards", label: "Награды", icon: Award },
 ];
 
 export function AdminLayout({ children }: AdminLayoutProps) {

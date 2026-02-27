@@ -74,6 +74,36 @@ export type Database = {
           },
         ]
       }
+      awards: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          is_published: boolean
+          order_position: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          is_published?: boolean
+          order_position?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_published?: boolean
+          order_position?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_name: string | null
