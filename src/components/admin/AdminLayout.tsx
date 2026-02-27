@@ -19,6 +19,7 @@ import {
   MapPin,
   Home,
   Award,
+  Clock,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -38,6 +39,7 @@ const navItems = [
   { href: "/admin/stats", label: "Статистика", icon: BarChart3 },
   { href: "/admin/cities", label: "Города", icon: MapPin },
   { href: "/admin/awards", label: "Награды", icon: Award },
+  { href: "/admin/timeline", label: "Таймлайн", icon: Clock },
 ];
 
 export function AdminLayout({ children }: AdminLayoutProps) {
