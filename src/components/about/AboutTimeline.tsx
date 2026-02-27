@@ -75,7 +75,7 @@ export function AboutTimeline() {
               <h3 className="text-2xl lg:text-3xl font-serif mb-4">{active.title}</h3>
               <p className="text-muted-foreground leading-relaxed">{active.description}</p>
             </div>
-            <div className="aspect-[4/3] bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+            <div className="aspect-[16/9] bg-muted rounded-lg flex items-center justify-center overflow-hidden max-h-[280px]">
               {active.image_url ? (
                 <img src={active.image_url} alt={active.title} className="w-full h-full object-cover" />
               ) : (
