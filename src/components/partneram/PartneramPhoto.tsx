@@ -28,15 +28,13 @@ export function PartneramPhoto() {
 
   return (
     <section ref={sectionRef} className="overflow-hidden">
-      <div className="container mx-auto px-6 lg:px-12 max-w-[1800px]">
-        <div className="overflow-hidden">
-          <img
-            ref={imgRef}
-            src={partneramPhoto}
-            alt="Недвижимость Art Estate"
-            className="w-full h-auto will-change-transform transition-transform duration-100 ease-out scale-[1.08]"
-          />
-        </div>
+      <div className="overflow-hidden">
+        <img
+          ref={imgRef}
+          src={partneramPhoto}
+          alt="Недвижимость Art Estate"
+          className="w-full h-auto will-change-transform transition-transform duration-100 ease-out scale-[1.08]"
+        />
       </div>
     </section>
   );
