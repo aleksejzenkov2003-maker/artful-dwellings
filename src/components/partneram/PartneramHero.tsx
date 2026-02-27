@@ -19,16 +19,16 @@ export function PartneramHero() {
           <img
             src={partneramHero}
             alt="Зарабатывайте с Art Estate — партнёрская программа"
-            className="w-full h-auto"
-          />
+            className="w-full h-auto" />
+
           {/* Button overlaid on the SVG, bottom-left */}
           <div className="absolute bottom-[6%] left-0">
             <a href="#partner-form">
-              <TealButton size="xl" className="px-10 py-5 text-base tracking-wider">СТАТЬ ПАРТНЁРОМ</TealButton>
+              <TealButton size="xl" className="text-base tracking-wider px-[43px] py-[28px] mx-[55px]">СТАТЬ ПАРТНЁРОМ</TealButton>
             </a>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
