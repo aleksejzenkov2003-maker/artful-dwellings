@@ -1,4 +1,5 @@
-import { Plus, Users } from "lucide-react";
+import { Plus } from "lucide-react";
+import peopleIcon from "@/assets/people-outline.svg";
 
 const cards = [
   {
@@ -50,7 +51,7 @@ export function PartneramGrid() {
                   {card.title}
                 </h3>
                 <div className="w-10 h-10 rounded-full bg-[#BA846E] flex items-center justify-center flex-shrink-0">
-                  <Users className="w-5 h-5 text-white" />
+                  <img src={peopleIcon} alt="" className="w-5 h-5" />
                 </div>
               </div>
               <p className="text-[13px] text-muted-foreground leading-relaxed italic mt-auto pt-4">
