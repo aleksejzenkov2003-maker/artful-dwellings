@@ -22,9 +22,9 @@ export function PartneramHero() {
             className="w-full h-auto"
           />
           {/* Button overlaid on the SVG, bottom-left */}
-          <div className="absolute bottom-[8%] left-0">
+          <div className="absolute bottom-[6%] left-0">
             <a href="#partner-form">
-              <TealButton size="lg">СТАТЬ ПАРТНЁРОМ</TealButton>
+              <TealButton size="xl" className="px-10 py-5 text-base tracking-wider">СТАТЬ ПАРТНЁРОМ</TealButton>
             </a>
           </div>
         </div>
