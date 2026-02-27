@@ -18,26 +18,26 @@ export function PartneramHero() {
         {/* Two-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-8 lg:gap-12 items-start">
           {/* Left column */}
-          <div className="space-y-6">
-            <h1 className="font-serif text-[2.5rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[4.5rem] leading-[1.05] tracking-[-0.01em] uppercase">
+          <div>
+            <h1 className="font-serif text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] xl:text-[5.5rem] leading-[1] tracking-[-0.02em] uppercase mb-6">
               Зарабатывайте<br />с Art Estate
             </h1>
 
-            <p className="text-lg lg:text-xl italic text-muted-foreground">
+            <p className="text-lg md:text-xl lg:text-[1.4rem] italic text-muted-foreground mb-8">
               Приведите клиента и получите до 30% комиссии!
             </p>
 
-            <div className="space-y-3 text-[15px] lg:text-base leading-relaxed text-muted-foreground">
+            <div className="space-y-5 text-[15px] lg:text-[16px] leading-[1.7] text-muted-foreground mb-10">
               <p>
-                Мы продаем недвижимость от лучших застройщиков Санкт-Петербурга, Москвы и Дубая.
-                Art Estate входит в <strong className="text-foreground">ТОП-3 ведущих агентств</strong> по продажам
+                Мы продаем недвижимость от лучших застройщиков Санкт-Петербурга, Москвы и Дубая. Art Estate входит в{" "}
+                <strong className="text-foreground">ТОП-3 ведущих агентств</strong> по продажам
                 элитных и респектабельных клубных домов крупнейших застройщиков.
               </p>
               <p>
                 Благодаря отличной репутации и высоким результатам, Art Estate включено
                 в список партнеров на <strong className="text-foreground">закрытых продажах</strong>.
-                В Московском портфеле Art Estate — <strong className="text-foreground">более 160 объектов</strong> Business,
-                Premium и DeLuxe классов.
+                В Московском портфеле Art Estate — <strong className="text-foreground">более 160 объектов</strong>{" "}
+                Business, Premium и DeLuxe классов.
               </p>
               <p>
                 Ежемесячно брокеры агентства получают более{" "}
@@ -47,11 +47,9 @@ export function PartneramHero() {
               </p>
             </div>
 
-            <div className="pt-2">
-              <a href="#partner-form">
-                <TealButton size="lg">СТАТЬ ПАРТНЁРОМ</TealButton>
-              </a>
-            </div>
+            <a href="#partner-form">
+              <TealButton size="xl">СТАТЬ ПАРТНЁРОМ</TealButton>
+            </a>
           </div>
 
           {/* Right column — founders photo */}
