@@ -43,6 +43,7 @@ import AdminLeads from "./pages/admin/AdminLeads";
 import AdminStats from "./pages/admin/AdminStats";
 import AdminCities from "./pages/admin/AdminCities";
 import AdminHomepage from "./pages/admin/AdminHomepage";
+import AdminAwards from "./pages/admin/AdminAwards";
 import BrokerPage from "./pages/BrokerPage";
 
 const queryClient = new QueryClient();
@@ -106,6 +107,7 @@ const App = () => (
               <Route path="/admin/leads" element={<ProtectedRoute><AdminLeads /></ProtectedRoute>} />
               <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
               <Route path="/admin/cities" element={<ProtectedRoute><AdminCities /></ProtectedRoute>} />
+              <Route path="/admin/awards" element={<ProtectedRoute><AdminAwards /></ProtectedRoute>} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
