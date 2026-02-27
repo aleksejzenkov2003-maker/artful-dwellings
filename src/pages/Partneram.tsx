@@ -1,23 +1,14 @@
 import { Layout } from "@/components/layout/Layout";
 import { UnifiedConsultationForm } from "@/components/shared/UnifiedConsultationForm";
 import { PartneramHero } from "@/components/partneram/PartneramHero";
-import partneramGrid from "@/assets/partneram-grid.png";
+import { PartneramHighlights } from "@/components/partneram/PartneramHighlights";
 
 const Partneram = () => {
   return (
     <Layout>
       <PartneramHero />
 
-      {/* Кому подойдет программа */}
-      <section className="py-16 lg:py-20">
-        <div className="container mx-auto px-6 lg:px-12 max-w-[1800px]">
-          <img
-            src={partneramGrid}
-            alt="Кому подойдет программа — партнёрская сетка"
-            className="w-full h-auto"
-          />
-        </div>
-      </section>
+      <PartneramHighlights />
 
       <div id="partner-form">
         <UnifiedConsultationForm
