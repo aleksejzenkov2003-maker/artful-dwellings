@@ -52,6 +52,14 @@ interface QuizContent {
   steps?: QuizStep[];
 }
 
+interface TelegramContent {
+  telegram_url?: string;
+  left_title?: string;
+  left_description?: string;
+  right_title?: string;
+  right_description?: string;
+}
+
 const defaultHeroCategories: HeroCategory[] = [
   { title: "Квартиры в новостройках", subtitle: "от застройщика", image: "", link: "/novostroyki" },
   { title: "Готовое жилье", subtitle: "вторичный рынок", image: "", link: "/vtorichnoe-zhilyo" },
@@ -83,6 +91,7 @@ export default function AdminHomepage() {
   const [realEstateArtContent, setRealEstateArtContent] = useState<RealEstateArtContent>({});
   const [expertsHeader, setExpertsHeader] = useState<ExpertsHeaderContent>({});
   const [quizContent, setQuizContent] = useState<QuizContent>({});
+  const [telegramContent, setTelegramContent] = useState<TelegramContent>({});
 
   // Load content when data changes
   useEffect(() => {
@@ -91,11 +100,13 @@ export default function AdminHomepage() {
       const realEstate = allContent.find(c => c.section_key === "real_estate_art");
       const experts = allContent.find(c => c.section_key === "experts_header");
       const quiz = allContent.find(c => c.section_key === "quiz");
+      const telegram = allContent.find(c => c.section_key === "telegram_partner");
 
       setHeroContent(hero?.content || {});
       setRealEstateArtContent(realEstate?.content || {});
       setExpertsHeader(experts?.content || {});
       setQuizContent(quiz?.content || {});
+      setTelegramContent(telegram?.content || {});
     }
   }, [allContent]);
 
@@ -185,11 +196,12 @@ export default function AdminHomepage() {
         </div>
 
         <Tabs defaultValue="hero" className="space-y-4">
-          <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+          <TabsList className="grid grid-cols-5 w-full max-w-3xl">
             <TabsTrigger value="hero">Hero</TabsTrigger>
             <TabsTrigger value="services">Услуги</TabsTrigger>
             <TabsTrigger value="experts">Эксперты</TabsTrigger>
             <TabsTrigger value="quiz">Квиз</TabsTrigger>
+            <TabsTrigger value="telegram">Telegram</TabsTrigger>
           </TabsList>
 
           {/* Hero Section */}
@@ -411,6 +423,67 @@ export default function AdminHomepage() {
                 ))}
 
                 <Button onClick={() => handleSave("quiz", quizContent)} disabled={updateContent.isPending}>
+                  <Save className="h-4 w-4 mr-2" />
+                  Сохранить
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Telegram Section */}
+          <TabsContent value="telegram" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Telegram-канал (страница партнёров)</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Ссылка на Telegram-канал</Label>
+                  <Input
+                    value={telegramContent.telegram_url || "https://t.me/artestate_channel"}
+                    onChange={(e) => setTelegramContent({ ...telegramContent, telegram_url: e.target.value })}
+                    placeholder="https://t.me/your_channel"
+                  />
+                  {telegramContent.telegram_url && (
+                    <div className="mt-3">
+                      <Label className="text-xs text-muted-foreground">Превью QR-кода</Label>
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(telegramContent.telegram_url || "https://t.me/artestate_channel")}&size=120x120`}
+                        alt="QR Preview"
+                        className="mt-1 w-24 h-24 rounded border"
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <Label>Заголовок левой карточки</Label>
+                  <Input
+                    value={telegramContent.left_title || "Закрытый Telegram-канал для наших партнёров"}
+                    onChange={(e) => setTelegramContent({ ...telegramContent, left_title: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Описание левой карточки</Label>
+                  <Textarea
+                    value={telegramContent.left_description || ""}
+                    onChange={(e) => setTelegramContent({ ...telegramContent, left_description: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Заголовок правой карточки</Label>
+                  <Input
+                    value={telegramContent.right_title || "Наш Telegram-канал"}
+                    onChange={(e) => setTelegramContent({ ...telegramContent, right_title: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Описание правой карточки</Label>
+                  <Textarea
+                    value={telegramContent.right_description || ""}
+                    onChange={(e) => setTelegramContent({ ...telegramContent, right_description: e.target.value })}
+                  />
+                </div>
+                <Button onClick={() => handleSave("telegram_partner", telegramContent)} disabled={updateContent.isPending}>
                   <Save className="h-4 w-4 mr-2" />
                   Сохранить
                 </Button>
