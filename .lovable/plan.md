@@ -1,19 +1,13 @@
 
 
-## Replace Partners Hero with SVG
+## Problem
+The PartneramGrid cards currently use `aspect-square` making them too tall/square. The reference screenshots show rectangular cards matching the AboutServices component style — shorter, with shadow styling, not square.
 
-Simple replacement — remove the entire `PartneramHero` component content and replace it with the uploaded SVG image.
+## Plan
+Edit `src/components/partneram/PartneramGrid.tsx`:
+- Replace `aspect-square` with `min-h-[200px] xl:min-h-[240px]` on both regular cards and CTA card (matching AboutServices)
+- Replace `border border-border` with `shadow-[0_2px_12px_rgba(0,0,0,0.08)]` for the white cards
+- Keep `p-8` padding as requested earlier
 
-### Steps:
-
-1. **Copy SVG to project**: `user-uploads://1_1819820.svg` → `src/assets/partneram-hero.svg`
-
-2. **Rewrite `src/components/partneram/PartneramHero.tsx`**: Strip all current content, replace with a simple `<img>` tag rendering the SVG at full width inside the container. Keep the "СТАТЬ ПАРТНЁРОМ" button anchor link below it if the SVG doesn't include one, or remove the component entirely.
-
-3. **Update `src/pages/Partneram.tsx`**: If PartneramHero is simplified to just an SVG, keep it as-is. Remove any unused imports (foundersDuo, labels, etc.).
-
-### Technical detail:
-- Import SVG as `import partneramHero from "@/assets/partneram-hero.svg"`
-- Render as `<img src={partneramHero} alt="Партнерам" className="w-full h-auto" />`
-- The SVG is 1440×562, so it will scale naturally with `w-full`
+This aligns the grid with the existing AboutServices component pattern from the About page.
 
