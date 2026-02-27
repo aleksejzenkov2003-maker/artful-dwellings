@@ -4,6 +4,7 @@ import { PartneramHero } from "@/components/partneram/PartneramHero";
 import { PartneramMarquee } from "@/components/partneram/PartneramMarquee";
 import { PartneramHighlights } from "@/components/partneram/PartneramHighlights";
 import { PartneramPhoto } from "@/components/partneram/PartneramPhoto";
+import { PartneramAbout } from "@/components/partneram/PartneramAbout";
 
 const Partneram = () => {
   return (
@@ -15,6 +16,8 @@ const Partneram = () => {
       <PartneramHighlights />
 
       <PartneramPhoto />
+
+      <PartneramAbout />
 
       <div id="partner-form">
         <UnifiedConsultationForm
