@@ -1,27 +1,38 @@
 
 
-## Fix: Number/Text Overlap on Services Page (/uslugi)
+## Redesign Partners Page — New Hero Block
 
-The same overlap issue from the Partners page exists here -- the large serif numbers (01/, 02/, etc.) collide with the adjacent text due to insufficient gap and no fixed width on the number element.
+Based on the reference images, the hero section needs a complete redesign. The current copper banner + building image layout will be replaced with a two-column layout featuring founders' photos.
 
-### Changes
+### What changes
 
-**File: `src/pages/Uslugi.tsx`** (line 64-66)
+**1. Copy uploaded founder photos to project assets**
+- `user-uploads://image_23.png` → `src/assets/founders-duo.png` (the combined photo of both founders)
+- `user-uploads://Константин_Назаров.png` → name label reference (will be rendered as styled text, not an image)
+- `user-uploads://Сергей_Чурганов.png` → name label reference (same)
 
-1. Increase gap from `gap-1` to `gap-4`
-2. Add `flex-shrink-0` and `min-w-[70px] lg:min-w-[90px]` to the number span so it never compresses into the text
-3. Reduce font size from `text-5xl md:text-6xl lg:text-7xl` to `text-[2.5rem] lg:text-[3.5rem]` for better fit -- matching the fix already applied on the Partners page
+**2. Rewrite `src/components/partneram/PartneramHero.tsx`**
 
-### Technical Detail
+New layout (two columns on desktop):
+- **Left column (~55%)**: Breadcrumb "Главная / Партнерам", large serif title "ЗАРАБАТЫВАЙТЕ С ART ESTATE", subtitle "Приведите клиента и получите до 30% комиссии", three text paragraphs about the company (TOP-3, closed sales, 160 objects, 800 clients, 80M check), teal "СТАТЬ ПАРТНЁРОМ" button
+- **Right column (~45%)**: The founders duo photo with two dark overlay labels at the bottom — "КОНСТАНТИН НАЗАРОВ / Основатель Art Estate" and "СЕРГЕЙ ЧУРГАНОВ / Основатель Art Estate"
 
-```tsx
-// Before (line 64-66):
-<div className="flex items-start gap-1">
-  <span className="text-5xl md:text-6xl lg:text-7xl font-serif italic text-primary leading-none">
+Key design details from reference:
+- Title: large uppercase serif font
+- Subtitle: italic, smaller
+- Text paragraphs: normal weight with bold keywords
+- Labels on photos: dark semi-transparent background, white text, positioned at bottom of each founder
+- Teal button uses existing `TealButton` component
+- On mobile: single column, text first, photo below
 
-// After:
-<div className="flex items-start gap-4">
-  <span className="flex-shrink-0 min-w-[70px] lg:min-w-[90px] text-[2.5rem] lg:text-[3.5rem] font-serif italic text-primary leading-none">
-```
+**3. Remove old sections from `Partneram.tsx`**
 
-This mirrors the exact same fix already applied to `src/pages/Partneram.tsx`.
+The old pillars and bullet points sections are being replaced by the content now in the hero. The hero itself consolidates the key selling points. Keep the `partneramGrid` and `UnifiedConsultationForm` sections as-is.
+
+### Technical details
+
+- Remove `consultationHouse` import, replace with `founders-duo.png`
+- The founder labels will be absolutely positioned `div` elements over the photo
+- Breadcrumb changes to text-based "Главная / Партнерам" with copper-colored "Партнерам" link style (matching reference)
+- Button scrolls to or links to the consultation form at bottom
+
