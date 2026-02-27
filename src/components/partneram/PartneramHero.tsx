@@ -15,16 +15,18 @@ export function PartneramHero() {
           <span className="text-[#BA846E] font-medium">Партнерам</span>
         </div>
 
-        <img
-          src={partneramHero}
-          alt="Зарабатывайте с Art Estate — партнёрская программа"
-          className="w-full h-auto"
-        />
-
-        <div className="mt-8">
-          <a href="#partner-form">
-            <TealButton size="lg">СТАТЬ ПАРТНЁРОМ</TealButton>
-          </a>
+        <div className="relative">
+          <img
+            src={partneramHero}
+            alt="Зарабатывайте с Art Estate — партнёрская программа"
+            className="w-full h-auto"
+          />
+          {/* Button overlaid on the SVG, bottom-left */}
+          <div className="absolute bottom-[8%] left-0">
+            <a href="#partner-form">
+              <TealButton size="lg">СТАТЬ ПАРТНЁРОМ</TealButton>
+            </a>
+          </div>
         </div>
       </div>
     </section>
