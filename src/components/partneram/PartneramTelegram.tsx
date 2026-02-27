@@ -21,10 +21,10 @@ export function PartneramTelegram() {
   return (
     <section className="py-16 lg:py-24" style={{ backgroundColor: "#262626" }}>
       <div className="container mx-auto px-4 lg:px-12 max-w-[1800px]">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-0 items-stretch">
           {/* Left card */}
           <div
-            className="rounded-3xl p-8 lg:p-10 flex flex-col justify-between"
+            className="p-8 lg:p-10 flex flex-col justify-between"
             style={{ backgroundColor: "#333333" }}
           >
             <div>
@@ -40,7 +40,7 @@ export function PartneramTelegram() {
               <img
                 src={qrUrl}
                 alt="QR-код Telegram"
-                className="w-28 h-28 lg:w-36 lg:h-36 rounded-xl"
+                className="w-28 h-28 lg:w-36 lg:h-36"
               />
               <a
                 href={c.telegram_url}
@@ -54,16 +54,16 @@ export function PartneramTelegram() {
           </div>
 
           {/* Center phone */}
-          <div className="hidden lg:flex items-center justify-center">
+          <div className="hidden lg:flex items-stretch overflow-hidden" style={{ backgroundColor: "#262626" }}>
             <img
               src={phoneImage}
               alt="Telegram на телефоне"
-              className="max-h-[420px] w-auto object-contain"
+              className="h-full w-auto object-cover"
             />
           </div>
 
           {/* Right card */}
-          <div className="rounded-3xl p-8 lg:p-10 bg-white flex flex-col justify-between">
+          <div className="p-8 lg:p-10 bg-white flex flex-col justify-between">
             <div>
               <h3 className="text-2xl lg:text-3xl font-bold leading-tight mb-4 font-serif">
                 {c.right_title}
@@ -77,7 +77,7 @@ export function PartneramTelegram() {
               href={c.telegram_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-black text-white text-sm font-semibold tracking-wider uppercase px-8 py-4 hover:bg-black/90 transition-colors w-full lg:w-auto"
+              className="inline-flex items-center justify-center bg-black text-white text-sm font-semibold tracking-wider uppercase px-8 py-4 hover:bg-black/90 transition-colors w-full lg:w-auto"
             >
               TELEGRAM-КАНАЛ
             </a>
