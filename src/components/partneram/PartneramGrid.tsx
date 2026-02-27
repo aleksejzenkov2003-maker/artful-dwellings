@@ -43,7 +43,7 @@ export function PartneramGrid() {
           {cards.map((card, index) => (
             <div
               key={index}
-              className="bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] p-6 flex flex-col justify-between min-h-[200px] xl:min-h-[240px]"
+              className="bg-white border border-border p-8 flex flex-col justify-between aspect-square"
             >
               <div className="flex items-start justify-between gap-3">
                 <h3 className="font-bold text-[18px] leading-snug text-foreground max-w-[70%]">
@@ -62,7 +62,7 @@ export function PartneramGrid() {
           {/* CTA card */}
           <a
             href="#partner-form"
-            className="p-6 flex flex-col justify-between min-h-[200px] xl:min-h-[240px] text-white transition-opacity hover:opacity-90"
+            className="p-8 flex flex-col justify-between aspect-square text-white transition-opacity hover:opacity-90"
             style={{ backgroundColor: '#BA846E' }}
           >
             <h3 className="font-serif font-normal text-[24px] leading-[26px]">Заинтересовали?</h3>
