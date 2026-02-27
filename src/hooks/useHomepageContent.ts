@@ -32,6 +32,8 @@ export function useHomepageContent(sectionKey: string, cityId?: string | null) {
       if (error) throw error;
       return data as HomepageContent | null;
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }
 
@@ -54,6 +56,8 @@ export function useAllHomepageContent(cityId?: string | null) {
       if (error) throw error;
       return data as HomepageContent[];
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }
 
