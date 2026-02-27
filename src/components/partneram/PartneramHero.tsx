@@ -18,20 +18,20 @@ export function PartneramHero() {
         </div>
 
         {/* Two-column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[50%_50%] gap-8 lg:gap-12 items-end">
           {/* Left column */}
           <div>
-            <h1 className="font-serif text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] xl:text-[5.5rem] leading-[1] tracking-[-0.02em] uppercase mb-6">
-              Зарабатывайте<br />с Art Estate
+            <h1 className="font-serif text-[2rem] md:text-[2.5rem] lg:text-[3rem] xl:text-[3.5rem] leading-[1] tracking-[-0.02em] uppercase mb-6">
+              Зарабатывайте с Art Estate
             </h1>
 
-            <p className="text-lg md:text-xl lg:text-[1.4rem] italic text-muted-foreground mb-8">
-              Приведите клиента и получите до 30% комиссии!
+            <p className="text-base md:text-lg italic text-muted-foreground mb-6">
+              Приведите клиента и получите до 30% комиссии
             </p>
 
-            <div className="space-y-5 text-[15px] lg:text-[16px] leading-[1.7] text-muted-foreground mb-10">
+            <div className="space-y-4 text-[14px] lg:text-[15px] leading-[1.7] text-muted-foreground mb-8">
               <p>
-                Мы продаем недвижимость от лучших застройщиков Санкт-Петербурга, Москвы и Дубая. Art Estate входит в{" "}
+                Art Estate входит в{" "}
                 <strong className="text-foreground">ТОП-3 ведущих агентств</strong> по продажам
                 элитных и респектабельных клубных домов крупнейших застройщиков.
               </p>
@@ -50,7 +50,7 @@ export function PartneramHero() {
             </div>
 
             <a href="#partner-form">
-              <TealButton size="xl">СТАТЬ ПАРТНЁРОМ</TealButton>
+              <TealButton size="lg">СТАТЬ ПАРТНЁРОМ</TealButton>
             </a>
           </div>
 
