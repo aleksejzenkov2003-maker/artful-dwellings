@@ -42,7 +42,7 @@ export function ComplexConceptSlider({ complexId }: ComplexConceptSliderProps) {
       ))}
 
       {/* Content overlay */}
-      <div className="relative z-10 h-full container mx-auto px-4 lg:px-8 flex flex-col justify-between py-12 lg:py-16">
+      <div className="relative z-10 h-full w-full max-w-[1800px] mx-auto px-6 lg:px-12 flex flex-col justify-between py-12 lg:py-16">
         {/* Top: counter */}
         <div className="flex items-center justify-between">
           <span className="text-white/60 text-[13px] tracking-[0.15em] uppercase font-medium">

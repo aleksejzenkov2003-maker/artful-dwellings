@@ -51,7 +51,7 @@ export function ComplexAdvantages({ complex }: ComplexAdvantagesProps) {
 
   return (
     <section id="advantages" className="py-16 lg:py-24 bg-background">
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
         {/* Header row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
           <div>

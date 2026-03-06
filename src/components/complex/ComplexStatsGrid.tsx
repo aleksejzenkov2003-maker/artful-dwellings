@@ -9,33 +9,33 @@ export function ComplexStatsGrid({ complex }: ComplexStatsGridProps) {
   const stats = [
     {
       value: complex.floors_count || "—",
-      label: "корпусов",
+      label: "КОРПУСОВ",
     },
     {
       value: complex.apartments_count || "—",
-      label: "квартир",
+      label: "КВАРТИР",
     },
     {
       value: complex.area_from && complex.area_to ? `${complex.area_from}-${complex.area_to}` : "—",
-      label: "площадь квартир (м²)",
+      label: "ПЛОЩАДЬ КВАРТИР (М²)",
     },
     {
       value: "2,5-4",
-      label: "высота потолков (м)",
+      label: "ВЫСОТА ПОТОЛКОВ (М)",
     },
   ];
 
   return (
-    <section id="details" className="py-16 lg:py-24 bg-background border-b border-border">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section id="details" className="py-16 lg:py-24 bg-background">
+      <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-16 mb-16 lg:mb-20">
           {stats.map((stat, index) => (
             <div key={index}>
-              <div className="font-serif text-[48px] md:text-[64px] lg:text-[72px] leading-none text-foreground mb-2">
+              <div className="font-display text-[56px] md:text-[80px] lg:text-[96px] xl:text-[110px] leading-[0.9] text-foreground tracking-[-0.03em]">
                 {stat.value}
               </div>
-              <p className="text-[12px] uppercase tracking-[0.12em] text-muted-foreground font-medium">
+              <p className="text-[11px] lg:text-[12px] uppercase tracking-[0.18em] text-muted-foreground font-medium mt-3">
                 {stat.label}
               </p>
             </div>
@@ -43,13 +43,13 @@ export function ComplexStatsGrid({ complex }: ComplexStatsGridProps) {
         </div>
 
         {/* Video Button */}
-        <div className="flex items-center gap-6">
-          <div className="w-px h-12 bg-[#BA846E]" />
+        <div className="flex items-center gap-5">
+          <div className="w-px h-14 bg-[#BA846E]" />
           <button className="flex items-center gap-4 group">
             <div className="w-14 h-14 rounded-full border-2 border-[#BA846E] flex items-center justify-center group-hover:bg-[#BA846E]/10 transition-colors">
               <Play className="w-5 h-5 text-[#BA846E] ml-0.5" />
             </div>
-            <span className="text-[13px] uppercase tracking-[0.12em] font-medium text-foreground">
+            <span className="text-[12px] uppercase tracking-[0.18em] font-medium text-foreground">
               Видео о проекте
             </span>
           </button>

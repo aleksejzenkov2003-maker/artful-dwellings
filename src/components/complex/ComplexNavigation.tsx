@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface ComplexNavigationProps {
   activeSection?: string;
@@ -30,6 +31,14 @@ export function ComplexNavigation({ activeSection }: ComplexNavigationProps) {
     }
   };
 
+  const navigateUpDown = (direction: "up" | "down") => {
+    const currentIndex = tabs.findIndex((t) => t.id === active);
+    const nextIndex = direction === "down"
+      ? Math.min(currentIndex + 1, tabs.length - 1)
+      : Math.max(currentIndex - 1, 0);
+    scrollToSection(tabs[nextIndex].id);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const sections = tabs
@@ -48,29 +57,45 @@ export function ComplexNavigation({ activeSection }: ComplexNavigationProps) {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border py-5">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-center overflow-x-auto">
-          {tabs.map((tab, index) => (
-            <div key={tab.id} className="flex items-center shrink-0">
-              {index > 0 && (
-                <span className="w-8 lg:w-16 h-px bg-muted-foreground/30 mx-4 lg:mx-6" />
-              )}
-              <button
-                onClick={() => scrollToSection(tab.id)}
-                className={`relative text-[11px] lg:text-[12px] uppercase tracking-[0.15em] font-medium transition-colors whitespace-nowrap py-2 ${
-                  active === tab.id
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {tab.label}
-                {active === tab.id && (
-                  <span className="absolute -bottom-5 left-0 right-0 h-0.5 bg-[#BA846E]" />
+    <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
+      <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
+        <div className="flex items-center justify-between py-5">
+          {/* Tabs */}
+          <div className="flex items-center flex-1 overflow-x-auto">
+            {tabs.map((tab, index) => (
+              <div key={tab.id} className="flex items-center shrink-0">
+                {index > 0 && (
+                  <span className="w-12 lg:w-20 xl:w-28 h-px bg-muted-foreground/20 mx-3 lg:mx-4" />
                 )}
-              </button>
-            </div>
-          ))}
+                <button
+                  onClick={() => scrollToSection(tab.id)}
+                  className={`text-[12px] lg:text-[13px] uppercase tracking-[0.18em] font-medium transition-colors whitespace-nowrap ${
+                    active === tab.id
+                      ? "text-foreground"
+                      : "text-muted-foreground/60 hover:text-foreground"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Up/Down arrows */}
+          <div className="flex flex-col ml-6 shrink-0">
+            <button
+              onClick={() => navigateUpDown("up")}
+              className="text-muted-foreground/40 hover:text-foreground transition-colors p-1"
+            >
+              <ChevronUp className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => navigateUpDown("down")}
+              className="text-muted-foreground/40 hover:text-foreground transition-colors p-1"
+            >
+              <ChevronDown className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </nav>

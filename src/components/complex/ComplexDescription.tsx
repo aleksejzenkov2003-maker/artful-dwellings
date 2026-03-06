@@ -13,7 +13,7 @@ export function ComplexDescription({ complex }: ComplexDescriptionProps) {
 
   return (
     <section id="description" className="py-16 lg:py-24 bg-background">
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
         <div className="max-w-4xl">
           <h2 className="font-serif font-normal text-[36px] md:text-[48px] leading-[1.1] mb-8">
             Описание
