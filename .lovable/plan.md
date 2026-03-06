@@ -1,36 +1,34 @@
 
 
-## Plan: Interactive Timeline "История компании"
+## Plan: Redesign ComplexConceptSlider to match reference
 
-Add an interactive horizontal timeline below the team section on /o-kompanii. When the user hovers/moves the mouse along the year markers, the timeline line highlights up to that year in accent color, and a detail card appears below showing a title, image, and description for that year.
+The reference shows a **white card** overlaid on the left side of a full-bleed background image, containing:
+- Counter "1 — 4" at top
+- Large bold title "АРХИТЕКТУРА" 
+- Description paragraph text
+- Navigation arrows (circle outline) at bottom-left
 
-### Data structure
+No tab row — just arrows to cycle slides, with the background image changing per slide.
 
-Timeline entries with fields: `year`, `title`, `image` (optional placeholder for now), `description`. Data from the existing `timelineYears` array, expanded with titles and descriptions.
+### Changes to `ComplexConceptSlider.tsx`
 
-### Component — `AboutTimeline.tsx` (rewrite)
+**Layout:**
+- Full-width section with background image crossfade (keep existing)
+- Remove the dark gradient overlay — use a lighter or no overlay since text is on a white card
+- Add a **white semi-transparent card** (`bg-white/95`) positioned on the left side, with padding, containing:
+  - Counter: `1 — 4` small text at top
+  - Title: large bold uppercase text (slide type label like "АРХИТЕКТУРА")
+  - Description: body text paragraph
+- Navigation arrows at bottom-left of the card — circular outline buttons (not filled)
+- Remove the tab row completely — navigation is only via arrows
 
-**Desktop (md+):**
-- Title "История компании" left-aligned, Aeroport font
-- Horizontal row of years (2016–2026, plus "..." at the end)
-- Dashed/dotted line connecting years
-- On hover/click a year: that year text turns accent color, the dotted line from start to that year turns accent, a card appears below with:
-  - Title (e.g. "Основание компании")
-  - Image placeholder (gray box with mountain icon)
-  - Description paragraph
-- State: `activeYear` controlled by `onMouseEnter` on each year label
-- Line coloring: use a gradient or two overlapping lines — one gray full width, one accent up to the active year's position
-
-**Mobile:**
-- Vertical scrollable timeline, tap to select year
-
-### Integration
-
-- Add `AboutTimeline` to `OKompanii.tsx` after `AboutTeamCarousel` (before `AboutTestimonials`)
-- Export from `src/components/about/index.ts`
+**Styling details from reference:**
+- White card: roughly 40-45% width on desktop, full height padding
+- Title: bold, ~28-32px, uppercase
+- Description: ~14-15px, regular weight, good line height
+- Arrows: thin circle border, chevron icons inside
+- Card has generous padding (~40-50px)
 
 ### Files changed
-- `src/components/about/AboutTimeline.tsx` — full rewrite with interactive hover logic
-- `src/components/about/index.ts` — add export
-- `src/pages/OKompanii.tsx` — add `<AboutTimeline />` after team section
+- `src/components/complex/ComplexConceptSlider.tsx` — rewrite layout to white card overlay style
 
