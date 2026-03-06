@@ -109,9 +109,8 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
 
           {/* Right — info grid */}
           <div className="lg:col-span-5 text-white">
-            <div className="grid grid-cols-2">
-              {/* Сдача */}
-              <div className="border border-white/10 p-5 lg:p-6">
+            <div className="grid grid-cols-2 gap-x-12 gap-y-8">
+              <div>
                 <p className="text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">Сдача</p>
                 <p className="text-[15px] lg:text-[16px] font-medium">
                   {complex.completion_date
@@ -122,18 +121,15 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
                     : "Уточняйте"}
                 </p>
               </div>
-              {/* Город */}
-              <div className="border border-white/10 border-l-0 p-5 lg:p-6">
+              <div>
                 <p className="text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">Город</p>
                 <p className="text-[15px] lg:text-[16px] font-medium">{complex.city || "Санкт-Петербург"}</p>
               </div>
-              {/* Адрес */}
-              <div className="border border-white/10 border-t-0 p-5 lg:p-6">
+              <div>
                 <p className="text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">Адрес</p>
                 <p className="text-[15px] lg:text-[16px] font-medium">{complex.address || "Уточняйте"}</p>
               </div>
-              {/* Район */}
-              <div className="border border-white/10 border-l-0 border-t-0 p-5 lg:p-6">
+              <div>
                 <p className="text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">Район</p>
                 <p className="text-[15px] lg:text-[16px] font-medium">{complex.district || "—"}</p>
               </div>
