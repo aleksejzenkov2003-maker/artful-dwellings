@@ -104,6 +104,15 @@ export default function AdminComplexEdit() {
   // Fetch buildings for this complex
   const { data: buildings } = useAllComplexBuildings(id);
 
+  // Slides
+  const { data: slides } = useAllComplexSlides(id);
+  const createSlide = useCreateSlide();
+  const updateSlide = useUpdateSlide();
+  const deleteSlide = useDeleteSlide();
+  const [isSlideDialogOpen, setIsSlideDialogOpen] = useState(false);
+  const [editingSlide, setEditingSlide] = useState<ComplexSlide | null>(null);
+  const [slideForm, setSlideForm] = useState<Partial<ComplexSlide>>({});
+
   // Initialize form when complex loads
   useState(() => {
     if (complex && Object.keys(formData).length === 0) {
