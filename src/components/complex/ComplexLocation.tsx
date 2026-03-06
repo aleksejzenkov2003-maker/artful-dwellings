@@ -15,7 +15,7 @@ export function ComplexLocation({ complex }: ComplexLocationProps) {
 
   return (
     <section id="location" className="py-16 lg:py-24 bg-background">
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Left: text + distances */}
           <div>
