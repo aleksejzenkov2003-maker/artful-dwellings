@@ -756,6 +756,90 @@ export default function AdminComplexEdit() {
             </div>
           </TabsContent>
 
+          {/* Slides Tab */}
+          <TabsContent value="slides" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <p className="text-muted-foreground">
+                Слайды для секции «Концепция»
+              </p>
+              <Button onClick={() => {
+                setEditingSlide(null);
+                setSlideForm({
+                  complex_id: id,
+                  slide_type: "architecture",
+                  title: "",
+                  description: "",
+                  image_url: "",
+                  order_position: (slides?.length || 0),
+                  is_published: true,
+                });
+                setIsSlideDialogOpen(true);
+              }}>
+                <Plus className="h-4 w-4 mr-2" />
+                Добавить слайд
+              </Button>
+            </div>
+
+            {slides && slides.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Тип</TableHead>
+                    <TableHead>Заголовок</TableHead>
+                    <TableHead>Изображение</TableHead>
+                    <TableHead>Порядок</TableHead>
+                    <TableHead>Опубликован</TableHead>
+                    <TableHead className="w-[100px]">Действия</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {slides.map((slide) => (
+                    <TableRow key={slide.id}>
+                      <TableCell>
+                        {SLIDE_TYPES.find(t => t.value === slide.slide_type)?.label || slide.slide_type}
+                      </TableCell>
+                      <TableCell>{slide.title}</TableCell>
+                      <TableCell>
+                        {slide.image_url ? (
+                          <img src={slide.image_url} alt="" className="w-16 h-10 object-cover rounded" />
+                        ) : "—"}
+                      </TableCell>
+                      <TableCell>{slide.order_position}</TableCell>
+                      <TableCell>{slide.is_published ? "Да" : "Нет"}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button size="icon" variant="ghost" onClick={() => {
+                            setEditingSlide(slide);
+                            setSlideForm({
+                              slide_type: slide.slide_type,
+                              title: slide.title,
+                              description: slide.description,
+                              image_url: slide.image_url,
+                              order_position: slide.order_position,
+                              is_published: slide.is_published,
+                            });
+                            setIsSlideDialogOpen(true);
+                          }}>
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" className="text-destructive" onClick={() => {
+                            if (confirm("Удалить слайд?")) deleteSlide.mutate(slide.id);
+                          }}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                Слайды не добавлены. Добавьте слайды чтобы секция «Концепция» отображалась на странице ЖК.
+              </div>
+            )}
+          </TabsContent>
+
           {/* SEO Tab */}
           <TabsContent value="seo" className="space-y-6">
             <div className="space-y-4 max-w-2xl">
