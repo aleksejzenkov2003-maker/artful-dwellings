@@ -123,7 +123,6 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
                     {complex.completion_date
                       ? new Date(complex.completion_date).toLocaleDateString("ru-RU", {
                           year: "numeric",
-                          quarter: undefined,
                           month: "long",
                         })
                       : "Уточняйте"}
