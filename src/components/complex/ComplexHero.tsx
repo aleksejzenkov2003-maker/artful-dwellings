@@ -109,30 +109,31 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
 
           {/* Right — info grid */}
           <div className="lg:col-span-5 text-white">
-            <div className="grid grid-cols-2 gap-x-12 gap-y-8">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">Сдача</p>
-                <p className="text-[15px] lg:text-[16px] font-medium">
-                  {complex.completion_date
-                    ? new Date(complex.completion_date).toLocaleDateString("ru-RU", {
-                        year: "numeric",
-                        month: "long",
-                      })
-                    : "Уточняйте"}
-                </p>
-              </div>
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">Город</p>
-                <p className="text-[15px] lg:text-[16px] font-medium">{complex.city || "Санкт-Петербург"}</p>
-              </div>
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">Адрес</p>
-                <p className="text-[15px] lg:text-[16px] font-medium">{complex.address || "Уточняйте"}</p>
-              </div>
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.15em] text-white/40 mb-2">Район</p>
-                <p className="text-[15px] lg:text-[16px] font-medium">{complex.district || "—"}</p>
-              </div>
+            <div className="grid grid-cols-[auto_1fr] gap-x-12 gap-y-4">
+              <p className="text-[14px] text-white/50">Сдача</p>
+              <p className="text-[14px] font-medium text-white">
+                {complex.completion_date
+                  ? new Date(complex.completion_date).toLocaleDateString("ru-RU", {
+                      quarter: undefined,
+                      year: "numeric",
+                      month: undefined,
+                    }).replace(/^/, () => {
+                      const d = new Date(complex.completion_date!);
+                      const q = Math.ceil((d.getMonth() + 1) / 3);
+                      return `${q === 1 ? 'I' : q === 2 ? 'II' : q === 3 ? 'III' : 'IV'} квартал `;
+                    })
+                  : "Уточняйте"}
+              </p>
+              <p className="text-[14px] text-white/50">Город</p>
+              <p className="text-[14px] font-medium text-white">{complex.city || "Санкт-Петербург"}</p>
+              <p className="text-[14px] text-white/50">Адрес</p>
+              <p className="text-[14px] font-medium text-white">{complex.address || "Уточняйте"}</p>
+              {complex.district && (
+                <>
+                  <p className="text-[14px] text-white/50">Метро</p>
+                  <p className="text-[14px] font-medium text-white">{complex.district}</p>
+                </>
+              )}
             </div>
           </div>
         </div>
