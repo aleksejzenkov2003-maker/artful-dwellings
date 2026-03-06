@@ -413,6 +413,53 @@ export type Database = {
           },
         ]
       }
+      complex_slides: {
+        Row: {
+          complex_id: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          order_position: number
+          slide_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          complex_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          order_position?: number
+          slide_type: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          complex_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          order_position?: number
+          slide_type?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "complex_slides_complex_id_fkey"
+            columns: ["complex_id"]
+            isOneToOne: false
+            referencedRelation: "residential_complexes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contacts: {
         Row: {
           address: string | null

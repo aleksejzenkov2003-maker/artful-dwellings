@@ -3,16 +3,15 @@ import { useParams, Link } from "react-router-dom";
 import { useResidentialComplex } from "@/hooks/useResidentialComplexes";
 import { ComplexHero } from "@/components/complex/ComplexHero";
 import { ComplexNavigation } from "@/components/complex/ComplexNavigation";
-import { ComplexPhotoGallery } from "@/components/complex/ComplexPhotoGallery";
-import { ComplexDetails } from "@/components/complex/ComplexDetails";
-import { ComplexAdvantages } from "@/components/complex/ComplexAdvantages";
-import { ComplexApartments } from "@/components/complex/ComplexApartments";
+import { ComplexStatsGrid } from "@/components/complex/ComplexStatsGrid";
 import { ComplexDescription } from "@/components/complex/ComplexDescription";
-import { ComplexQuizBanner } from "@/components/complex/ComplexQuizBanner";
-import { ComplexLocation } from "@/components/complex/ComplexLocation";
-import { ComplexExcursionForm } from "@/components/complex/ComplexExcursionForm";
-import { ComplexConceptCards } from "@/components/complex/ComplexConceptCards";
+import { ComplexConceptSlider } from "@/components/complex/ComplexConceptSlider";
 import { BuildingSelector } from "@/components/complex/BuildingSelector";
+import { ComplexApartments } from "@/components/complex/ComplexApartments";
+import { ComplexLocation } from "@/components/complex/ComplexLocation";
+import { ComplexAdvantages } from "@/components/complex/ComplexAdvantages";
+import { ComplexQuizBanner } from "@/components/complex/ComplexQuizBanner";
+import { ComplexExcursionForm } from "@/components/complex/ComplexExcursionForm";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -56,38 +55,37 @@ const ResidentialComplex = () => {
 
   return (
     <Layout>
-      {/* SEO */}
       {complex.seo_title && <title>{complex.seo_title}</title>}
-      
-      {/* Hero Section */}
+
+      {/* Hero */}
       <ComplexHero complex={complex} />
 
       {/* Sticky Navigation */}
       <ComplexNavigation />
 
-      {/* Photo Gallery Section */}
-      <ComplexPhotoGallery complex={complex} />
+      {/* Stats Grid */}
+      <ComplexStatsGrid complex={complex} />
 
-      {/* Details Section */}
-      <ComplexDetails complex={complex} />
+      {/* Description */}
+      <ComplexDescription complex={complex} />
 
-      {/* Location Section */}
-      <ComplexLocation complex={complex} />
+      {/* Concept Slider */}
+      <ComplexConceptSlider complexId={complex.id} />
 
-      {/* Building Selector - shows if buildings are configured */}
-      <BuildingSelector 
-        complexId={complex.id} 
-        planImage={complex.main_image || ''} 
+      {/* Building Selector */}
+      <BuildingSelector
+        complexId={complex.id}
+        planImage={complex.main_image || ""}
         complexName={complex.name}
       />
 
-      {/* Apartments Section */}
+      {/* Apartments */}
       <ComplexApartments complex={complex} />
 
-      {/* Description Section */}
-      <ComplexDescription complex={complex} />
+      {/* Location */}
+      <ComplexLocation complex={complex} />
 
-      {/* Advantages Section */}
+      {/* Advantages */}
       <ComplexAdvantages complex={complex} />
 
       {/* Quiz Banner */}
@@ -95,9 +93,6 @@ const ResidentialComplex = () => {
 
       {/* Excursion Form */}
       <ComplexExcursionForm complex={complex} />
-
-      {/* Concept Cards */}
-      <ComplexConceptCards complex={complex} />
     </Layout>
   );
 };

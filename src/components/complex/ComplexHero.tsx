@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { ArrowLeft, Share2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
 import { useApartmentStats } from "@/hooks/useApartments";
 import { toast } from "sonner";
 import { ComplexPresentationButton } from "./ComplexPresentationButton";
-import { TealButton } from "@/components/ui/teal-button";
 
 interface ComplexHeroProps {
   complex: ResidentialComplex;
@@ -13,7 +12,7 @@ interface ComplexHeroProps {
 
 export function ComplexHero({ complex }: ComplexHeroProps) {
   const { data: apartmentStats } = useApartmentStats(complex.id);
-  
+
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -24,7 +23,7 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
           url,
         });
       } catch {
-        // User cancelled
+        // cancelled
       }
     } else {
       await navigator.clipboard.writeText(url);
@@ -32,35 +31,20 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
     }
   };
 
-  const scrollToApartments = () => {
-    const element = document.getElementById("apartments");
-    if (element) {
-      const headerOffset = 100;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-    }
-  };
-
-  // Use real apartment count or fallback to apartments_count field
-  const availableCount = apartmentStats?.totalAvailable ?? complex.apartments_count ?? 0;
-  
-  // Map status to display text
   const getStatusLabel = (status: string | null) => {
     switch (status) {
       case "ready":
-      case "completed": 
+      case "completed":
         return "СДАН";
-      case "building": 
+      case "building":
         return "СТРОИТСЯ";
-      case "soon": 
+      case "soon":
         return "СКОРО";
-      default: 
+      default:
         return "В ПРОДАЖЕ";
     }
   };
 
-  // Truncate description for hero
   const shortDescription = complex.description
     ? complex.description.length > 200
       ? complex.description.substring(0, 200) + "..."
@@ -68,118 +52,98 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
     : "";
 
   return (
-    <section className="relative min-h-screen flex items-center">
-      {/* Background Image */}
+    <section className="relative min-h-screen flex items-end">
+      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${complex.main_image || "/placeholder.svg"})`,
-        }}
+        style={{ backgroundImage: `url(${complex.main_image || "/placeholder.svg"})` }}
       />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#1a2a3a]/95 via-[#1a2a3a]/50 to-[#1a2a3a]/30" />
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#1a2a3a]/95 via-[#1a2a3a]/70 to-[#1a2a3a]/30" />
-
-      {/* Back Button - Fixed position */}
+      {/* Back link */}
       <div className="absolute top-6 left-4 lg:left-8 z-20">
-        <Button 
-          asChild 
-          variant="ghost" 
-          size="icon"
-          className="text-white hover:bg-white/10"
+        <Link
+          to="/novostroyki"
+          className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[12px] uppercase tracking-[0.15em]"
         >
-          <Link to="/novostroyki">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
+          <ArrowLeft className="h-4 w-4" />
+          Назад в каталог
+        </Link>
+      </div>
+
+      {/* Share */}
+      <div className="absolute top-6 right-4 lg:right-8 z-20">
+        <button
+          onClick={handleShare}
+          className="flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+        >
+          <Share2 className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 lg:px-8 py-24 lg:py-32">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[60vh]">
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-7 xl:col-span-6 text-white">
-            {/* Breadcrumb */}
-            <div className="mb-8">
-              <span className="text-[11px] uppercase tracking-[0.2em] text-white/60 font-medium">
-                НОВОСТРОЙКИ
+      <div className="relative z-10 w-full">
+        <div className="container mx-auto px-4 lg:px-8 pb-16 lg:pb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end">
+            {/* Left */}
+            <div className="lg:col-span-7 text-white">
+              {/* Status */}
+              <span className="inline-block px-4 py-1.5 border border-white/30 text-[11px] uppercase tracking-[0.2em] text-white/80 mb-6">
+                {getStatusLabel(complex.status)}
               </span>
-            </div>
 
-            {/* Label */}
-            <div className="mb-4">
-              <span className="text-[12px] uppercase tracking-[0.15em] text-white/70 font-medium">
+              {/* Label */}
+              <p className="text-[11px] uppercase tracking-[0.2em] text-white/50 mb-3">
                 ЖИЛОЙ КОМПЛЕКС
-              </span>
-            </div>
-
-            {/* Complex Name */}
-            <h1 className="font-serif text-[48px] md:text-[64px] lg:text-[80px] xl:text-[96px] font-normal leading-[0.95] tracking-[-0.02em] mb-6">
-              {complex.name}
-            </h1>
-
-            {/* Decorative Line */}
-            <div className="w-16 h-px bg-white/40 mb-8" />
-
-            {/* Description */}
-            {shortDescription && (
-              <p className="font-serif text-[15px] md:text-[17px] leading-relaxed text-white/80 max-w-lg mb-10 italic">
-                {shortDescription}
               </p>
-            )}
 
-            {/* Buttons Row */}
-            <div className="flex flex-col">
+              {/* Name */}
+              <h1 className="font-serif text-[48px] md:text-[64px] lg:text-[80px] font-normal leading-[0.95] tracking-[-0.02em] mb-6">
+                {complex.name}
+              </h1>
+
+              {/* Description */}
+              {shortDescription && (
+                <p className="text-[14px] md:text-[15px] leading-relaxed text-white/70 max-w-lg mb-8">
+                  {shortDescription}
+                </p>
+              )}
+
+              {/* Download button */}
               <ComplexPresentationButton complex={complex} />
-              <span className="text-[11px] text-white/50 mt-3 tracking-wide">
-                Скачайте полную презентацию дома с ценами
-              </span>
             </div>
 
-            {/* Share Button */}
-            <button
-              onClick={handleShare}
-              className="flex items-center gap-3 mt-10 text-white/60 hover:text-white transition-colors group"
-            >
-              <Share2 className="w-4 h-4" />
-              <span className="text-[11px] uppercase tracking-[0.15em] font-medium">
-                ПОДЕЛИТЬСЯ
-              </span>
-              <span className="w-8 h-8 bg-[#4C75A3] flex items-center justify-center hover:opacity-80 transition-opacity">
-                <span className="text-white text-xs font-bold">VK</span>
-              </span>
-            </button>
-          </div>
-
-          {/* Right Column - Stats */}
-          <div className="lg:col-span-5 xl:col-span-6 flex flex-col items-start lg:items-end justify-center text-white">
-            <div className="lg:text-right">
-              {/* Apartments Count */}
-              <div className="mb-6">
-                <div className="text-teal text-[64px] md:text-[80px] lg:text-[100px] xl:text-[120px] font-light leading-none font-serif">
-                  {availableCount}
+            {/* Right — info grid */}
+            <div className="lg:col-span-5 text-white">
+              <div className="grid grid-cols-2 gap-px bg-white/10">
+                {/* Сдача */}
+                <div className="bg-[#1a2a3a]/80 backdrop-blur-sm p-5">
+                  <p className="text-[11px] uppercase tracking-[0.12em] text-white/50 mb-2">Сдача</p>
+                  <p className="text-[15px] font-medium">
+                    {complex.completion_date
+                      ? new Date(complex.completion_date).toLocaleDateString("ru-RU", {
+                          year: "numeric",
+                          month: "long",
+                        })
+                      : "Уточняйте"}
+                  </p>
                 </div>
-                <div className="text-[11px] uppercase tracking-[0.2em] text-white/60 mt-2">
-                  КВАРТИР В ПРОДАЖЕ
+                {/* Город */}
+                <div className="bg-[#1a2a3a]/80 backdrop-blur-sm p-5">
+                  <p className="text-[11px] uppercase tracking-[0.12em] text-white/50 mb-2">Город</p>
+                  <p className="text-[15px] font-medium">{complex.city || "Санкт-Петербург"}</p>
+                </div>
+                {/* Адрес */}
+                <div className="bg-[#1a2a3a]/80 backdrop-blur-sm p-5">
+                  <p className="text-[11px] uppercase tracking-[0.12em] text-white/50 mb-2">Адрес</p>
+                  <p className="text-[15px] font-medium">{complex.address || "Уточняйте"}</p>
+                </div>
+                {/* Район */}
+                <div className="bg-[#1a2a3a]/80 backdrop-blur-sm p-5">
+                  <p className="text-[11px] uppercase tracking-[0.12em] text-white/50 mb-2">Район</p>
+                  <p className="text-[15px] font-medium">{complex.district || "—"}</p>
                 </div>
               </div>
-
-              {/* Status Badge */}
-              <div className="mb-10">
-                <span className="inline-block px-6 py-2.5 border border-white/30 text-[11px] uppercase tracking-[0.2em] text-white/80">
-                  {getStatusLabel(complex.status)}
-                </span>
-              </div>
-
-              {/* CTA Button */}
-              <TealButton
-                onClick={scrollToApartments}
-                variant="outline"
-                size="lg"
-                className="min-w-[200px] lg:min-w-[240px]"
-              >
-                ВЫБРАТЬ КВАРТИРУ
-              </TealButton>
             </div>
           </div>
         </div>

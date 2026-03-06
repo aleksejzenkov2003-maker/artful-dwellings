@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ArrowLeft, Plus, Pencil, Trash2, MapPin, Loader2, Save } from "lucide-react";
 import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
@@ -42,6 +43,15 @@ import {
 import { useAllComplexBuildings } from "@/hooks/useComplexBuildings";
 import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { SingleImageUploader } from "@/components/admin/SingleImageUploader";
+import {
+  useAllComplexSlides,
+  useCreateSlide,
+  useUpdateSlide,
+  useDeleteSlide,
+  SLIDE_TYPES,
+  type ComplexSlide,
+} from "@/hooks/useComplexSlides";
 
 type Complex = Tables<"residential_complexes">;
 type Coordinates = { lat: number; lng: number };
@@ -93,6 +103,15 @@ export default function AdminComplexEdit() {
   
   // Fetch buildings for this complex
   const { data: buildings } = useAllComplexBuildings(id);
+
+  // Slides
+  const { data: slides } = useAllComplexSlides(id);
+  const createSlide = useCreateSlide();
+  const updateSlide = useUpdateSlide();
+  const deleteSlide = useDeleteSlide();
+  const [isSlideDialogOpen, setIsSlideDialogOpen] = useState(false);
+  const [editingSlide, setEditingSlide] = useState<ComplexSlide | null>(null);
+  const [slideForm, setSlideForm] = useState<Partial<ComplexSlide>>({});
 
   // Initialize form when complex loads
   useState(() => {
@@ -381,6 +400,7 @@ export default function AdminComplexEdit() {
           <TabsList>
             <TabsTrigger value="general">Основное</TabsTrigger>
             <TabsTrigger value="apartments">Квартиры ({apartments?.length || 0})</TabsTrigger>
+            <TabsTrigger value="slides">Слайды ({slides?.length || 0})</TabsTrigger>
             <TabsTrigger value="media">Медиа</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
@@ -736,6 +756,90 @@ export default function AdminComplexEdit() {
             </div>
           </TabsContent>
 
+          {/* Slides Tab */}
+          <TabsContent value="slides" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <p className="text-muted-foreground">
+                Слайды для секции «Концепция»
+              </p>
+              <Button onClick={() => {
+                setEditingSlide(null);
+                setSlideForm({
+                  complex_id: id,
+                  slide_type: "architecture",
+                  title: "",
+                  description: "",
+                  image_url: "",
+                  order_position: (slides?.length || 0),
+                  is_published: true,
+                });
+                setIsSlideDialogOpen(true);
+              }}>
+                <Plus className="h-4 w-4 mr-2" />
+                Добавить слайд
+              </Button>
+            </div>
+
+            {slides && slides.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Тип</TableHead>
+                    <TableHead>Заголовок</TableHead>
+                    <TableHead>Изображение</TableHead>
+                    <TableHead>Порядок</TableHead>
+                    <TableHead>Опубликован</TableHead>
+                    <TableHead className="w-[100px]">Действия</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {slides.map((slide) => (
+                    <TableRow key={slide.id}>
+                      <TableCell>
+                        {SLIDE_TYPES.find(t => t.value === slide.slide_type)?.label || slide.slide_type}
+                      </TableCell>
+                      <TableCell>{slide.title}</TableCell>
+                      <TableCell>
+                        {slide.image_url ? (
+                          <img src={slide.image_url} alt="" className="w-16 h-10 object-cover rounded" />
+                        ) : "—"}
+                      </TableCell>
+                      <TableCell>{slide.order_position}</TableCell>
+                      <TableCell>{slide.is_published ? "Да" : "Нет"}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button size="icon" variant="ghost" onClick={() => {
+                            setEditingSlide(slide);
+                            setSlideForm({
+                              slide_type: slide.slide_type,
+                              title: slide.title,
+                              description: slide.description,
+                              image_url: slide.image_url,
+                              order_position: slide.order_position,
+                              is_published: slide.is_published,
+                            });
+                            setIsSlideDialogOpen(true);
+                          }}>
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" className="text-destructive" onClick={() => {
+                            if (confirm("Удалить слайд?")) deleteSlide.mutate(slide.id);
+                          }}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                Слайды не добавлены. Добавьте слайды чтобы секция «Концепция» отображалась на странице ЖК.
+              </div>
+            )}
+          </TabsContent>
+
           {/* SEO Tab */}
           <TabsContent value="seo" className="space-y-6">
             <div className="space-y-4 max-w-2xl">
@@ -887,6 +991,112 @@ export default function AdminComplexEdit() {
               </Button>
               <Button onClick={handleSaveApartment}>
                 {editingApartment ? "Сохранить" : "Добавить"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* Slide Dialog */}
+      <Dialog open={isSlideDialogOpen} onOpenChange={setIsSlideDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {editingSlide ? "Редактировать слайд" : "Добавить слайд"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Тип слайда</Label>
+              <Select
+                value={slideForm.slide_type || "architecture"}
+                onValueChange={(value) => setSlideForm({ ...slideForm, slide_type: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SLIDE_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Заголовок *</Label>
+              <Input
+                value={slideForm.title || ""}
+                onChange={(e) => setSlideForm({ ...slideForm, title: e.target.value })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Описание</Label>
+              <Textarea
+                value={slideForm.description || ""}
+                onChange={(e) => setSlideForm({ ...slideForm, description: e.target.value })}
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>URL изображения</Label>
+              <Input
+                value={slideForm.image_url || ""}
+                onChange={(e) => setSlideForm({ ...slideForm, image_url: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Порядок</Label>
+                <Input
+                  type="number"
+                  value={slideForm.order_position ?? 0}
+                  onChange={(e) => setSlideForm({ ...slideForm, order_position: Number(e.target.value) })}
+                />
+              </div>
+              <div className="flex items-center gap-2 pt-6">
+                <Switch
+                  checked={slideForm.is_published ?? true}
+                  onCheckedChange={(checked) => setSlideForm({ ...slideForm, is_published: checked })}
+                />
+                <Label>Опубликован</Label>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsSlideDialogOpen(false)}>
+                Отмена
+              </Button>
+              <Button onClick={() => {
+                if (!slideForm.title) {
+                  toast.error("Введите заголовок");
+                  return;
+                }
+                if (editingSlide) {
+                  updateSlide.mutate({
+                    id: editingSlide.id,
+                    ...slideForm,
+                  });
+                } else {
+                  createSlide.mutate({
+                    complex_id: id!,
+                    slide_type: slideForm.slide_type || "architecture",
+                    title: slideForm.title!,
+                    description: slideForm.description || null,
+                    image_url: slideForm.image_url || null,
+                    order_position: slideForm.order_position || 0,
+                    is_published: slideForm.is_published ?? true,
+                  });
+                }
+                setIsSlideDialogOpen(false);
+                toast.success(editingSlide ? "Слайд обновлён" : "Слайд добавлен");
+              }}>
+                {editingSlide ? "Сохранить" : "Добавить"}
               </Button>
             </div>
           </div>
