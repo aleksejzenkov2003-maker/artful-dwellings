@@ -1,4 +1,4 @@
-import { MapPin, Navigation, Car, Plane } from "lucide-react";
+import { MapPin, Navigation, Car, Clock } from "lucide-react";
 import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
 
 interface ComplexLocationProps {
@@ -6,80 +6,58 @@ interface ComplexLocationProps {
 }
 
 export function ComplexLocation({ complex }: ComplexLocationProps) {
+  const distances = [
+    { time: "3", unit: "мин", label: "Детский сад", icon: Clock },
+    { time: "5", unit: "мин", label: "Школа", icon: Clock },
+    { time: "7", unit: "мин", label: "Метро", icon: Navigation },
+    { time: "10", unit: "мин", label: "Центр города", icon: Car },
+  ];
+
   return (
-    <section id="location" className="py-16 lg:py-20 bg-background border-b border-border">
+    <section id="location" className="py-16 lg:py-24 bg-background">
       <div className="container mx-auto px-4 lg:px-8">
-        {/* Address */}
-        <div className="text-center mb-8">
-          <h2 className="font-serif font-normal text-[28px] md:text-[36px] lg:text-[42px] leading-[1.15] mb-4">
-            {complex.address || "Адрес не указан"}
-          </h2>
-          
-          {/* District */}
-          {complex.district && (
-            <p className="text-muted-foreground text-[13px] uppercase tracking-[0.1em]">
-              Район {complex.district}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          {/* Left: text + distances */}
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground font-medium mb-4">
+              ЛОКАЦИЯ
             </p>
-          )}
-        </div>
+            <h2 className="font-serif text-[36px] md:text-[48px] leading-[1.1] mb-6">
+              {complex.address || "Расположение"}
+            </h2>
 
-        {/* Separator */}
-        <div className="w-full h-px bg-border mb-8" />
+            {complex.district && (
+              <p className="text-muted-foreground text-[15px] leading-relaxed mb-10">
+                Район {complex.district}. Развитая инфраструктура в шаговой доступности — школы, детские сады, магазины и общественный транспорт.
+              </p>
+            )}
 
-        {/* Location Info */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {/* Distance to Center */}
-          <div className="flex items-start gap-3">
-            <Navigation className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
-            <div>
-              <p className="text-[13px] uppercase tracking-[0.08em] font-medium">
-                До центра
-              </p>
-              <p className="text-[13px] text-muted-foreground">
-                10.3 км / 43 мин
-              </p>
+            {/* Distance grid */}
+            <div className="grid grid-cols-2 gap-6">
+              {distances.map((item, index) => (
+                <div key={index} className="flex items-start gap-4">
+                  <div className="text-[36px] md:text-[48px] font-serif leading-none text-foreground">
+                    {item.time}
+                  </div>
+                  <div className="pt-2">
+                    <p className="text-[12px] uppercase tracking-[0.1em] text-muted-foreground">
+                      {item.unit}
+                    </p>
+                    <p className="text-[14px] font-medium mt-1">
+                      {item.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Metro */}
-          <div className="flex items-start gap-3">
-            <div className="w-5 h-5 flex items-center justify-center mt-0.5">
-              <span className="w-3 h-3 rounded-full bg-red-500" />
-            </div>
-            <div>
-              <p className="text-[13px] uppercase tracking-[0.08em] font-medium">
-                {complex.address?.split(",")[0] || "Метро"}
-              </p>
-              <p className="text-[13px] text-muted-foreground">
-                7 минут пешком
-              </p>
-            </div>
-          </div>
-
-          {/* KAD */}
-          <div className="flex items-start gap-3">
-            <Car className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
-            <div>
-              <p className="text-[13px] uppercase tracking-[0.08em] font-medium">
-                КАД
-              </p>
-              <p className="text-[13px] text-muted-foreground">
-                5 км / 19 мин
-              </p>
-            </div>
-          </div>
-
-          {/* Airport */}
-          <div className="flex items-start gap-3">
-            <Plane className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-            <div>
-              <p className="text-[13px] uppercase tracking-[0.08em] font-medium">
-                Аэропорт
-              </p>
-              <p className="text-[13px] text-muted-foreground">
-                10.6 км / 20 мин
-              </p>
-            </div>
+          {/* Right: map placeholder */}
+          <div className="relative rounded-none overflow-hidden bg-[#1a2a3a] min-h-[400px] flex items-center justify-center">
+            <MapPin className="w-12 h-12 text-white/20" />
+            <p className="absolute bottom-6 left-6 text-[11px] uppercase tracking-[0.15em] text-white/40">
+              Карта
+            </p>
           </div>
         </div>
       </div>
