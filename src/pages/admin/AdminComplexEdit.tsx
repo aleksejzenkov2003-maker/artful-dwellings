@@ -400,6 +400,7 @@ export default function AdminComplexEdit() {
           <TabsList>
             <TabsTrigger value="general">Основное</TabsTrigger>
             <TabsTrigger value="apartments">Квартиры ({apartments?.length || 0})</TabsTrigger>
+            <TabsTrigger value="slides">Слайды ({slides?.length || 0})</TabsTrigger>
             <TabsTrigger value="media">Медиа</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
