@@ -113,15 +113,12 @@ export function ComplexHero({ complex }: ComplexHeroProps) {
               <p className="text-[14px] text-white/50">Сдача</p>
               <p className="text-[14px] font-medium text-white">
                 {complex.completion_date
-                  ? new Date(complex.completion_date).toLocaleDateString("ru-RU", {
-                      quarter: undefined,
-                      year: "numeric",
-                      month: undefined,
-                    }).replace(/^/, () => {
-                      const d = new Date(complex.completion_date!);
+                  ? (() => {
+                      const d = new Date(complex.completion_date);
                       const q = Math.ceil((d.getMonth() + 1) / 3);
-                      return `${q === 1 ? 'I' : q === 2 ? 'II' : q === 3 ? 'III' : 'IV'} квартал `;
-                    })
+                      const roman = q === 1 ? 'I' : q === 2 ? 'II' : q === 3 ? 'III' : 'IV';
+                      return `${roman} квартал ${d.getFullYear()}`;
+                    })()
                   : "Уточняйте"}
               </p>
               <p className="text-[14px] text-white/50">Город</p>
