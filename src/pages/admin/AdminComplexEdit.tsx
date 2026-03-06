@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ArrowLeft, Plus, Pencil, Trash2, MapPin, Loader2, Save } from "lucide-react";
 import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
@@ -42,6 +43,15 @@ import {
 import { useAllComplexBuildings } from "@/hooks/useComplexBuildings";
 import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { SingleImageUploader } from "@/components/admin/SingleImageUploader";
+import {
+  useAllComplexSlides,
+  useCreateSlide,
+  useUpdateSlide,
+  useDeleteSlide,
+  SLIDE_TYPES,
+  type ComplexSlide,
+} from "@/hooks/useComplexSlides";
 
 type Complex = Tables<"residential_complexes">;
 type Coordinates = { lat: number; lng: number };
