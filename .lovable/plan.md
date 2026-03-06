@@ -1,17 +1,36 @@
 
 
-## Plan: Remove table borders from ComplexHero info grid
+## Plan: Interactive Timeline "История компании"
 
-Replace the bordered 2x2 grid with borderless key-value pairs matching the reference. The reference shows items arranged in 2 columns with just spacing between them -- no visible borders.
+Add an interactive horizontal timeline below the team section on /o-kompanii. When the user hovers/moves the mouse along the year markers, the timeline line highlights up to that year in accent color, and a detail card appears below showing a title, image, and description for that year.
 
-### Changes to `ComplexHero.tsx` (lines 111-145)
+### Data structure
 
-Replace the bordered grid with a simple 2-column layout using gap spacing instead of borders:
+Timeline entries with fields: `year`, `title`, `image` (optional placeholder for now), `description`. Data from the existing `timelineYears` array, expanded with titles and descriptions.
 
-- Remove all `border border-white/10` and `border-l-0 border-t-0` classes
-- Use `gap-x-12 gap-y-8` for spacing between items
-- Keep the same label/value typography
-- Add `metro` field if available (shown in reference image-302: "Метро — Василеостровская")
+### Component — `AboutTimeline.tsx` (rewrite)
 
-The items remain: Сдача, Город, Адрес, Район (+ Метро if data exists).
+**Desktop (md+):**
+- Title "История компании" left-aligned, Aeroport font
+- Horizontal row of years (2016–2026, plus "..." at the end)
+- Dashed/dotted line connecting years
+- On hover/click a year: that year text turns accent color, the dotted line from start to that year turns accent, a card appears below with:
+  - Title (e.g. "Основание компании")
+  - Image placeholder (gray box with mountain icon)
+  - Description paragraph
+- State: `activeYear` controlled by `onMouseEnter` on each year label
+- Line coloring: use a gradient or two overlapping lines — one gray full width, one accent up to the active year's position
+
+**Mobile:**
+- Vertical scrollable timeline, tap to select year
+
+### Integration
+
+- Add `AboutTimeline` to `OKompanii.tsx` after `AboutTeamCarousel` (before `AboutTestimonials`)
+- Export from `src/components/about/index.ts`
+
+### Files changed
+- `src/components/about/AboutTimeline.tsx` — full rewrite with interactive hover logic
+- `src/components/about/index.ts` — add export
+- `src/pages/OKompanii.tsx` — add `<AboutTimeline />` after team section
 
