@@ -37,6 +37,7 @@ type CompanyStat = Tables<"company_stats">;
 
 export default function AdminStats() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingStat, setEditingStat] = useState<CompanyStat | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"company_stats">>>({});
