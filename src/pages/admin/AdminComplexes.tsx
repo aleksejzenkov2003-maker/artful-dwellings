@@ -482,6 +482,7 @@ export default function AdminComplexes() {
                 </form>
               </DialogContent>
             </Dialog>
+            )}
           </div>
         </div>
 
