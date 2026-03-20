@@ -43,7 +43,7 @@ const allNavItems = [
   { href: "/admin/awards", label: "Награды", icon: Award, minRole: "content" as const },
   { href: "/admin/timeline", label: "Таймлайн", icon: Clock, minRole: "content" as const },
   { href: "/admin/users", label: "Пользователи", icon: UserCog, minRole: "admin" as const },
-  { href: "/admin/logs", label: "Логи", icon: ScrollText, minRole: "super_admin" as const },
+  { href: "/admin/logs", label: "Логи", icon: ScrollText, minRole: "admin" as const },
 ];
 
 const ROLE_LEVEL: Record<string, number> = {
