@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Eye } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type BlogPost = Tables<"blog_posts">;
 
