@@ -129,12 +129,14 @@ export default function AdminCities() {
             <p className="text-muted-foreground">Управление городами присутствия</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingCity(null); setFormData({ is_active: true, country: "Россия", order_position: 0 }); }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить город
-              </Button>
-            </DialogTrigger>
+            {canCreate && (
+              <DialogTrigger asChild>
+                <Button onClick={() => { setEditingCity(null); setFormData({ is_active: true, country: "Россия", order_position: 0 }); }}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить город
+                </Button>
+              </DialogTrigger>
+            )}
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>
