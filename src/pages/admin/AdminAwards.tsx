@@ -101,11 +101,13 @@ export default function AdminAwards() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Награды и сертификаты</h1>
         <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) resetForm(); }}>
-          <DialogTrigger asChild>
-            <Button onClick={openCreate}>
-              <Plus className="h-4 w-4 mr-2" /> Добавить
-            </Button>
-          </DialogTrigger>
+          {canCreate && (
+            <DialogTrigger asChild>
+              <Button onClick={openCreate}>
+                <Plus className="h-4 w-4 mr-2" /> Добавить
+              </Button>
+            </DialogTrigger>
+          )}
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{editing ? "Редактировать" : "Новая награда"}</DialogTitle>
