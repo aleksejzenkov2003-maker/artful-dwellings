@@ -24,11 +24,13 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type City = Tables<"cities">;
 
 export default function AdminCities() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCity, setEditingCity] = useState<City | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"cities">>>({});
@@ -127,12 +129,14 @@ export default function AdminCities() {
             <p className="text-muted-foreground">Управление городами присутствия</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingCity(null); setFormData({ is_active: true, country: "Россия", order_position: 0 }); }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить город
-              </Button>
-            </DialogTrigger>
+            {canCreate && (
+              <DialogTrigger asChild>
+                <Button onClick={() => { setEditingCity(null); setFormData({ is_active: true, country: "Россия", order_position: 0 }); }}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить город
+                </Button>
+              </DialogTrigger>
+            )}
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>
@@ -242,17 +246,21 @@ export default function AdminCities() {
                   <TableCell>{city.is_default ? "Да" : "Нет"}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="ghost" onClick={() => handleEdit(city)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(city.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canEdit && (
+                        <Button size="icon" variant="ghost" onClick={() => handleEdit(city)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => deleteMutation.mutate(city.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

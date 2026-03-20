@@ -33,11 +33,13 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Upload, Video, Loader2, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type TeamMember = Tables<"team_members">;
 
 export default function AdminTeam() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"team_members">>>({});
@@ -185,14 +187,16 @@ export default function AdminTeam() {
             <h1 className="text-3xl font-display mb-2">Команда</h1>
             <p className="text-muted-foreground">Управление сотрудниками</p>
           </div>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link to="/admin/team/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить сотрудника
-              </Link>
-            </Button>
-          </div>
+          {canCreate && (
+            <div className="flex gap-2">
+              <Button asChild>
+                <Link to="/admin/team/new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить сотрудника
+                </Link>
+              </Button>
+            </div>
+          )}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
@@ -391,19 +395,23 @@ export default function AdminTeam() {
                   <TableCell>{member.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button asChild size="icon" variant="ghost">
-                        <Link to={`/admin/team/${member.id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(member.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canEdit && (
+                        <Button asChild size="icon" variant="ghost">
+                          <Link to={`/admin/team/${member.id}`}>
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => deleteMutation.mutate(member.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

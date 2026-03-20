@@ -22,12 +22,14 @@ import {
   Building2, // ✅ FIX: добавили импорт
 } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Complex = Tables<"residential_complexes">;
 type Coordinates = { lat: number; lng: number };
 
 export default function AdminComplexes() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingComplex, setEditingComplex] = useState<Complex | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"residential_complexes">>>({});
@@ -203,18 +205,19 @@ export default function AdminComplexes() {
               Геокодировать все
             </Button>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  onClick={() => {
-                    setEditingComplex(null);
-                    setFormData({ is_published: true });
-                  }}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Добавить ЖК
-                </Button>
-              </DialogTrigger>
+            {canCreate && (
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setEditingComplex(null);
+                      setFormData({ is_published: true });
+                    }}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Добавить ЖК
+                  </Button>
+                </DialogTrigger>
 
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
@@ -479,6 +482,7 @@ export default function AdminComplexes() {
                 </form>
               </DialogContent>
             </Dialog>
+            )}
           </div>
         </div>
 
@@ -505,17 +509,21 @@ export default function AdminComplexes() {
                   <TableCell>{complex.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="ghost" asChild title="Редактировать">
-                        <Link to={`/admin/complexes/${complex.id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                      {canEdit && (
+                        <Button size="icon" variant="ghost" asChild title="Редактировать">
+                          <Link to={`/admin/complexes/${complex.id}`}>
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      )}
 
-                      <Button size="icon" variant="ghost" asChild title="Корпуса">
-                        <Link to={`/admin/complexes/${complex.id}/buildings`}>
-                          <Building2 className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                      {canEdit && (
+                        <Button size="icon" variant="ghost" asChild title="Корпуса">
+                          <Link to={`/admin/complexes/${complex.id}/buildings`}>
+                            <Building2 className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      )}
 
                       <Button size="icon" variant="ghost" asChild title="Просмотр">
                         <Link to={`/novostroyki/${complex.slug}`} target="_blank">
@@ -523,15 +531,17 @@ export default function AdminComplexes() {
                         </Link>
                       </Button>
 
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(complex.id)}
-                        title="Удалить"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => deleteMutation.mutate(complex.id)}
+                          title="Удалить"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

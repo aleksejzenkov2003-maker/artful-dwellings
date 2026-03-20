@@ -31,11 +31,13 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Globe } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type CompanyStat = Tables<"company_stats">;
 
 export default function AdminStats() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingStat, setEditingStat] = useState<CompanyStat | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"company_stats">>>({});
@@ -148,12 +150,14 @@ export default function AdminStats() {
             <p className="text-muted-foreground">Управление показателями на главной</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingStat(null); setFormData({ is_published: true, order_position: 0 }); }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить показатель
-              </Button>
-            </DialogTrigger>
+            {canCreate && (
+              <DialogTrigger asChild>
+                <Button onClick={() => { setEditingStat(null); setFormData({ is_published: true, order_position: 0 }); }}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить показатель
+                </Button>
+              </DialogTrigger>
+            )}
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>
@@ -294,17 +298,21 @@ export default function AdminStats() {
                   <TableCell>{stat.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="ghost" onClick={() => handleEdit(stat)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(stat.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canEdit && (
+                        <Button size="icon" variant="ghost" onClick={() => handleEdit(stat)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => deleteMutation.mutate(stat.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

@@ -15,11 +15,13 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Tables } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Service = Tables<"services">;
 
 export default function AdminServices() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
 
   const { data: services, isLoading } = useQuery({
     queryKey: ["admin-services"],
@@ -53,12 +55,14 @@ export default function AdminServices() {
             <h1 className="text-3xl font-display mb-2">Услуги</h1>
             <p className="text-muted-foreground">Управление услугами компании</p>
           </div>
-          <Button asChild>
-            <Link to="/admin/services/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Добавить услугу
-            </Link>
-          </Button>
+          {canCreate && (
+            <Button asChild>
+              <Link to="/admin/services/new">
+                <Plus className="h-4 w-4 mr-2" />
+                Добавить услугу
+              </Link>
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
@@ -92,19 +96,23 @@ export default function AdminServices() {
                   <TableCell>{service.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button asChild size="icon" variant="ghost">
-                        <Link to={`/admin/services/${service.id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(service.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canEdit && (
+                        <Button asChild size="icon" variant="ghost">
+                          <Link to={`/admin/services/${service.id}`}>
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => deleteMutation.mutate(service.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

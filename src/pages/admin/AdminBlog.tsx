@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Eye } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type BlogPost = Tables<"blog_posts">;
 
@@ -27,6 +28,7 @@ const categories = [
 
 export default function AdminBlog() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit, canViewOnly } = usePermissions();
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ["admin-blog"],
@@ -66,12 +68,14 @@ export default function AdminBlog() {
             <h1 className="text-3xl font-display mb-2">Блог</h1>
             <p className="text-muted-foreground">Управление статьями</p>
           </div>
-          <Button asChild>
-            <Link to="/admin/blog/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Добавить статью
-            </Link>
-          </Button>
+          {canCreate && (
+            <Button asChild>
+              <Link to="/admin/blog/new">
+                <Plus className="h-4 w-4 mr-2" />
+                Добавить статью
+              </Link>
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
@@ -118,19 +122,23 @@ export default function AdminBlog() {
                           <Eye className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <Button asChild size="icon" variant="ghost">
-                        <Link to={`/admin/blog/${post.id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => handleDelete(post)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canEdit && (
+                        <Button asChild size="icon" variant="ghost">
+                          <Link to={`/admin/blog/${post.id}`}>
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => handleDelete(post)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -140,12 +148,14 @@ export default function AdminBlog() {
         ) : (
           <div className="text-center py-12 border-2 border-dashed rounded-lg">
             <p className="text-muted-foreground mb-4">Статьи не добавлены</p>
-            <Button asChild>
-              <Link to="/admin/blog/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Создать первую статью
-              </Link>
-            </Button>
+            {canCreate && (
+              <Button asChild>
+                <Link to="/admin/blog/new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Создать первую статью
+                </Link>
+              </Button>
+            )}
           </div>
         )}
       </div>

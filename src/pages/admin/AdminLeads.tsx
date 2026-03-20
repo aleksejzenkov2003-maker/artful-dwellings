@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { Eye, Trash2, Phone, Mail, User } from "lucide-react";
 import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 import { Link } from "react-router-dom";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Lead = Tables<"leads">;
 
@@ -44,6 +45,7 @@ const statuses = [
 
 export default function AdminLeads() {
   const queryClient = useQueryClient();
+  const { canDelete, canEdit } = usePermissions();
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [notes, setNotes] = useState("");
@@ -180,14 +182,16 @@ export default function AdminLeads() {
                       <Button size="icon" variant="ghost" onClick={() => handleView(lead)}>
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(lead.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => deleteMutation.mutate(lead.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

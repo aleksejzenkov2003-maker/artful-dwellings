@@ -32,6 +32,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Star } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Review = Tables<"reviews">;
 
@@ -45,6 +46,7 @@ const sources = [
 
 export default function AdminReviews() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"reviews">>>({});
@@ -158,12 +160,14 @@ export default function AdminReviews() {
             <p className="text-muted-foreground">Управление отзывами клиентов</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingReview(null); setFormData({ is_published: true, rating: 5, order_position: 0 }); }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить отзыв
-              </Button>
-            </DialogTrigger>
+            {canCreate && (
+              <DialogTrigger asChild>
+                <Button onClick={() => { setEditingReview(null); setFormData({ is_published: true, rating: 5, order_position: 0 }); }}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить отзыв
+                </Button>
+              </DialogTrigger>
+            )}
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
@@ -309,17 +313,21 @@ export default function AdminReviews() {
                   <TableCell>{review.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="ghost" onClick={() => handleEdit(review)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(review.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canEdit && (
+                        <Button size="icon" variant="ghost" onClick={() => handleEdit(review)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => deleteMutation.mutate(review.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

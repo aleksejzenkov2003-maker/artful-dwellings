@@ -11,6 +11,7 @@ import { SingleImageUploader } from "@/components/admin/SingleImageUploader";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, GripVertical } from "lucide-react";
+import { usePermissions } from "@/hooks/usePermissions";
 import {
   Dialog,
   DialogContent,
@@ -39,6 +40,7 @@ const emptyForm = {
 
 export default function AdminTimeline() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -141,9 +143,11 @@ export default function AdminTimeline() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Таймлайн — История компании</h1>
-          <Button onClick={openCreate}>
-            <Plus className="w-4 h-4 mr-2" /> Добавить
-          </Button>
+          {canCreate && (
+            <Button onClick={openCreate}>
+              <Plus className="w-4 h-4 mr-2" /> Добавить
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
@@ -180,20 +184,24 @@ export default function AdminTimeline() {
                     )}
                   </div>
                   <div className="flex gap-2 shrink-0">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => openEdit(ev)}
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => deleteMutation.mutate(ev.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    {canEdit && (
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => openEdit(ev)}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                    )}
+                    {canDelete && (
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => deleteMutation.mutate(ev.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
