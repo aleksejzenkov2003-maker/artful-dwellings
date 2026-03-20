@@ -148,12 +148,14 @@ export default function AdminBlog() {
         ) : (
           <div className="text-center py-12 border-2 border-dashed rounded-lg">
             <p className="text-muted-foreground mb-4">Статьи не добавлены</p>
-            <Button asChild>
-              <Link to="/admin/blog/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Создать первую статью
-              </Link>
-            </Button>
+            {canCreate && (
+              <Button asChild>
+                <Link to="/admin/blog/new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Создать первую статью
+                </Link>
+              </Button>
+            )}
           </div>
         )}
       </div>

@@ -184,20 +184,24 @@ export default function AdminTimeline() {
                     )}
                   </div>
                   <div className="flex gap-2 shrink-0">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => openEdit(ev)}
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => deleteMutation.mutate(ev.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    {canEdit && (
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => openEdit(ev)}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                    )}
+                    {canDelete && (
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => deleteMutation.mutate(ev.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
