@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export default function AdminAwards() {
   const { data: awards = [], isLoading } = useAwards(false);
