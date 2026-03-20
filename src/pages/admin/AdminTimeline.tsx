@@ -11,6 +11,7 @@ import { SingleImageUploader } from "@/components/admin/SingleImageUploader";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, GripVertical } from "lucide-react";
+import { usePermissions } from "@/hooks/usePermissions";
 import {
   Dialog,
   DialogContent,
