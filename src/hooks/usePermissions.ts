@@ -26,7 +26,7 @@ export function usePermissions() {
     // Granular permissions
     canManageUsers: level <= 2,
     canManageRoles: role === "super_admin",
-    canViewLogs: role === "super_admin",
+    canViewLogs: level <= 2,
     canPublish: level <= 2,
     canDelete: level <= 2,
     canEdit: level <= 4,
