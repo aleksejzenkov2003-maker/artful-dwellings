@@ -45,6 +45,8 @@ import AdminCities from "./pages/admin/AdminCities";
 import AdminHomepage from "./pages/admin/AdminHomepage";
 import AdminAwards from "./pages/admin/AdminAwards";
 import AdminTimeline from "./pages/admin/AdminTimeline";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminAuditLogs from "./pages/admin/AdminAuditLogs";
 import BrokerPage from "./pages/BrokerPage";
 
 const queryClient = new QueryClient();
