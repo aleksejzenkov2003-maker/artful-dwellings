@@ -205,18 +205,19 @@ export default function AdminComplexes() {
               Геокодировать все
             </Button>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  onClick={() => {
-                    setEditingComplex(null);
-                    setFormData({ is_published: true });
-                  }}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Добавить ЖК
-                </Button>
-              </DialogTrigger>
+            {canCreate && (
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setEditingComplex(null);
+                      setFormData({ is_published: true });
+                    }}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Добавить ЖК
+                  </Button>
+                </DialogTrigger>
 
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
