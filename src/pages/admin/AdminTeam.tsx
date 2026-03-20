@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Upload, Video, Loader2, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type TeamMember = Tables<"team_members">;
 
