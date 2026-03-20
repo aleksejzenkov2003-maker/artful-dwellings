@@ -95,25 +95,25 @@ const App = () => (
               
               {/* Admin routes - protected with authentication */}
               <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-              <Route path="/admin/homepage" element={<ProtectedRoute><AdminHomepage /></ProtectedRoute>} />
-              <Route path="/admin/complexes" element={<ProtectedRoute><AdminComplexes /></ProtectedRoute>} />
-              <Route path="/admin/complexes/:id" element={<ProtectedRoute><AdminComplexEdit /></ProtectedRoute>} />
-              <Route path="/admin/complexes/:complexId/buildings" element={<ProtectedRoute><AdminComplexBuildings /></ProtectedRoute>} />
-              <Route path="/admin/blog" element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
-              <Route path="/admin/blog/:id" element={<ProtectedRoute><AdminBlogEdit /></ProtectedRoute>} />
-              <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
-              <Route path="/admin/services" element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
-              <Route path="/admin/services/:id" element={<ProtectedRoute><AdminServiceEdit /></ProtectedRoute>} />
-              <Route path="/admin/team" element={<ProtectedRoute><AdminTeam /></ProtectedRoute>} />
-              <Route path="/admin/team/:id" element={<ProtectedRoute><AdminTeamEdit /></ProtectedRoute>} />
-              <Route path="/admin/reviews" element={<ProtectedRoute><AdminReviews /></ProtectedRoute>} />
-              <Route path="/admin/leads" element={<ProtectedRoute><AdminLeads /></ProtectedRoute>} />
+              <Route path="/admin/homepage" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminHomepage /></ProtectedRoute>} />
+              <Route path="/admin/complexes" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminComplexes /></ProtectedRoute>} />
+              <Route path="/admin/complexes/:id" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminComplexEdit /></ProtectedRoute>} />
+              <Route path="/admin/complexes/:complexId/buildings" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminComplexBuildings /></ProtectedRoute>} />
+              <Route path="/admin/blog" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminBlog /></ProtectedRoute>} />
+              <Route path="/admin/blog/:id" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminBlogEdit /></ProtectedRoute>} />
+              <Route path="/admin/promotions" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminPromotions /></ProtectedRoute>} />
+              <Route path="/admin/services" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminServices /></ProtectedRoute>} />
+              <Route path="/admin/services/:id" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminServiceEdit /></ProtectedRoute>} />
+              <Route path="/admin/team" element={<ProtectedRoute requiredRoles={["super_admin", "admin"]}><AdminTeam /></ProtectedRoute>} />
+              <Route path="/admin/team/:id" element={<ProtectedRoute requiredRoles={["super_admin", "admin"]}><AdminTeamEdit /></ProtectedRoute>} />
+              <Route path="/admin/reviews" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminReviews /></ProtectedRoute>} />
+              <Route path="/admin/leads" element={<ProtectedRoute requiredRoles={["super_admin", "admin"]}><AdminLeads /></ProtectedRoute>} />
               <Route path="/admin/stats" element={<ProtectedRoute><AdminStats /></ProtectedRoute>} />
-              <Route path="/admin/cities" element={<ProtectedRoute><AdminCities /></ProtectedRoute>} />
-              <Route path="/admin/awards" element={<ProtectedRoute><AdminAwards /></ProtectedRoute>} />
-              <Route path="/admin/timeline" element={<ProtectedRoute><AdminTimeline /></ProtectedRoute>} />
+              <Route path="/admin/cities" element={<ProtectedRoute requiredRoles={["super_admin", "admin"]}><AdminCities /></ProtectedRoute>} />
+              <Route path="/admin/awards" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminAwards /></ProtectedRoute>} />
+              <Route path="/admin/timeline" element={<ProtectedRoute requiredRoles={["super_admin", "admin", "manager", "content"]}><AdminTimeline /></ProtectedRoute>} />
               <Route path="/admin/users" element={<ProtectedRoute requiredRoles={["super_admin", "admin"]}><AdminUsers /></ProtectedRoute>} />
-              <Route path="/admin/logs" element={<ProtectedRoute requiredRoles={["super_admin"]}><AdminAuditLogs /></ProtectedRoute>} />
+              <Route path="/admin/logs" element={<ProtectedRoute requiredRoles={["super_admin", "admin"]}><AdminAuditLogs /></ProtectedRoute>} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>

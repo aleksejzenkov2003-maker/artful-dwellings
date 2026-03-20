@@ -509,17 +509,21 @@ export default function AdminComplexes() {
                   <TableCell>{complex.is_published ? "Да" : "Нет"}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button size="icon" variant="ghost" asChild title="Редактировать">
-                        <Link to={`/admin/complexes/${complex.id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                      {canEdit && (
+                        <Button size="icon" variant="ghost" asChild title="Редактировать">
+                          <Link to={`/admin/complexes/${complex.id}`}>
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      )}
 
-                      <Button size="icon" variant="ghost" asChild title="Корпуса">
-                        <Link to={`/admin/complexes/${complex.id}/buildings`}>
-                          <Building2 className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                      {canEdit && (
+                        <Button size="icon" variant="ghost" asChild title="Корпуса">
+                          <Link to={`/admin/complexes/${complex.id}/buildings`}>
+                            <Building2 className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      )}
 
                       <Button size="icon" variant="ghost" asChild title="Просмотр">
                         <Link to={`/novostroyki/${complex.slug}`} target="_blank">
@@ -527,15 +531,17 @@ export default function AdminComplexes() {
                         </Link>
                       </Button>
 
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(complex.id)}
-                        title="Удалить"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {canDelete && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive"
+                          onClick={() => deleteMutation.mutate(complex.id)}
+                          title="Удалить"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
