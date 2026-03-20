@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Promotion = Tables<"promotions">;
 
