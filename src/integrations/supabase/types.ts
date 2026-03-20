@@ -1096,6 +1096,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_delete: { Args: { _user_id: string }; Returns: boolean }
+      can_write: { Args: { _user_id: string }; Returns: boolean }
       get_user_role: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
@@ -1105,6 +1107,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_any_admin: { Args: { _user_id: string }; Returns: boolean }
       is_content: { Args: { _user_id: string }; Returns: boolean }
       is_manager: { Args: { _user_id: string }; Returns: boolean }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
