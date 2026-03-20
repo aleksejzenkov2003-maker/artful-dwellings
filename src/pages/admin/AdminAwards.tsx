@@ -25,6 +25,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 
 export default function AdminAwards() {
   const { data: awards = [], isLoading } = useAwards(false);
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Award | null>(null);
