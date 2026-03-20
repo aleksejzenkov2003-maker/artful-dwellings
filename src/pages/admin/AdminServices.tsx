@@ -55,12 +55,14 @@ export default function AdminServices() {
             <h1 className="text-3xl font-display mb-2">Услуги</h1>
             <p className="text-muted-foreground">Управление услугами компании</p>
           </div>
-          <Button asChild>
-            <Link to="/admin/services/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Добавить услугу
-            </Link>
-          </Button>
+          {canCreate && (
+            <Button asChild>
+              <Link to="/admin/services/new">
+                <Plus className="h-4 w-4 mr-2" />
+                Добавить услугу
+              </Link>
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
