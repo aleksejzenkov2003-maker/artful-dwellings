@@ -45,6 +45,7 @@ const statuses = [
 
 export default function AdminLeads() {
   const queryClient = useQueryClient();
+  const { canDelete, canEdit } = usePermissions();
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [notes, setNotes] = useState("");
