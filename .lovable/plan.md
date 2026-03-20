@@ -1,80 +1,65 @@
 
 
-## Plan: Role-Based Access Control System with Audit Logs
+## Аудит соответствия ТЗ по ролям
 
-### Current State
-- `app_role` enum has only 3 values: `admin`, `moderator`, `user`
-- `user_roles` table exists but only supports these 3 roles
-- `AuthContext` only checks for `admin` role (binary admin/not-admin)
-- No audit logging exists
-- No user management UI in admin panel
-- Auth page has public signup (should be admin-only user creation)
+### Что уже реализовано ✓
+- 5 ролей в enum: `super_admin`, `admin`, `manager`, `content`, `viewer`
+- `usePermissions` хук с гранулярными правами (`canDelete`, `canPublish`, `canEdit`, etc.)
+- Навигация в `AdminLayout` фильтруется по уровню роли
+- Пользователей создает только админ через Edge Function (публичная регистрация убрана)
+- Логи: `audit_logs` таблица + триггеры на 13 таблицах (ЖК, блог, акции, услуги, команда, отзывы, заявки, квартиры, города, награды, таймлайн, homepage_content, user_roles)
+- Логи доступны только `super_admin` (RLS)
+- Edge Function проверяет: только super_admin может создавать/удалять admin-ов
 
-### Required Roles Mapping
-| Role | Enum Value | Access |
-|------|-----------|--------|
-| Главный админ | `super_admin` | Full access, manage roles, delete anything, view logs |
-| Админ | `admin` | Manage users (except super_admin), publish, edit, delete content |
-| Менеджер | `manager` | Create/edit content, change project statuses. No delete, no publish (needs admin approval) |
-| Команда контента | `content` | Create/edit texts, SEO, banners, view-only analytics/CRM |
-| Viewer | `viewer` | Read-only access to reports/stats/analytics |
+### Что НЕ реализовано — нужно доделать
 
-### Implementation Steps
+#### 1. Кнопки удаления/публикации НЕ скрыты по ролям
+Все админ-страницы (Блог, ЖК, Акции, Услуги, Отзывы, Команда и т.д.) показывают кнопки «Удалить», «Создать», «Редактировать» всем ролям одинаково. `usePermissions` создан, но **нигде не используется** в этих страницах.
 
-#### 1. Database Migration
-- Alter `app_role` enum to add: `super_admin`, `manager`, `content`, `viewer`
-- Create `audit_logs` table:
-  - `id`, `user_id`, `action` (create/update/delete), `table_name`, `record_id`, `old_data` (jsonb), `new_data` (jsonb), `created_at`
-  - RLS: only `super_admin` can SELECT; INSERT open for authenticated users (logged via triggers)
-- Create database trigger function `log_audit_action()` that auto-logs INSERT/UPDATE/DELETE on key tables (residential_complexes, blog_posts, promotions, services, team_members, reviews, leads, apartments, complex_slides, cities, awards, timeline_events, homepage_content)
-- Create helper functions: `is_super_admin(uuid)`, `is_manager(uuid)`, `is_content(uuid)`, `is_viewer(uuid)`
+**Нужно**: в каждой админ-странице добавить `usePermissions()` и:
+- **Viewer**: скрыть все кнопки действий (только просмотр)
+- **Content**: показать создание/редактирование, скрыть удаление и публикацию
+- **Manager**: показать создание/редактирование, скрыть удаление; публикация → «На модерацию»
+- **Admin/Super_admin**: показать всё
 
-#### 2. Update AuthContext
-- Expand `isAdmin` to a `role` field storing the user's highest role
-- Add helper booleans: `isSuperAdmin`, `isAdmin`, `isManager`, `isContent`, `isViewer`
-- Add `canEdit`, `canDelete`, `canPublish`, `canManageUsers` permission helpers
+Затрагиваемые файлы (каждый нужно обновить):
+- `AdminBlog.tsx` — скрыть Trash2 для manager/content, скрыть всё для viewer
+- `AdminComplexes.tsx` — аналогично + статус-переключатель только для manager+
+- `AdminPromotions.tsx`, `AdminServices.tsx`, `AdminReviews.tsx`, `AdminTeam.tsx`, `AdminAwards.tsx`, `AdminTimeline.tsx`, `AdminHomepage.tsx`, `AdminCities.tsx`, `AdminLeads.tsx`, `AdminStats.tsx`
+- `AdminBlogEdit.tsx`, `AdminComplexEdit.tsx`, `AdminServiceEdit.tsx`, `AdminTeamEdit.tsx` — в формах редактирования скрыть кнопку «Опубликовать» для manager (заменить на «Отправить на модерацию»)
 
-#### 3. Remove Public Signup
-- Remove the "Регистрация" tab from Auth page
-- Add user management page at `/admin/users` where super_admin/admin can create users with email+password+role
-- Use Supabase Edge Function to create users server-side (since `supabase.auth.admin.createUser` requires service role key)
+#### 2. Route-level protection не по ролям
+Все `/admin/*` маршруты защищены только `<ProtectedRoute>` без `requiredRoles` (кроме `/admin/users` и `/admin/logs`). Viewer может зайти на `/admin/complexes` и попытаться удалить данные (хотя RLS может заблокировать, UI не защищен).
 
-#### 4. Admin Layout Updates
-- Filter sidebar nav items based on role permissions
-- Show "Пользователи" and "Логи" nav items only for super_admin
-- Show "Заявки" for admin+ roles only
+**Нужно**: добавить `requiredRoles` к маршрутам:
+- `/admin/leads` → `["super_admin", "admin"]`
+- `/admin/cities` → `["super_admin", "admin"]`
+- `/admin/team` → `["super_admin", "admin"]`
+- Остальные контентные маршруты → минимум `["super_admin", "admin", "manager", "content"]`
 
-#### 5. Permission Guards in Admin Pages
-- Create `usePermissions()` hook returning granular permissions per role
-- Conditionally render edit/delete/publish buttons based on role
-- For manager role: hide delete buttons, replace "Опубликовать" with "Отправить на модерацию"
-- For content role: similar to manager but scoped to content tables only
-- For viewer: hide all action buttons, read-only views
+#### 3. RLS политики не учитывают новые роли
+Многие таблицы имеют `is_admin(auth.uid())` в RLS (например `contacts`, `apartments`, `complex_slides`, `awards`, `timeline_events`, `homepage_content`, `complex_buildings`). Функция `is_admin()` проверяет только роль `admin`, но не `super_admin`, `manager`, `content`.
 
-#### 6. User Management Page (`/admin/users`)
-- List all profiles with their roles
-- Super_admin can assign any role; admin can assign manager/content/viewer
-- Edge function `create-user` to handle server-side user creation with service role key
-- Edge function `update-user-role` to change roles securely
+**Нужно**: обновить RLS-политики чтобы:
+- `super_admin` и `admin` имели полный CRUD
+- `manager` и `content` могли INSERT/UPDATE но не DELETE
+- `viewer` — только SELECT
 
-#### 7. Audit Logs Page (`/admin/logs`)
-- Visible only to super_admin
-- Table showing: timestamp, user email, action, table, record summary
-- Filterable by user, action type, table, date range
+Создать новую helper-функцию `can_write(uuid)` = role in (super_admin, admin, manager, content) и `can_delete(uuid)` = role in (super_admin, admin).
 
-### Technical Details
+#### 4. Логи — ТЗ говорит «только у админа», текущая реализация — только super_admin
+По ТЗ логи должны быть доступны админу тоже. Нужно обновить RLS на `audit_logs` чтобы `admin` тоже мог SELECT.
 
-**New files:**
-- `supabase/functions/create-user/index.ts` — edge function for user creation
-- `src/pages/admin/AdminUsers.tsx` — user management page
-- `src/pages/admin/AdminAuditLogs.tsx` — audit logs viewer
-- `src/hooks/usePermissions.ts` — role-based permission hook
+### План реализации
 
-**Modified files:**
-- `src/contexts/AuthContext.tsx` — expanded role support
-- `src/components/admin/AdminLayout.tsx` — role-filtered navigation
-- `src/components/admin/ProtectedRoute.tsx` — role-based route protection
-- `src/pages/Auth.tsx` — remove signup tab
-- `src/App.tsx` — add new admin routes
-- Multiple admin pages — conditional UI based on permissions
+**Шаг 1 — Миграция БД**: Создать функции `can_write()`, `can_delete()`. Обновить RLS-политики на таблицах с `is_admin()` чтобы включить новые роли. Обновить RLS на `audit_logs` — разрешить SELECT для admin.
+
+**Шаг 2 — UI permissions**: Добавить `usePermissions()` во все админ-страницы. Условно скрывать кнопки удаления, создания, публикации в зависимости от роли.
+
+**Шаг 3 — Route guards**: Добавить `requiredRoles` к маршрутам в `App.tsx`.
+
+### Оценка объема
+- 1 миграция (RLS + функции)
+- ~12 админ-страниц нужно обновить для UI-permissions
+- 1 файл `App.tsx` для route guards
 
