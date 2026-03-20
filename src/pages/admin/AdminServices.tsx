@@ -21,6 +21,7 @@ type Service = Tables<"services">;
 
 export default function AdminServices() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
 
   const { data: services, isLoading } = useQuery({
     queryKey: ["admin-services"],
