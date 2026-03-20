@@ -30,6 +30,7 @@ type City = Tables<"cities">;
 
 export default function AdminCities() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCity, setEditingCity] = useState<City | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"cities">>>({});
