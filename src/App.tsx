@@ -45,6 +45,8 @@ import AdminCities from "./pages/admin/AdminCities";
 import AdminHomepage from "./pages/admin/AdminHomepage";
 import AdminAwards from "./pages/admin/AdminAwards";
 import AdminTimeline from "./pages/admin/AdminTimeline";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminAuditLogs from "./pages/admin/AdminAuditLogs";
 import BrokerPage from "./pages/BrokerPage";
 
 const queryClient = new QueryClient();
@@ -110,6 +112,8 @@ const App = () => (
               <Route path="/admin/cities" element={<ProtectedRoute><AdminCities /></ProtectedRoute>} />
               <Route path="/admin/awards" element={<ProtectedRoute><AdminAwards /></ProtectedRoute>} />
               <Route path="/admin/timeline" element={<ProtectedRoute><AdminTimeline /></ProtectedRoute>} />
+              <Route path="/admin/users" element={<ProtectedRoute requiredRoles={["super_admin", "admin"]}><AdminUsers /></ProtectedRoute>} />
+              <Route path="/admin/logs" element={<ProtectedRoute requiredRoles={["super_admin"]}><AdminAuditLogs /></ProtectedRoute>} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
