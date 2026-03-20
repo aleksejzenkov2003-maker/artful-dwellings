@@ -32,6 +32,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Star } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Review = Tables<"reviews">;
 
