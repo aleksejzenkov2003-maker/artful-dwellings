@@ -143,9 +143,11 @@ export default function AdminTimeline() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Таймлайн — История компании</h1>
-          <Button onClick={openCreate}>
-            <Plus className="w-4 h-4 mr-2" /> Добавить
-          </Button>
+          {canCreate && (
+            <Button onClick={openCreate}>
+              <Plus className="w-4 h-4 mr-2" /> Добавить
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
