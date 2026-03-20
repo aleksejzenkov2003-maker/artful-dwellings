@@ -31,6 +31,7 @@ type Promotion = Tables<"promotions">;
 
 export default function AdminPromotions() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPromotion, setEditingPromotion] = useState<Promotion | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"promotions">>>({});
