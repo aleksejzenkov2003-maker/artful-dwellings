@@ -46,6 +46,7 @@ const sources = [
 
 export default function AdminReviews() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"reviews">>>({});
