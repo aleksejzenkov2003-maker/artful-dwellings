@@ -187,14 +187,16 @@ export default function AdminTeam() {
             <h1 className="text-3xl font-display mb-2">Команда</h1>
             <p className="text-muted-foreground">Управление сотрудниками</p>
           </div>
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link to="/admin/team/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить сотрудника
-              </Link>
-            </Button>
-          </div>
+          {canCreate && (
+            <div className="flex gap-2">
+              <Button asChild>
+                <Link to="/admin/team/new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить сотрудника
+                </Link>
+              </Button>
+            </div>
+          )}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
