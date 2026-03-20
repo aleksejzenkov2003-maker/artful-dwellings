@@ -29,6 +29,7 @@ type Coordinates = { lat: number; lng: number };
 
 export default function AdminComplexes() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingComplex, setEditingComplex] = useState<Complex | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"residential_complexes">>>({});
