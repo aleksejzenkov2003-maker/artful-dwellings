@@ -150,12 +150,14 @@ export default function AdminStats() {
             <p className="text-muted-foreground">Управление показателями на главной</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingStat(null); setFormData({ is_published: true, order_position: 0 }); }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить показатель
-              </Button>
-            </DialogTrigger>
+            {canCreate && (
+              <DialogTrigger asChild>
+                <Button onClick={() => { setEditingStat(null); setFormData({ is_published: true, order_position: 0 }); }}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить показатель
+                </Button>
+              </DialogTrigger>
+            )}
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>
