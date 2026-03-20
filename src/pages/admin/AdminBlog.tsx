@@ -68,12 +68,14 @@ export default function AdminBlog() {
             <h1 className="text-3xl font-display mb-2">Блог</h1>
             <p className="text-muted-foreground">Управление статьями</p>
           </div>
-          <Button asChild>
-            <Link to="/admin/blog/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Добавить статью
-            </Link>
-          </Button>
+          {canCreate && (
+            <Button asChild>
+              <Link to="/admin/blog/new">
+                <Plus className="h-4 w-4 mr-2" />
+                Добавить статью
+              </Link>
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
