@@ -28,6 +28,7 @@ const categories = [
 
 export default function AdminBlog() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit, canViewOnly } = usePermissions();
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ["admin-blog"],
