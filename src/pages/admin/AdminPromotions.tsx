@@ -133,12 +133,14 @@ export default function AdminPromotions() {
             <p className="text-muted-foreground">Управление акциями и спецпредложениями</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingPromotion(null); setFormData({ is_published: true, is_active: true }); }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить акцию
-              </Button>
-            </DialogTrigger>
+            {canCreate && (
+              <DialogTrigger asChild>
+                <Button onClick={() => { setEditingPromotion(null); setFormData({ is_published: true, is_active: true }); }}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить акцию
+                </Button>
+              </DialogTrigger>
+            )}
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
