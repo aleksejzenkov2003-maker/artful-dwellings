@@ -39,6 +39,7 @@ type TeamMember = Tables<"team_members">;
 
 export default function AdminTeam() {
   const queryClient = useQueryClient();
+  const { canCreate, canDelete, canEdit } = usePermissions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [formData, setFormData] = useState<Partial<TablesInsert<"team_members">>>({});
