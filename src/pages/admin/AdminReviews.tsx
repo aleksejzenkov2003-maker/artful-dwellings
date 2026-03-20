@@ -160,12 +160,14 @@ export default function AdminReviews() {
             <p className="text-muted-foreground">Управление отзывами клиентов</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => { setEditingReview(null); setFormData({ is_published: true, rating: 5, order_position: 0 }); }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Добавить отзыв
-              </Button>
-            </DialogTrigger>
+            {canCreate && (
+              <DialogTrigger asChild>
+                <Button onClick={() => { setEditingReview(null); setFormData({ is_published: true, rating: 5, order_position: 0 }); }}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Добавить отзыв
+                </Button>
+              </DialogTrigger>
+            )}
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
