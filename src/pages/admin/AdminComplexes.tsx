@@ -22,6 +22,7 @@ import {
   Building2, // ✅ FIX: добавили импорт
 } from "lucide-react";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type Complex = Tables<"residential_complexes">;
 type Coordinates = { lat: number; lng: number };
