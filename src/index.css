@@ -175,16 +175,13 @@
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
   
-  html {
+  html, body, #root {
+    width: 100%;
+    max-width: 100%;
     overflow-x: clip;
-    max-width: 100%;
-  }
-  
-  body {
-    @apply overflow-x-hidden;
-    max-width: 100%;
   }
 
   body {
