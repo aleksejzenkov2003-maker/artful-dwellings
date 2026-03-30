@@ -221,8 +221,8 @@ function applyPageContentToTildaHtml(args: {
       const node = el as HTMLElement;
       if (!node.innerHTML) return;
       node.innerHTML = node.innerHTML
-        .replaceAll("«МИРЪ»", `«${complex.name}»`)
-        .replaceAll("«МИР»", `«${complex.name}»`);
+        .split("«МИРЪ»").join(`«${complex.name}»`)
+        .split("«МИР»").join(`«${complex.name}»`);
     });
 
     // Video caption inside about section
@@ -565,7 +565,7 @@ function applyPageContentToTildaHtml(args: {
         if (ch.nodeType !== Node.TEXT_NODE) return;
         const v = ch.textContent || "";
         if (!v.includes("МИР")) return;
-        ch.textContent = v.replaceAll("«МИРЪ»", `«${complex.name}»`).replaceAll("«МИР»", `«${complex.name}»`);
+        ch.textContent = v.split("«МИРЪ»").join(`«${complex.name}»`).split("«МИР»").join(`«${complex.name}»`);
       });
     }
     // also attributes like aria-label
@@ -573,7 +573,7 @@ function applyPageContentToTildaHtml(args: {
       if (!a.value.includes("МИР")) return;
       node.setAttribute(
         a.name,
-        a.value.replaceAll("«МИРЪ»", `«${complex.name}»`).replaceAll("«МИР»", `«${complex.name}»`),
+        a.value.split("«МИРЪ»").join(`«${complex.name}»`).split("«МИР»").join(`«${complex.name}»`),
       );
     });
   });
