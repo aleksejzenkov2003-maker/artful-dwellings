@@ -374,49 +374,54 @@ export default function AdminComplexEdit() {
     });
   }
 
-  const existingPageContent = (((formData as any).page_content as PageContent) || {}) as PageContent;
+  const pageContent: PageContent = useMemo(() => {
+    const existing = (((formData as any).page_content as PageContent) || {}) as PageContent;
+    const complexName = (formData.name as string) || complex.name;
 
-  const templateDefaults: PageContent = {
-    installments_intro:
-      "Беспроцентная рассрочка от застройщика RBI — это стоимость квартиры или апартаментов, разбитая на удобные суммы, которые можно выплачивать через различные промежутки времени.",
-    installments_subsidy_heading: "СубсидированнЫЕ ставки ДО 6% по СИ без удорожания",
-    installments_subsidy_rates_html:
-      "БСПБ — 5,76%<br />Альфабанк — 4,9%<br />Сбербанк — 5,1%<br />Совкомбанк — 4,4%<br />и другие банки по ставке 6%",
-    installments_program1_heading: "Рассрочка с первым взносом 30%",
-    installments_program1_note: "Предложение по базовой цене минус 6%. Размер скидки уточняйте у менеджера.",
-    installments_program1_cards: [
-      { title: "30%", description: "3 (10) дня со дня заключения договора" },
-      { title: "70%", description: "Остаток – через 12 месяцев" },
-    ],
-    installments_program2_heading: "Рассрочка с первым взносом 50%",
-    installments_program2_note:
-      "Предложение по цене 100% оплаты (для акционных квартир стоимость обсуждается отдельно)",
-    installments_program2_cards: [
-      { title: "50%", description: "3 (10) дня со дня заключения договора" },
-      { title: "50%", description: "через 6 месяцев" },
-    ],
-    driver_title: "Личный водитель",
-    driver_badge: "БЕСПЛАТНО",
-    driver_right_text: "Запланируйте поездку с водителем в клубный дом «МИРЪ»",
-    driver_wait_time: "время ожидания 15 минут",
-    driver_description:
-      "Забронируйте поездку на&nbsp;нашем автомобиле бизнес-класса с&nbsp;водителем в&nbsp;клубный дом «МИРЪ»",
-    driver_button_text: "Вызвать личного водителя",
-    telegram_title: "Наш Telegram-канал",
-    telegram_description:
-      "Будьте в&nbsp;курсе новостей на&nbsp;рынке недвижимости и&nbsp;получайте полезный контент вместе с&nbsp;Art Estate",
-    telegram_button_text: "ПРИСОЕДИНИТЬСЯ",
-    telegram_button_url: "https://t.me/+42AXQCuRHHZkNjhi",
-    disclaimer_text:
-      "Art Estate не является финансовой организацией и оказывает только посреднические консультационные услуги по расчету ипотеки. Выдачей ипотеки занимаются соответствующие финансовые учреждения.",
-    forms_success_url: "/thanks",
-  };
+    // Defaults that match the current Tilda template content,
+    // so admin fields are pre-filled even if DB page_content is empty.
+    const templateDefaults: PageContent = {
+      installments_intro:
+        "Беспроцентная рассрочка от застройщика RBI — это стоимость квартиры или апартаментов, разбитая на удобные суммы, которые можно выплачивать через различные промежутки времени.",
+      installments_subsidy_heading: "СубсидированнЫЕ ставки ДО 6% по СИ без удорожания",
+      installments_subsidy_rates_html:
+        "БСПБ — 5,76%<br />Альфабанк — 4,9%<br />Сбербанк — 5,1%<br />Совкомбанк — 4,4%<br />и другие банки по ставке 6%",
+      installments_program1_heading: "Рассрочка с первым взносом 30%",
+      installments_program1_note: "Предложение по базовой цене минус 6%. Размер скидки уточняйте у менеджера.",
+      installments_program1_cards: [
+        { title: "30%", description: "3 (10) дня со дня заключения договора" },
+        { title: "70%", description: "Остаток – через 12 месяцев" },
+      ],
+      installments_program2_heading: "Рассрочка с первым взносом 50%",
+      installments_program2_note:
+        "Предложение по цене 100% оплаты (для акционных квартир стоимость обсуждается отдельно)",
+      installments_program2_cards: [
+        { title: "50%", description: "3 (10) дня со дня заключения договора" },
+        { title: "50%", description: "через 6 месяцев" },
+      ],
+      driver_title: "Личный водитель",
+      driver_badge: "БЕСПЛАТНО",
+      driver_right_text: `Запланируйте поездку с водителем в ${complexName}`,
+      driver_wait_time: "время ожидания 15 минут",
+      driver_description:
+        `Забронируйте поездку на&nbsp;нашем автомобиле бизнес-класса с&nbsp;водителем в&nbsp;${complexName}`,
+      driver_button_text: "Вызвать личного водителя",
+      telegram_title: "Наш Telegram-канал",
+      telegram_description:
+        "Будьте в&nbsp;курсе новостей на&nbsp;рынке недвижимости и&nbsp;получайте полезный контент вместе с&nbsp;Art Estate",
+      telegram_button_text: "ПРИСОЕДИНИТЬСЯ",
+      telegram_button_url: "https://t.me/+42AXQCuRHHZkNjhi",
+      disclaimer_text:
+        "Art Estate не является финансовой организацией и оказывает только посреднические консультационные услуги по расчету ипотеки. Выдачей ипотеки занимаются соответствующие финансовые учреждения.",
+      forms_success_url: "/thanks",
+    };
 
-  const pageContent: PageContent = {
-    ...EMPTY_PAGE_CONTENT,
-    ...templateDefaults,
-    ...existingPageContent,
-  };
+    return {
+      ...EMPTY_PAGE_CONTENT,
+      ...templateDefaults,
+      ...existing,
+    };
+  }, [formData, complex.name]);
   const updatePageContent = (patch: Partial<PageContent>) => {
     setFormData({
       ...formData,

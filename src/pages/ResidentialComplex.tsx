@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useResidentialComplex } from "@/hooks/useResidentialComplexes";
 import { useApartmentsByComplex } from "@/hooks/useApartments";
 import type { Apartment } from "@/hooks/useApartments";
+import { useComplexBuildings } from "@/hooks/useComplexBuildings";
+import type { ComplexBuilding } from "@/hooks/useComplexBuildings";
 import type { PageContent } from "@/types/pageContent";
 import { Layout } from "@/components/layout/Layout";
 
@@ -63,12 +65,21 @@ function applyPageContentToTildaHtml(args: {
     name: string;
     address: string | null;
     completion_date: string | null;
+    apartments_count: number | null;
+    area_from: number | null;
+    area_to: number | null;
     page_content: unknown;
   };
   apartments: Apartment[];
+  buildings: ComplexBuilding[];
 }): string {
-  const { templateHtml, complex, apartments } = args;
-  const content = (complex.page_content as PageContent) || {};
+  const { templateHtml, complex, apartments, buildings } = args;
+  const raw = (complex.page_content as PageContent) || {};
+  const content: PageContent = {
+    // fallbacks from "admin ЖК" fields (not from template)
+    about_text: raw.about_text || "",
+    ...raw,
+  };
 
   const parser = new DOMParser();
   const doc = parser.parseFromString(templateHtml, "text/html");
@@ -148,23 +159,102 @@ function applyPageContentToTildaHtml(args: {
     setHtml(infra.querySelector(".tn-atom[field='tn_text_1470210011265']"), content.infrastructure_text);
   }
 
+  // About section ("О проекте") lives in #rec1289837621.
+  // Template contains project-specific text; we override with DB content.
+  const aboutRec = doc.querySelector("#rec1289837621");
+  if (aboutRec) {
+    const aboutHtml = content.about_text || "";
+    if (aboutHtml) {
+      const textAtoms = Array.from(aboutRec.querySelectorAll(".tn-atom[field^='tn_text_']")) as HTMLElement[];
+      // Heuristic: pick the largest text block and replace it with about_text.
+      let best: HTMLElement | null = null;
+      let bestScore = 0;
+      for (const el of textAtoms) {
+        const t = (el.textContent || "").trim();
+        if (!t) continue;
+        const score = t.length;
+        if (score > bestScore) {
+          bestScore = score;
+          best = el;
+        }
+      }
+      if (best) setHtml(best, aboutHtml);
+    }
+
+    // Replace project stats from admin fields/buildings/apartments
+    const corpCount = buildings.length;
+    const apartmentsCount = complex.apartments_count;
+    const areaFrom = complex.area_from;
+    const areaTo = complex.area_to;
+
+    const aboutAtoms = Array.from(aboutRec.querySelectorAll(".tn-atom")) as HTMLElement[];
+    for (const el of aboutAtoms) {
+      const t = (el.textContent || "").trim();
+      if (!t) continue;
+
+      if (/корпус/i.test(t) && corpCount > 0) {
+        const lines = [
+          `${corpCount} корпуса`,
+          ...buildings
+            .slice(0, 6)
+            .map((b, i) => `${b.name || `Корпус ${i + 1}`}${b.floors_count ? ` — ${b.floors_count} этажей` : ""}`),
+        ];
+        el.innerHTML = lines.join("<br>");
+        continue;
+      }
+
+      if (/квартир/i.test(t) && typeof apartmentsCount === "number") {
+        el.textContent = `${apartmentsCount} КВАРТИРЫ`;
+        continue;
+      }
+
+      if (/от\\s*\\d+\\s*до\\s*\\d+.*кв/i.test(t) && (areaFrom || areaTo)) {
+        const from = areaFrom ? Math.round(areaFrom) : null;
+        const to = areaTo ? Math.round(areaTo) : null;
+        el.textContent = `ОТ ${from ?? "—"} ДО ${to ?? "—"} КВ. М`;
+        continue;
+      }
+    }
+
+    // Remove "МИРЪ" leftovers inside about block if any.
+    aboutRec.querySelectorAll(".tn-atom").forEach((el) => {
+      const node = el as HTMLElement;
+      if (!node.innerHTML) return;
+      node.innerHTML = node.innerHTML
+        .replaceAll("«МИРЪ»", `«${complex.name}»`)
+        .replaceAll("«МИР»", `«${complex.name}»`);
+    });
+
+    // Video caption inside about section
+    const aboutVideoCaption = aboutRec.querySelector(".tn-atom[field='tn_text_1617103014890']");
+    if (aboutVideoCaption) {
+      setText(aboutVideoCaption, `посмотрите видео о ${complex.name}`);
+    }
+  }
+
   // Video: update Vimeo id if provided
-  if (content.video_url) {
-    const vimeoId =
-      content.video_url.match(/vimeo\.com\/(\d+)/)?.[1] ||
-      content.video_url.match(/player\.vimeo\.com\/video\/(\d+)/)?.[1];
-    if (vimeoId) {
-      const videoDiv = doc.querySelector(
-        "#rec1289837611 .t-video-lazyload[data-videolazy-type='vimeo']",
-      );
-      if (videoDiv) videoDiv.setAttribute("data-videolazy-id", vimeoId);
+  {
+    const videoDiv = doc.querySelector("#rec1289837611 .t-video-lazyload[data-videolazy-type='vimeo']");
+    if (content.video_url) {
+      const vimeoId =
+        content.video_url.match(/vimeo\.com\/(\d+)/)?.[1] ||
+        content.video_url.match(/player\.vimeo\.com\/video\/(\d+)/)?.[1];
+      if (vimeoId && videoDiv) videoDiv.setAttribute("data-videolazy-id", vimeoId);
+    } else {
+      // Do not show template video for other complexes
+      videoDiv?.closest("#rec1289837611")?.remove();
     }
   }
 
   // Panorama iframe
-  if (content.panorama_url) {
+  {
     const iframe = doc.querySelector("iframe[title='Панорама']");
-    if (iframe) iframe.setAttribute("src", content.panorama_url);
+    if (content.panorama_url) {
+      if (iframe) iframe.setAttribute("src", content.panorama_url);
+    } else {
+      // Do not show template panorama for other complexes
+      iframe?.closest(".t-popup")?.remove();
+    }
   }
 
   // Map image (rec1289837631)
@@ -467,6 +557,27 @@ function applyPageContentToTildaHtml(args: {
     });
   }
 
+  // Global cleanup: never keep template-specific "МИРЪ" strings for other objects
+  doc.querySelectorAll("*").forEach((el) => {
+    const node = el as HTMLElement;
+    if (node.childNodes && node.childNodes.length > 0) {
+      node.childNodes.forEach((ch) => {
+        if (ch.nodeType !== Node.TEXT_NODE) return;
+        const v = ch.textContent || "";
+        if (!v.includes("МИР")) return;
+        ch.textContent = v.replaceAll("«МИРЪ»", `«${complex.name}»`).replaceAll("«МИР»", `«${complex.name}»`);
+      });
+    }
+    // also attributes like aria-label
+    Array.from(node.attributes || []).forEach((a) => {
+      if (!a.value.includes("МИР")) return;
+      node.setAttribute(
+        a.name,
+        a.value.replaceAll("«МИРЪ»", `«${complex.name}»`).replaceAll("«МИР»", `«${complex.name}»`),
+      );
+    });
+  });
+
   return doc.body.innerHTML || templateHtml;
 }
 
@@ -474,6 +585,7 @@ export default function ResidentialComplex() {
   const { slug } = useParams<{ slug: string }>();
   const { data: complex, isLoading, error } = useResidentialComplex(slug || "");
   const { data: apartments = [] } = useApartmentsByComplex(complex?.id);
+  const { data: buildings = [] } = useComplexBuildings(complex?.id);
   const [templateHtml, setTemplateHtml] = useState<string | null>(null);
   const [templateError, setTemplateError] = useState<string | null>(null);
 
@@ -560,11 +672,15 @@ export default function ResidentialComplex() {
         name: complex.name,
         address: complex.address,
         completion_date: complex.completion_date,
+        apartments_count: complex.apartments_count,
+        area_from: complex.area_from,
+        area_to: complex.area_to,
         page_content: (complex as unknown as { page_content: unknown }).page_content,
       },
       apartments,
+      buildings,
     });
-  }, [templateHtml, complex, apartments]);
+  }, [templateHtml, complex, apartments, buildings]);
 
   return (
     <Layout>
