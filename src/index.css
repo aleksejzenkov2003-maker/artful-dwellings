@@ -177,7 +177,12 @@
     @apply border-border;
   }
   
-  html, body {
+  html {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+  
+  body {
     @apply overflow-x-hidden;
     max-width: 100%;
   }
