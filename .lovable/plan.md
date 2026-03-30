@@ -1,52 +1,37 @@
 
 
-## Plan: Fully Populate "Полянка 44" Complex
+## Problem
 
-### Current State
-- Complex record exists with basic data (name, address, description, features, infrastructure, 3 unsplash images, price range)
-- 4 concept slides exist but **without images** (`image_url` is null)
-- **0 apartments** — the apartments table is empty for this complex
-- **0 buildings** — no building/corpus records
-- Missing: `completion_date`, `seo_title`, `seo_description`
+The header and footer extend beyond the viewport width, causing text to be cut off on the right side (visible in screenshots: "ЗАКАЗАТЬ ЗВОН-", "КОНТА-", "Арт И-", "Санкт-Пет-").
 
-### What Will Be Done
+The current fix (`overflow-x-hidden` + `max-width: 100vw` on `html, body`) does not work because:
+1. `100vw` includes the scrollbar width, making content slightly wider than the visible area
+2. `overflow-x-hidden` on both `html` and `body` simultaneously can behave inconsistently across browsers — when set on `html`, the browser may transfer it to the viewport, causing `body`'s rule to be ignored
 
-#### 1. Update Complex Record
-- Set `completion_date` to Q2 2026
-- Add `seo_title` and `seo_description`
-- Expand `description` to a richer, multi-paragraph text
-- Update `images` array with more high-quality Unsplash architecture/interior photos (6-8 images)
-- Update `floors_count` to reflect building count (3 корпуса)
+## Root Cause
 
-#### 2. Add Concept Slide Images
-Update 4 existing slides with relevant Unsplash image URLs:
-- Architecture → modern building facade photo
-- Landscaping → green landscaping/park photo
-- Courtyard → residential courtyard photo
-- Art objects → urban art/sculpture photo
+`max-width: 100vw` is the culprit. On pages with a vertical scrollbar, `100vw` = viewport + scrollbar width, so content overflows by ~15px.
 
-#### 3. Create Buildings (3 корпуса)
-Insert 3 buildings into `complex_buildings`:
-- Корпус 1: 12 этажей
-- Корпус 2: 8 этажей
-- Корпус 3: 15 этажей
+## Plan
 
-#### 4. Generate Apartments (~30 records)
-Insert apartments across 3 buildings with realistic data:
-- Studios (25-35 m²): from 4.9M ₽
-- 1-bedroom (40-55 m²): from 8.5M ₽
-- 2-bedroom (60-85 m²): from 14M ₽
-- 3-bedroom (90-120 m²): from 22M ₽
-- Penthouse (150-210 m²): from 35M ₽
-- Various floors, statuses (available/reserved/sold), layout images from Unsplash
+### 1. Fix `src/index.css` — replace `100vw` with `100%`
 
-### Technical Details
+Change the `html, body` rule:
+```css
+html, body {
+  @apply overflow-x-hidden;
+  max-width: 100%;
+}
+```
 
-**Single database migration** containing:
-1. `UPDATE residential_complexes` — enrich fields
-2. `UPDATE complex_slides` — add image_url to 4 slides
-3. `INSERT INTO complex_buildings` — 3 buildings with polygon_points as empty arrays
-4. `INSERT INTO apartments` — ~30 apartments distributed across buildings and floors
+`100%` respects the actual available width (excluding scrollbar), unlike `100vw`.
 
-No code file changes needed — all data population via SQL migration.
+### 2. Fix `src/pages/ResidentialComplex.tsx` — same change on Tilda container
+
+Change `max-w-[100vw]` to `max-w-full` on the Tilda body div:
+```tsx
+<div className="t-body -mt-28 lg:-mt-28 overflow-x-hidden max-w-full" .../>
+```
+
+These two changes should resolve the header/footer clipping on all pages.
 
