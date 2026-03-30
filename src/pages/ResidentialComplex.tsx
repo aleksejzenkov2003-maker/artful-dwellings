@@ -557,28 +557,12 @@ function applyPageContentToTildaHtml(args: {
     });
   }
 
-  // Global cleanup: never keep template-specific "МИРЪ" strings for other objects
-  doc.querySelectorAll("*").forEach((el) => {
-    const node = el as HTMLElement;
-    if (node.childNodes && node.childNodes.length > 0) {
-      node.childNodes.forEach((ch) => {
-        if (ch.nodeType !== Node.TEXT_NODE) return;
-        const v = ch.textContent || "";
-        if (!v.includes("МИР")) return;
-        ch.textContent = v.split("«МИРЪ»").join(`«${complex.name}»`).split("«МИР»").join(`«${complex.name}»`);
-      });
-    }
-    // also attributes like aria-label
-    Array.from(node.attributes || []).forEach((a) => {
-      if (!a.value.includes("МИР")) return;
-      node.setAttribute(
-        a.name,
-        a.value.split("«МИРЪ»").join(`«${complex.name}»`).split("«МИР»").join(`«${complex.name}»`),
-      );
-    });
-  });
+  // Global cleanup: replace template-specific "МИРЪ" strings via fast string ops
+  let finalHtml = doc.body.innerHTML || templateHtml;
+  finalHtml = finalHtml.split("«МИРЪ»").join(`«${complex.name}»`);
+  finalHtml = finalHtml.split("«МИР»").join(`«${complex.name}»`);
 
-  return doc.body.innerHTML || templateHtml;
+  return finalHtml;
 }
 
 export default function ResidentialComplex() {
