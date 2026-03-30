@@ -75,9 +75,9 @@ function applyPageContentToTildaHtml(args: {
 
   // Make asset paths absolute inside SPA routes.
   const fixed = (doc.body.innerHTML || "")
-    .replaceAll("images/", "/tilda/images/")
-    .replaceAll("href=\"css/", "href=\"/tilda/css/")
-    .replaceAll("src=\"js/", "src=\"/tilda/js/");
+    .split("images/").join("/tilda/images/")
+    .split("href=\"css/").join("href=\"/tilda/css/")
+    .split("src=\"js/").join("src=\"/tilda/js/");
   doc.body.innerHTML = fixed;
 
   // Remove Tilda navigation/burger, floating widgets, and Tilda footer (we use our own header/footer).
