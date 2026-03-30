@@ -44,6 +44,7 @@ import { useAllComplexBuildings } from "@/hooks/useComplexBuildings";
 import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { SingleImageUploader } from "@/components/admin/SingleImageUploader";
+import { FileUploader } from "@/components/admin/FileUploader";
 import {
   useAllComplexSlides,
   useCreateSlide,
@@ -858,6 +859,15 @@ export default function AdminComplexEdit() {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold border-b pb-2">Главный экран (Hero)</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Фон первого экрана (изображение)</Label>
+                  <SingleImageUploader
+                    value={pageContent.hero_background_image || ""}
+                    onChange={(url) => updatePageContent({ hero_background_image: url })}
+                    folder={id}
+                    placeholder="Загрузить фон"
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label>Подзаголовок героя</Label>
                   <Input
@@ -942,6 +952,509 @@ export default function AdminComplexEdit() {
                     placeholder="https://example.com/tour/tour.html"
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* Map / Layouts background images */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Изображения блоков</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label>Карта / подложка (изображение)</Label>
+                  <SingleImageUploader
+                    value={pageContent.map_image || ""}
+                    onChange={(url) => updatePageContent({ map_image: url })}
+                    folder={id}
+                    placeholder="Загрузить карту"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Фон секции «Планировки квартир» (изображение)</Label>
+                  <SingleImageUploader
+                    value={pageContent.layouts_background_image || ""}
+                    onChange={(url) => updatePageContent({ layouts_background_image: url })}
+                    folder={id}
+                    placeholder="Загрузить фон планировок"
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Планировки квартир берутся из таблицы квартир (апартаменты), здесь настраивается только фон секции.
+              </p>
+            </div>
+
+            {/* Documents */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Документация</h3>
+              <p className="text-xs text-muted-foreground">
+                Добавляй документы (PDF/DOC/DOCX). На странице они появятся списком.
+              </p>
+              {(pageContent.documents || []).map((doc, idx) => (
+                <div key={idx} className="border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Документ {idx + 1}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive h-7 w-7"
+                      onClick={() => {
+                        const documents = (pageContent.documents || []).filter((_, i) => i !== idx);
+                        updatePageContent({ documents });
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <Input
+                    value={doc.title}
+                    onChange={(e) => {
+                      const documents = [...(pageContent.documents || [])];
+                      documents[idx] = { ...documents[idx], title: e.target.value };
+                      updatePageContent({ documents });
+                    }}
+                    placeholder="Название документа"
+                  />
+                  <div className="space-y-2">
+                    <Label>Файл</Label>
+                    <FileUploader
+                      value={doc.url}
+                      onChange={(url) => {
+                        const documents = [...(pageContent.documents || [])];
+                        documents[idx] = { ...documents[idx], url };
+                        updatePageContent({ documents });
+                      }}
+                      folder={id}
+                      bucket="complex-documents"
+                      accept=".pdf,.doc,.docx"
+                      placeholder="Загрузить документ"
+                    />
+                  </div>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  updatePageContent({
+                    documents: [...(pageContent.documents || []), { title: "", url: "" }],
+                  })
+                }
+              >
+                <Plus className="h-4 w-4 mr-1" /> Добавить документ
+              </Button>
+            </div>
+
+            {/* Promotions */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Акции</h3>
+              <p className="text-xs text-muted-foreground">
+                Эти карточки заменят блок «Акции» в шаблоне.
+              </p>
+              {(pageContent.promotions || []).map((p, idx) => (
+                <div key={idx} className="border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Акция {idx + 1}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive h-7 w-7"
+                      onClick={() => {
+                        const promotions = (pageContent.promotions || []).filter((_, i) => i !== idx);
+                        updatePageContent({ promotions });
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <Input
+                    value={p.title}
+                    onChange={(e) => {
+                      const promotions = [...(pageContent.promotions || [])];
+                      promotions[idx] = { ...promotions[idx], title: e.target.value };
+                      updatePageContent({ promotions });
+                    }}
+                    placeholder="Заголовок"
+                  />
+                  <Textarea
+                    value={p.text || ""}
+                    onChange={(e) => {
+                      const promotions = [...(pageContent.promotions || [])];
+                      promotions[idx] = { ...promotions[idx], text: e.target.value };
+                      updatePageContent({ promotions });
+                    }}
+                    rows={3}
+                    placeholder="Описание"
+                  />
+                  <div className="space-y-2">
+                    <Label>Изображение (опционально)</Label>
+                    <SingleImageUploader
+                      value={p.image_url || ""}
+                      onChange={(url) => {
+                        const promotions = [...(pageContent.promotions || [])];
+                        promotions[idx] = { ...promotions[idx], image_url: url };
+                        updatePageContent({ promotions });
+                      }}
+                      folder={id}
+                      placeholder="Загрузить картинку"
+                    />
+                  </div>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  updatePageContent({
+                    promotions: [...(pageContent.promotions || []), { title: "", text: "", image_url: "" }],
+                  })
+                }
+              >
+                <Plus className="h-4 w-4 mr-1" /> Добавить акцию
+              </Button>
+            </div>
+
+            {/* Installments (template programs) */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Программы рассрочки (как в шаблоне)</h3>
+              <div className="space-y-2">
+                <Label>Вступительный текст (HTML)</Label>
+                <RichTextEditor
+                  value={pageContent.installments_intro || ""}
+                  onChange={(value) => updatePageContent({ installments_intro: value })}
+                  placeholder="Беспроцентная рассрочка от застройщика…"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Подзаголовок: «Субсидированные ставки…»</Label>
+                  <Input
+                    value={pageContent.installments_subsidy_heading || ""}
+                    onChange={(e) => updatePageContent({ installments_subsidy_heading: e.target.value })}
+                    placeholder="Субсидированные ставки до 6% по СИ без удорожания"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Список ставок (HTML, можно &lt;br&gt;)</Label>
+                  <Textarea
+                    value={pageContent.installments_subsidy_rates_html || ""}
+                    onChange={(e) => updatePageContent({ installments_subsidy_rates_html: e.target.value })}
+                    rows={4}
+                    placeholder={"БСПБ — 5,76%<br />Альфабанк — 4,9%<br />…"}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3 border rounded-lg p-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Подзаголовок программы №1</Label>
+                    <Input
+                      value={pageContent.installments_program1_heading || ""}
+                      onChange={(e) => updatePageContent({ installments_program1_heading: e.target.value })}
+                      placeholder="Рассрочка с первым взносом 30%"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Описание программы №1</Label>
+                    <Input
+                      value={pageContent.installments_program1_note || ""}
+                      onChange={(e) => updatePageContent({ installments_program1_note: e.target.value })}
+                      placeholder="Предложение по базовой цене…"
+                    />
+                  </div>
+                </div>
+
+                <Label>Карточки программы №1 (2 шт. в шаблоне)</Label>
+                {(pageContent.installments_program1_cards || []).map((card, idx) => (
+                  <div key={idx} className="flex gap-2 items-start">
+                    <Input
+                      value={card.title}
+                      onChange={(e) => {
+                        const cards = [...(pageContent.installments_program1_cards || [])];
+                        cards[idx] = { ...cards[idx], title: e.target.value };
+                        updatePageContent({ installments_program1_cards: cards });
+                      }}
+                      placeholder="Заголовок (например 30%)"
+                      className="flex-1"
+                    />
+                    <Input
+                      value={card.description}
+                      onChange={(e) => {
+                        const cards = [...(pageContent.installments_program1_cards || [])];
+                        cards[idx] = { ...cards[idx], description: e.target.value };
+                        updatePageContent({ installments_program1_cards: cards });
+                      }}
+                      placeholder="Описание"
+                      className="flex-[2]"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive shrink-0"
+                      onClick={() => {
+                        const cards = (pageContent.installments_program1_cards || []).filter((_, i) => i !== idx);
+                        updatePageContent({ installments_program1_cards: cards });
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    updatePageContent({
+                      installments_program1_cards: [
+                        ...(pageContent.installments_program1_cards || []),
+                        { title: "", description: "" },
+                      ],
+                    })
+                  }
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Добавить карточку
+                </Button>
+              </div>
+
+              <div className="space-y-3 border rounded-lg p-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Подзаголовок программы №2</Label>
+                    <Input
+                      value={pageContent.installments_program2_heading || ""}
+                      onChange={(e) => updatePageContent({ installments_program2_heading: e.target.value })}
+                      placeholder="Рассрочка с первым взносом 50%"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Описание программы №2</Label>
+                    <Input
+                      value={pageContent.installments_program2_note || ""}
+                      onChange={(e) => updatePageContent({ installments_program2_note: e.target.value })}
+                      placeholder="Предложение по цене 100% оплаты…"
+                    />
+                  </div>
+                </div>
+
+                <Label>Карточки программы №2 (2 шт. в шаблоне)</Label>
+                {(pageContent.installments_program2_cards || []).map((card, idx) => (
+                  <div key={idx} className="flex gap-2 items-start">
+                    <Input
+                      value={card.title}
+                      onChange={(e) => {
+                        const cards = [...(pageContent.installments_program2_cards || [])];
+                        cards[idx] = { ...cards[idx], title: e.target.value };
+                        updatePageContent({ installments_program2_cards: cards });
+                      }}
+                      placeholder="Заголовок (например 50%)"
+                      className="flex-1"
+                    />
+                    <Input
+                      value={card.description}
+                      onChange={(e) => {
+                        const cards = [...(pageContent.installments_program2_cards || [])];
+                        cards[idx] = { ...cards[idx], description: e.target.value };
+                        updatePageContent({ installments_program2_cards: cards });
+                      }}
+                      placeholder="Описание"
+                      className="flex-[2]"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive shrink-0"
+                      onClick={() => {
+                        const cards = (pageContent.installments_program2_cards || []).filter((_, i) => i !== idx);
+                        updatePageContent({ installments_program2_cards: cards });
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    updatePageContent({
+                      installments_program2_cards: [
+                        ...(pageContent.installments_program2_cards || []),
+                        { title: "", description: "" },
+                      ],
+                    })
+                  }
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Добавить карточку
+                </Button>
+              </div>
+            </div>
+
+            {/* Driver (template block) */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Личный водитель (как в шаблоне)</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Фон секции (изображение)</Label>
+                  <SingleImageUploader
+                    value={pageContent.driver_background_image || ""}
+                    onChange={(url) => updatePageContent({ driver_background_image: url })}
+                    folder={id}
+                    placeholder="Загрузить фон секции"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Заголовок</Label>
+                  <Input
+                    value={pageContent.driver_title || ""}
+                    onChange={(e) => updatePageContent({ driver_title: e.target.value })}
+                    placeholder="Личный водитель"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Бейдж (например «БЕСПЛАТНО»)</Label>
+                  <Input
+                    value={pageContent.driver_badge || ""}
+                    onChange={(e) => updatePageContent({ driver_badge: e.target.value })}
+                    placeholder="БЕСПЛАТНО"
+                  />
+                </div>
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Описание (HTML)</Label>
+                  <RichTextEditor
+                    value={pageContent.driver_description || ""}
+                    onChange={(value) => updatePageContent({ driver_description: value })}
+                    placeholder="Забронируйте поездку…"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Текст справа (HTML)</Label>
+                  <RichTextEditor
+                    value={pageContent.driver_right_text || ""}
+                    onChange={(value) => updatePageContent({ driver_right_text: value })}
+                    placeholder="Запланируйте поездку…"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Время ожидания</Label>
+                  <Input
+                    value={pageContent.driver_wait_time || ""}
+                    onChange={(e) => updatePageContent({ driver_wait_time: e.target.value })}
+                    placeholder="время ожидания 15 минут"
+                  />
+                </div>
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Картинка автомобиля (PNG)</Label>
+                  <SingleImageUploader
+                    value={pageContent.driver_car_image || ""}
+                    onChange={(url) => updatePageContent({ driver_car_image: url })}
+                    folder={id}
+                    placeholder="Загрузить изображение"
+                  />
+                </div>
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Текст кнопки формы</Label>
+                  <Input
+                    value={pageContent.driver_button_text || ""}
+                    onChange={(e) => updatePageContent({ driver_button_text: e.target.value })}
+                    placeholder="Вызвать личного водителя"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Telegram (template block) */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Telegram-канал (как в шаблоне)</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label>Заголовок</Label>
+                  <Input
+                    value={pageContent.telegram_title || ""}
+                    onChange={(e) => updatePageContent({ telegram_title: e.target.value })}
+                    placeholder="Наш Telegram-канал"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Ссылка кнопки</Label>
+                  <Input
+                    value={pageContent.telegram_button_url || ""}
+                    onChange={(e) => updatePageContent({ telegram_button_url: e.target.value })}
+                    placeholder="https://t.me/..."
+                  />
+                </div>
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Описание (HTML)</Label>
+                  <RichTextEditor
+                    value={pageContent.telegram_description || ""}
+                    onChange={(value) => updatePageContent({ telegram_description: value })}
+                    placeholder="Будьте в курсе новостей…"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Текст кнопки</Label>
+                  <Input
+                    value={pageContent.telegram_button_text || ""}
+                    onChange={(e) => updatePageContent({ telegram_button_text: e.target.value })}
+                    placeholder="ПРИСОЕДИНИТЬСЯ"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>QR-код (изображение)</Label>
+                  <SingleImageUploader
+                    value={pageContent.telegram_qr_image || ""}
+                    onChange={(url) => updatePageContent({ telegram_qr_image: url })}
+                    folder={id}
+                    placeholder="Загрузить QR"
+                  />
+                </div>
+                <div className="space-y-2 lg:col-span-2">
+                  <Label>Скрин телефона (изображение)</Label>
+                  <SingleImageUploader
+                    value={pageContent.telegram_phone_image || ""}
+                    onChange={(url) => updatePageContent({ telegram_phone_image: url })}
+                    folder={id}
+                    placeholder="Загрузить скрин"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Forms & Disclaimer */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Формы и дисклеймер</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Redirect после отправки формы</Label>
+                  <Input
+                    value={pageContent.forms_success_url || "/thanks"}
+                    onChange={(e) => updatePageContent({ forms_success_url: e.target.value })}
+                    placeholder="/thanks"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Это заменит `data-success-url` у форм из шаблона (чтобы не уходили на чужой домен).
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Дисклеймер (HTML) — плашка внизу</Label>
+                <RichTextEditor
+                  value={pageContent.disclaimer_text || ""}
+                  onChange={(value) => updatePageContent({ disclaimer_text: value })}
+                  placeholder="Art Estate не является финансовой организацией…"
+                />
               </div>
             </div>
 

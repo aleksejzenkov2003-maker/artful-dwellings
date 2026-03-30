@@ -22,6 +22,7 @@ import AkciiDetail from "./pages/AkciiDetail";
 import Kontakty from "./pages/Kontakty";
 import Otzyvy from "./pages/Otzyvy";
 import NotFound from "./pages/NotFound";
+import Thanks from "./pages/Thanks";
 
 // Auth
 import Auth from "./pages/Auth";
@@ -89,6 +90,7 @@ const App = () => (
               <Route path="/otzyvy" element={<Otzyvy />} />
               <Route path="/kontakty" element={<Kontakty />} />
               <Route path="/broker/:slug" element={<BrokerPage />} />
+              <Route path="/thanks" element={<Thanks />} />
               
               {/* Auth */}
               <Route path="/auth" element={<Auth />} />
