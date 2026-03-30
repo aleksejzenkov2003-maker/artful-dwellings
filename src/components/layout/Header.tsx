@@ -58,16 +58,16 @@ export function Header() {
   };
   const phoneNumber = contacts?.phone || "8 (812) 389-33-56";
   const phoneHref = `tel:${phoneNumber.replace(/[^\d+]/g, "")}`;
-  return <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+  return <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm w-full max-w-full overflow-hidden">
       {/* Top bar - white solid background */}
       <div className="border-b border-border">
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 min-w-0">
             {/* Logo */}
             <Logo />
 
             {/* Right side */}
-            <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden lg:flex items-center gap-6 min-w-0">
               <div className="flex items-center gap-1 text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
                 <span>RU</span>
                 <ChevronDown className="h-3 w-3" />
@@ -130,9 +130,9 @@ export function Header() {
       </div>
 
       {/* Secondary navigation - solid background */}
-      <div className="hidden lg:block bg-[hsl(var(--navy-dark))] text-white">
+      <div className="hidden lg:block bg-[hsl(var(--navy-dark))] text-white overflow-hidden">
         <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12">
-          <div className="flex items-center h-11">
+          <div className="flex items-center h-11 min-w-0">
             {/* Category button - opens mega menu */}
             <button onClick={() => setIsMegaMenuOpen(true)} className="flex items-center gap-2 px-5 h-full bg-coral text-white cursor-pointer hover:bg-coral-light transition-colors outline-none">
               <Menu className="h-4 w-4" />

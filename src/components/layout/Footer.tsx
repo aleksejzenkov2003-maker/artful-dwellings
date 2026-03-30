@@ -36,7 +36,7 @@ export function Footer() {
   const address = contacts?.address || "г. Санкт-Петербург, ул. Пионерская, д. 34";
 
   return (
-    <footer className="bg-navy text-white">
+    <footer className="bg-navy text-white w-full max-w-full overflow-hidden">
       {/* Main footer */}
       <div className="container-wide py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
