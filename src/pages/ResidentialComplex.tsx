@@ -189,57 +189,71 @@ function applyPageContentToTildaHtml(args: {
     const areaTo = complex.area_to;
 
     const aboutAtoms = Array.from(aboutRec.querySelectorAll(".tn-atom")) as HTMLElement[];
-    let replacedCorpus = false;
-    let replacedApartments = false;
-    let replacedArea = false;
-    for (const el of aboutAtoms) {
-      const t = (el.textContent || "").trim();
-      if (!t) continue;
 
-      if (/корпус/i.test(t) && corpCount > 0) {
-        if (!replacedCorpus) {
-          const lines = [
-            `${corpCount} корпуса`,
-            ...buildings
-              .slice(0, 6)
-              .map((b, i) => `${b.name || `Корпус ${i + 1}`}${b.floors_count ? ` — ${b.floors_count} этажей` : ""}`),
-          ];
-          el.innerHTML = lines.join("<br>");
-          replacedCorpus = true;
-        } else {
-          // Hide duplicate corpus blocks
-          const wrapper = el.closest(".tn-elem") as HTMLElement | null;
-          if (wrapper) wrapper.style.display = "none";
-          else el.style.display = "none";
+    const pickAtom = (pred: (t: string) => boolean, score?: (t: string) => number) => {
+      let best: HTMLElement | null = null;
+      let bestScore = -Infinity;
+      for (const el of aboutAtoms) {
+        const t = (el.textContent || "").trim();
+        if (!t) continue;
+        if (!pred(t)) continue;
+        const s = score ? score(t) : t.length;
+        if (s > bestScore) {
+          bestScore = s;
+          best = el;
         }
-        continue;
       }
+      return best;
+    };
 
-      if (/квартир/i.test(t) && typeof apartmentsCount === "number") {
-        if (!replacedApartments) {
-          el.textContent = `${apartmentsCount} КВАРТИРЫ`;
-          replacedApartments = true;
-        } else {
-          const wrapper = el.closest(".tn-elem") as HTMLElement | null;
-          if (wrapper) wrapper.style.display = "none";
-          else el.style.display = "none";
-        }
-        continue;
-      }
+    // 1) Корпуса: в шаблоне обычно 2 отдельных текста:
+    // - короткий заголовок "2 корпуса"
+    // - список строк "Большой корпус №1 — 9 этажей"
+    // Поэтому НЕ кладём всё в один элемент (это вызывает наслоение).
+    if (corpCount > 0) {
+      const corpsHeaderEl = pickAtom(
+        (t) => /^\d+\s+корпус/i.test(t) || /^\d+\s+корпуса/i.test(t),
+        (t) => 1000 - t.length,
+      );
+      if (corpsHeaderEl) corpsHeaderEl.textContent = `${corpCount} корпуса`;
 
-      if (/от\s*\d+\s*до\s*\d+.*кв/i.test(t) && (areaFrom || areaTo)) {
-        if (!replacedArea) {
-          const from = areaFrom ? Math.round(areaFrom) : null;
-          const to = areaTo ? Math.round(areaTo) : null;
-          el.textContent = `ОТ ${from ?? "—"} ДО ${to ?? "—"} КВ. М`;
-          replacedArea = true;
-        } else {
-          const wrapper = el.closest(".tn-elem") as HTMLElement | null;
-          if (wrapper) wrapper.style.display = "none";
-          else el.style.display = "none";
-        }
-        continue;
+      const corpsListEl = pickAtom(
+        (t) =>
+          (/корпус/i.test(t) && /этаж/i.test(t)) ||
+          /Большой\s+корпус/i.test(t) ||
+          /Малый\s+корпус/i.test(t) ||
+          (/корпус/i.test(t) && /—/.test(t)),
+        (t) => 1000 + t.length,
+      );
+      if (corpsListEl) {
+        const lines = buildings
+          .slice(0, 6)
+          .map(
+            (b, i) =>
+              `${b.name || `Корпус ${i + 1}`}${b.floors_count ? ` — ${b.floors_count} этажей` : ""}`,
+          );
+        corpsListEl.innerHTML = lines.join("<br>");
       }
+    }
+
+    // 2) Квартиры: заменяем только один элемент с "### КВАРТИР..."
+    if (typeof apartmentsCount === "number") {
+      const aptsEl = pickAtom(
+        (t) => /\b\d+\s*(квартир|квартиры)\b/i.test(t) && t.length < 60,
+        (t) => 500 - t.length,
+      );
+      if (aptsEl) aptsEl.textContent = `${apartmentsCount} КВАРТИРЫ`;
+    }
+
+    // 3) Диапазон площадей "ОТ .. ДО .. КВ. М" — только один элемент
+    if (areaFrom || areaTo) {
+      const from = areaFrom ? Math.round(areaFrom) : null;
+      const to = areaTo ? Math.round(areaTo) : null;
+      const areaEl = pickAtom(
+        (t) => /\bОТ\b/i.test(t) && /\bДО\b/i.test(t) && /кв/i.test(t) && t.length < 80,
+        (t) => 500 - t.length,
+      );
+      if (areaEl) areaEl.textContent = `ОТ ${from ?? "—"} ДО ${to ?? "—"} КВ. М`;
     }
 
     // Remove "МИРЪ" leftovers inside about block if any.
