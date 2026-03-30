@@ -195,6 +195,22 @@
   }
 }
 
+/* Tilda template containment — prevent inner elements from overflowing */
+.t-body {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: clip !important;
+}
+
+.t-body .t-rec,
+.t-body .t-container,
+.t-body .t-container_100,
+.t-body .t-width,
+.t-body .t-col {
+  max-width: 100% !important;
+  overflow-x: hidden;
+}
+
 @layer utilities {
   .font-serif {
     font-family: 'Aeroport', system-ui, sans-serif;
