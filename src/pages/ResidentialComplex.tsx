@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { tildaTemplatePromise } from "@/main";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -600,19 +601,14 @@ export default function ResidentialComplex() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/tilda/files/page76983836body.html", { cache: "force-cache" })
-      .then(async (r) => {
-        if (!r.ok) throw new Error(`Template load failed (${r.status})`);
-        const text = await r.text();
-        if (!cancelled) setTemplateHtml(text);
-      })
-      .catch((e) => {
-        if (!cancelled) setTemplateError(e instanceof Error ? e.message : "Template load failed");
+    tildaTemplatePromise
+      .then((text) => {
+        if (!cancelled) {
+          if (text) setTemplateHtml(text);
+          else setTemplateError("Template load failed");
+        }
       });
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
