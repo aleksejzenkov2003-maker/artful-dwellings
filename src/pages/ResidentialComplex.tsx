@@ -759,7 +759,7 @@ const ResidentialComplex = () => {
   if (error || !complex) return <NotFound />;
 
   const content: PageContent =
-    (complex.page_content as unknown as PageContent) || {};
+    ((complex as any).page_content as unknown as PageContent) || {};
 
   return (
     <div style={{ fontFamily: "'Montserrat', sans-serif" }}>

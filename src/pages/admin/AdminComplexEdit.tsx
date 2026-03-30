@@ -143,7 +143,7 @@ export default function AdminComplexEdit() {
         infrastructure: complex.infrastructure,
         seo_title: complex.seo_title,
         seo_description: complex.seo_description,
-        page_content: complex.page_content || {},
+        page_content: (complex as any).page_content || {},
       });
     }
   });
@@ -369,16 +369,16 @@ export default function AdminComplexEdit() {
       infrastructure: complex.infrastructure,
       seo_title: complex.seo_title,
       seo_description: complex.seo_description,
-      page_content: complex.page_content || {},
+      page_content: (complex as any).page_content || {},
     });
   }
 
-  const pageContent: PageContent = (formData.page_content as PageContent) || {};
+  const pageContent: PageContent = ((formData as any).page_content as PageContent) || {};
   const updatePageContent = (patch: Partial<PageContent>) => {
     setFormData({
       ...formData,
-      page_content: { ...pageContent, ...patch } as unknown as Complex["page_content"],
-    });
+      page_content: { ...pageContent, ...patch },
+    } as any);
   };
 
   const formatPrice = (price: number) => {
