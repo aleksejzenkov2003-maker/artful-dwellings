@@ -188,11 +188,14 @@ function applyPageContentToTildaHtml(args: {
     const areaTo = complex.area_to;
 
     const aboutAtoms = Array.from(aboutRec.querySelectorAll(".tn-atom")) as HTMLElement[];
+    let replacedCorpus = false;
+    let replacedApartments = false;
+    let replacedArea = false;
     for (const el of aboutAtoms) {
       const t = (el.textContent || "").trim();
       if (!t) continue;
 
-      if (/корпус/i.test(t) && corpCount > 0) {
+      if (!replacedCorpus && /корпус/i.test(t) && corpCount > 0) {
         const lines = [
           `${corpCount} корпуса`,
           ...buildings
@@ -200,18 +203,21 @@ function applyPageContentToTildaHtml(args: {
             .map((b, i) => `${b.name || `Корпус ${i + 1}`}${b.floors_count ? ` — ${b.floors_count} этажей` : ""}`),
         ];
         el.innerHTML = lines.join("<br>");
+        replacedCorpus = true;
         continue;
       }
 
-      if (/квартир/i.test(t) && typeof apartmentsCount === "number") {
+      if (!replacedApartments && /квартир/i.test(t) && typeof apartmentsCount === "number") {
         el.textContent = `${apartmentsCount} КВАРТИРЫ`;
+        replacedApartments = true;
         continue;
       }
 
-      if (/от\\s*\\d+\\s*до\\s*\\d+.*кв/i.test(t) && (areaFrom || areaTo)) {
+      if (!replacedArea && /от\s*\d+\s*до\s*\d+.*кв/i.test(t) && (areaFrom || areaTo)) {
         const from = areaFrom ? Math.round(areaFrom) : null;
         const to = areaTo ? Math.round(areaTo) : null;
         el.textContent = `ОТ ${from ?? "—"} ДО ${to ?? "—"} КВ. М`;
+        replacedArea = true;
         continue;
       }
     }
