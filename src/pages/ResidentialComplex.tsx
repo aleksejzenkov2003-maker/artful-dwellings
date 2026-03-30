@@ -147,12 +147,6 @@ const ResidentialComplex = () => {
       html = html.replaceAll("Миргородская ул., 1", complex.address);
     }
 
-    // Hide the Tilda burger menu – the SPA has its own header
-    html = html.replace(
-      '</div> <div id="rec1289837571"',
-      '<style>#rec1289837561{display:none!important;}</style></div> <div id="rec1289837571"'
-    );
-
     return html;
   }, [templateHtml, complex?.name, complex?.address]);
 
