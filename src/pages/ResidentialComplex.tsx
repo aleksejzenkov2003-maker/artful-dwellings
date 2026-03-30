@@ -195,29 +195,48 @@ function applyPageContentToTildaHtml(args: {
       const t = (el.textContent || "").trim();
       if (!t) continue;
 
-      if (!replacedCorpus && /корпус/i.test(t) && corpCount > 0) {
-        const lines = [
-          `${corpCount} корпуса`,
-          ...buildings
-            .slice(0, 6)
-            .map((b, i) => `${b.name || `Корпус ${i + 1}`}${b.floors_count ? ` — ${b.floors_count} этажей` : ""}`),
-        ];
-        el.innerHTML = lines.join("<br>");
-        replacedCorpus = true;
+      if (/корпус/i.test(t) && corpCount > 0) {
+        if (!replacedCorpus) {
+          const lines = [
+            `${corpCount} корпуса`,
+            ...buildings
+              .slice(0, 6)
+              .map((b, i) => `${b.name || `Корпус ${i + 1}`}${b.floors_count ? ` — ${b.floors_count} этажей` : ""}`),
+          ];
+          el.innerHTML = lines.join("<br>");
+          replacedCorpus = true;
+        } else {
+          // Hide duplicate corpus blocks
+          const wrapper = el.closest(".tn-elem") as HTMLElement | null;
+          if (wrapper) wrapper.style.display = "none";
+          else el.style.display = "none";
+        }
         continue;
       }
 
-      if (!replacedApartments && /квартир/i.test(t) && typeof apartmentsCount === "number") {
-        el.textContent = `${apartmentsCount} КВАРТИРЫ`;
-        replacedApartments = true;
+      if (/квартир/i.test(t) && typeof apartmentsCount === "number") {
+        if (!replacedApartments) {
+          el.textContent = `${apartmentsCount} КВАРТИРЫ`;
+          replacedApartments = true;
+        } else {
+          const wrapper = el.closest(".tn-elem") as HTMLElement | null;
+          if (wrapper) wrapper.style.display = "none";
+          else el.style.display = "none";
+        }
         continue;
       }
 
-      if (!replacedArea && /от\s*\d+\s*до\s*\d+.*кв/i.test(t) && (areaFrom || areaTo)) {
-        const from = areaFrom ? Math.round(areaFrom) : null;
-        const to = areaTo ? Math.round(areaTo) : null;
-        el.textContent = `ОТ ${from ?? "—"} ДО ${to ?? "—"} КВ. М`;
-        replacedArea = true;
+      if (/от\s*\d+\s*до\s*\d+.*кв/i.test(t) && (areaFrom || areaTo)) {
+        if (!replacedArea) {
+          const from = areaFrom ? Math.round(areaFrom) : null;
+          const to = areaTo ? Math.round(areaTo) : null;
+          el.textContent = `ОТ ${from ?? "—"} ДО ${to ?? "—"} КВ. М`;
+          replacedArea = true;
+        } else {
+          const wrapper = el.closest(".tn-elem") as HTMLElement | null;
+          if (wrapper) wrapper.style.display = "none";
+          else el.style.display = "none";
+        }
         continue;
       }
     }
