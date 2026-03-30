@@ -1,0 +1,387 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import { useResidentialComplexes } from "@/hooks/useResidentialComplexes";
+import { HexagonPattern } from "@/components/ui/HexagonPattern";
+import { useSubmitLead } from "@/hooks/useSubmitLead";
+import { toast } from "sonner";
+import type { ResidentialComplex } from "@/hooks/useResidentialComplexes";
+
+// Format price helper
+function formatPrice(price: number | null): string {
+  if (!price) return "";
+  return new Intl.NumberFormat("ru-RU").format(price);
+}
+
+// Small card for top grid (4 cards row)
+interface SmallCardProps {
+  complex: ResidentialComplex;
+  showBadge?: boolean;
+}
+
+function SmallCard({ complex, showBadge = false }: SmallCardProps) {
+  const isNew = complex.status === "building" || complex.status === "pre-sale";
+  
+  return (
+    <Link
+      to={`/novostroyki/${complex.slug}`}
+      className="group relative overflow-hidden aspect-[4/3]"
+    >
+      <img
+        src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600"}
+        alt={complex.name}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+      
+      {/* New badge */}
+      {(showBadge || isNew) && (
+        <div className="absolute top-3 left-3">
+          <span className="bg-primary text-primary-foreground font-sans font-medium text-[10px] uppercase tracking-wider px-2.5 py-1">
+            Новый объект
+          </span>
+        </div>
+      )}
+      
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        {complex.developer && (
+          <p className="text-[10px] text-white/60 uppercase tracking-wider mb-0.5">
+            {complex.developer}
+          </p>
+        )}
+        <h3 className="text-sm font-serif text-white mb-1">
+          {complex.name}
+        </h3>
+        {complex.price_from && (
+          <p className="text-primary text-xs font-medium">
+            от {formatPrice(complex.price_from)} ₽/м²
+          </p>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+// Large card for bottom grid (spans 2 rows on left)
+interface LargeCardProps {
+  complex: ResidentialComplex;
+}
+
+function LargeCard({ complex }: LargeCardProps) {
+  const isNew = complex.status === "building" || complex.status === "pre-sale";
+  
+  return (
+    <Link
+      to={`/novostroyki/${complex.slug}`}
+      className="group relative overflow-hidden aspect-[3/4]"
+    >
+      <img
+        src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600"}
+        alt={complex.name}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+      
+      {/* New badge */}
+      {isNew && (
+        <div className="absolute top-4 left-4">
+          <span className="bg-primary text-primary-foreground font-sans font-medium text-[11px] uppercase tracking-wider px-3 py-1.5">
+            Новый объект
+          </span>
+        </div>
+      )}
+      
+      <div className="absolute bottom-0 left-0 right-0 p-5">
+        {complex.developer && (
+          <p className="text-xs text-white/60 uppercase tracking-wider mb-1">
+            {complex.developer}
+          </p>
+        )}
+        <h3 className="text-xl font-serif text-white mb-2">
+          {complex.name}
+        </h3>
+        {complex.price_from && (
+          <p className="text-primary font-medium">
+            от {formatPrice(complex.price_from)} ₽/м²
+          </p>
+        )}
+        {complex.address && (
+          <p className="text-white/50 text-xs mt-1">
+            {complex.city}, {complex.district}
+          </p>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+// Extra large card with text below (for second section)
+interface FeatureCardProps {
+  complex: ResidentialComplex;
+  variant: "overlay" | "text-below";
+}
+
+function FeatureCard({ complex, variant }: FeatureCardProps) {
+  if (variant === "overlay") {
+    return (
+      <Link to={`/novostroyki/${complex.slug}`} className="group block">
+        <div className="relative overflow-hidden aspect-[4/3]">
+          <img
+            src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800"}
+            alt={complex.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
+            {complex.district && (
+              <span className="font-sans font-normal text-[12px] uppercase tracking-[0.1em] text-primary mb-2 block">
+                Район {complex.district}
+              </span>
+            )}
+            <h3 className="font-serif font-normal text-[28px] lg:text-[36px] leading-[1.1] text-white mb-2">
+              {complex.name}
+            </h3>
+            {complex.address && (
+              <p className="font-sans font-normal text-[13px] text-primary">
+                {complex.address}
+              </p>
+            )}
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  // text-below variant
+  return (
+    <Link to={`/novostroyki/${complex.slug}`} className="group block">
+      <div className="relative overflow-hidden aspect-[4/3] mb-6">
+        <img
+          src={complex.main_image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800"}
+          alt={complex.name}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <div>
+        {complex.district && (
+          <span className="font-sans font-normal text-[12px] uppercase tracking-[0.1em] text-muted-foreground mb-3 block">
+            Район {complex.district}
+          </span>
+        )}
+        <h3 className="font-serif font-normal text-[36px] lg:text-[48px] leading-[1.05] text-foreground group-hover:text-primary transition-colors mb-2">
+          {complex.name}
+        </h3>
+        {complex.address && (
+          <p className="font-sans font-normal text-[14px] text-muted-foreground">
+            {complex.address}
+          </p>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+export function PropertySearchSection() {
+  const [activeTab, setActiveTab] = useState<"new" | "secondary">("new");
+  const [rooms, setRooms] = useState<string[]>([]);
+  const [maxPrice, setMaxPrice] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  
+  const { data: complexes } = useResidentialComplexes({ limit: 10, propertyType: activeTab === "new" ? "new" : "secondary" });
+  const mutation = useSubmitLead();
+  
+  // First 6 for top grid, next 4 for feature section
+  const topGridComplexes = complexes?.slice(0, 6) || [];
+  const featureComplexes = complexes?.slice(6, 10) || [];
+
+  const toggleRoom = (room: string) => {
+    setRooms(prev => 
+      prev.includes(room) ? prev.filter(r => r !== room) : [...prev, room]
+    );
+  };
+
+  const handleSubmit = () => {
+    if (phone.length < 10) {
+      toast.error("Введите корректный номер телефона");
+      return;
+    }
+    
+    mutation.mutate({
+      name: name || "Заявка на подбор",
+      phone,
+      email: null,
+      message: `Комнат: ${rooms.join(", ") || "Любое"}, Бюджет до: ${maxPrice || "Не указан"} ₽`,
+      form_type: "property_search",
+      form_source: "Главная - подбор недвижимости",
+    }, {
+      onSuccess: () => {
+        setName("");
+        setPhone("");
+        setMaxPrice("");
+        setRooms([]);
+      }
+    });
+  };
+
+  return (
+    <section className="py-16 lg:py-24 bg-background relative overflow-hidden">
+      <HexagonPattern className="right-0 top-0 w-96 h-full opacity-30" />
+      
+      <div className="container-wide relative z-10">
+        {/* Title */}
+        <h2 className="text-3xl md:text-4xl font-heading font-normal text-center mb-12">
+          Подберем идеальное предложение от 300 застройщиков
+        </h2>
+
+        {/* Quick Search Form */}
+        <div className="max-w-5xl mx-auto mb-12">
+          <div className="flex flex-wrap items-center justify-center gap-4 p-6 bg-card border border-border">
+            <div className="flex items-center gap-2">
+              <span className="text-ui-label text-muted-foreground">Комнат:</span>
+              <div className="flex gap-1">
+                {["Ст", "1", "2", "3", "4+"].map((room) => (
+                  <button
+                    key={room}
+                    onClick={() => toggleRoom(room)}
+                    className={`w-10 h-10 border transition-colors text-sm ${
+                      rooms.includes(room) 
+                        ? "border-primary bg-primary text-primary-foreground" 
+                        : "border-border hover:border-primary hover:text-primary"
+                    }`}
+                  >
+                    {room}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-ui-label text-muted-foreground">До</span>
+              <Input 
+                type="text" 
+                placeholder="5 000 000" 
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="w-32 text-right"
+              />
+              <span className="text-ui-label text-muted-foreground">₽</span>
+            </div>
+
+            <Input 
+              type="text" 
+              placeholder="Ваше имя" 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-40"
+            />
+
+            <Input 
+              type="tel" 
+              placeholder="Ваш телефон" 
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-40"
+            />
+
+            <Button 
+              onClick={handleSubmit}
+              disabled={mutation.isPending}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase text-xs tracking-[0.08em]"
+            >
+              {mutation.isPending ? "..." : "Отправить заявку"}
+            </Button>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex justify-center gap-8 mb-12">
+          <button
+            onClick={() => setActiveTab("new")}
+            className={`text-sm uppercase tracking-wider pb-2 border-b-2 transition-colors ${
+              activeTab === "new" 
+                ? "border-primary text-primary" 
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Строящаяся недвижимость
+          </button>
+          <button
+            onClick={() => setActiveTab("secondary")}
+            className={`text-sm uppercase tracking-wider pb-2 border-b-2 transition-colors ${
+              activeTab === "secondary" 
+                ? "border-primary text-primary" 
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Вторичная недвижимость
+          </button>
+        </div>
+
+        {/* Property Cards Grid - Reference layout */}
+        {topGridComplexes.length > 0 && (
+          <div className="space-y-4">
+            {/* Top row: 4 small cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {topGridComplexes.slice(0, 4).map((complex, index) => (
+                <SmallCard 
+                  key={complex.id} 
+                  complex={complex} 
+                  showBadge={index < 2}
+                />
+              ))}
+            </div>
+            
+            {/* Bottom row: 1 large card + 1 small card */}
+            {topGridComplexes.length > 4 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {topGridComplexes[4] && (
+                  <LargeCard complex={topGridComplexes[4]} />
+                )}
+                {topGridComplexes[5] && (
+                  <SmallCard complex={topGridComplexes[5]} />
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Show More Button */}
+        <div className="text-center mt-12">
+          <Link to="/novostroyki">
+            <Button variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-background uppercase text-xs tracking-wider px-8">
+              Показать ещё
+            </Button>
+          </Link>
+        </div>
+
+        {/* Feature Section - Large cards with text below (like reference 2) */}
+        {featureComplexes.length > 0 && (
+          <div className="mt-24 pt-16 border-t border-border">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+              {featureComplexes.slice(0, 2).map((complex, index) => (
+                <FeatureCard 
+                  key={complex.id} 
+                  complex={complex} 
+                  variant={index === 0 ? "overlay" : "text-below"}
+                />
+              ))}
+            </div>
+            {featureComplexes.length > 2 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mt-8">
+                {featureComplexes.slice(2, 4).map((complex, index) => (
+                  <FeatureCard 
+                    key={complex.id} 
+                    complex={complex} 
+                    variant={index === 0 ? "text-below" : "overlay"}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}

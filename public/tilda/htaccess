@@ -1,0 +1,42 @@
+ErrorDocument 403 /404.html
+ErrorDocument 404 /404.html
+
+DirectoryIndex page76983836.html
+
+RewriteEngine On
+
+RewriteCond %{HTTP:X-Forwarded-Proto} =http
+RewriteRule ^(.*)$ https://jkmir\.ru/$1 [R=301,L]
+
+RewriteCond %{HTTP:X-Forwarded-Proto} =https
+RewriteCond %{HTTP_HOST} ^www\.jkmir.ru [NC]
+RewriteRule ^(.*)$ https://jkmir\.ru/$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} /robots.txt
+RewriteCond "%{DOCUMENT_ROOT}/project4248127/robots_%{HTTP_HOST}.txt" -f
+RewriteRule ^(.*)$ robots_%{HTTP_HOST}.txt [NC,L]
+RewriteRule ^mir_mirgorodskaya1$ page76983836.html [NC]
+RewriteRule ^mir_mirgorodskaya1/$ page76983836.html [NC]
+
+RewriteRule ^tessinskiy1$ page20228213.html [NC]
+RewriteRule ^tessinskiy1/$ page20228213.html [NC]
+
+RewriteRule ^thanks$ page77445166.html [NC]
+RewriteRule ^thanks/$ page77445166.html [NC]
+
+RewriteRule ^tessinskiy2$ page20231618.html [NC]
+RewriteRule ^tessinskiy2/$ page20231618.html [NC]
+
+RewriteRule ^2$ page23055266.html [NC]
+RewriteRule ^2/$ page23055266.html [NC]
+
+RewriteRule ^privacy$ page80153006.html [NC]
+RewriteRule ^privacy/$ page80153006.html [NC]
+
+RewriteRule ^thx$ page24239726.html [NC]
+RewriteRule ^thx/$ page24239726.html [NC]
+
+RewriteRule ^new$ page47415713.html [NC]
+RewriteRule ^new/$ page47415713.html [NC]
+
+
