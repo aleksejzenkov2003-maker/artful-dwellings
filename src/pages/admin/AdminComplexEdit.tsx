@@ -62,7 +62,7 @@ export default function AdminComplexEdit() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   
-  const [formData, setFormData] = useState<Partial<TablesUpdate<"residential_complexes">>>({});
+  const [formData, setFormData] = useState<Partial<TablesUpdate<"residential_complexes">> & { page_content?: any }>({});
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   
