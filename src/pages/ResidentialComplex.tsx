@@ -730,7 +730,7 @@ export default function ResidentialComplex() {
           </div>
         </section>
       ) : (
-        <div className="t-body -mt-28 lg:-mt-28" style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: processedHtml }} />
+        <div className="t-body -mt-28 lg:-mt-28 overflow-x-hidden max-w-[100vw]" style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: processedHtml }} />
       )}
     </Layout>
   );
