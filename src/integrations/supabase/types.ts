@@ -759,7 +759,6 @@ export type Database = {
           is_published: boolean | null
           main_image: string | null
           name: string
-          page_content: Json | null
           presentation_url: string | null
           price_from: number | null
           price_to: number | null
@@ -791,7 +790,6 @@ export type Database = {
           is_published?: boolean | null
           main_image?: string | null
           name: string
-          page_content?: Json | null
           presentation_url?: string | null
           price_from?: number | null
           price_to?: number | null
@@ -823,7 +821,6 @@ export type Database = {
           is_published?: boolean | null
           main_image?: string | null
           name?: string
-          page_content?: Json | null
           presentation_url?: string | null
           price_from?: number | null
           price_to?: number | null
