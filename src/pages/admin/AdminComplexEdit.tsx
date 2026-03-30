@@ -52,6 +52,7 @@ import {
   SLIDE_TYPES,
   type ComplexSlide,
 } from "@/hooks/useComplexSlides";
+import type { PageContent } from "@/types/pageContent";
 
 type Complex = Tables<"residential_complexes">;
 type Coordinates = { lat: number; lng: number };
@@ -142,6 +143,7 @@ export default function AdminComplexEdit() {
         infrastructure: complex.infrastructure,
         seo_title: complex.seo_title,
         seo_description: complex.seo_description,
+        page_content: complex.page_content || {},
       });
     }
   });
@@ -367,8 +369,17 @@ export default function AdminComplexEdit() {
       infrastructure: complex.infrastructure,
       seo_title: complex.seo_title,
       seo_description: complex.seo_description,
+      page_content: complex.page_content || {},
     });
   }
+
+  const pageContent: PageContent = (formData.page_content as PageContent) || {};
+  const updatePageContent = (patch: Partial<PageContent>) => {
+    setFormData({
+      ...formData,
+      page_content: { ...pageContent, ...patch } as unknown as Complex["page_content"],
+    });
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("ru-RU").format(price) + " ₽";
@@ -399,6 +410,7 @@ export default function AdminComplexEdit() {
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList>
             <TabsTrigger value="general">Основное</TabsTrigger>
+            <TabsTrigger value="page-content">Контент страницы</TabsTrigger>
             <TabsTrigger value="apartments">Квартиры ({apartments?.length || 0})</TabsTrigger>
             <TabsTrigger value="slides">Слайды ({slides?.length || 0})</TabsTrigger>
             <TabsTrigger value="media">Медиа</TabsTrigger>
@@ -838,6 +850,318 @@ export default function AdminComplexEdit() {
                 Слайды не добавлены. Добавьте слайды чтобы секция «Концепция» отображалась на странице ЖК.
               </div>
             )}
+          </TabsContent>
+
+          {/* Page Content Tab */}
+          <TabsContent value="page-content" className="space-y-8">
+            {/* Hero */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Главный экран (Hero)</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Подзаголовок героя</Label>
+                  <Input
+                    value={pageContent.hero_title || ""}
+                    onChange={(e) => updatePageContent({ hero_title: e.target.value })}
+                    placeholder="Элитный клубный дом в историческом центре..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Станция метро</Label>
+                  <Input
+                    value={pageContent.metro_station || ""}
+                    onChange={(e) => updatePageContent({ metro_station: e.target.value })}
+                    placeholder="пл. Восстания"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Телефон</Label>
+                  <Input
+                    value={pageContent.phone || ""}
+                    onChange={(e) => updatePageContent({ phone: e.target.value })}
+                    placeholder="+7 (812) 501-1000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Часы работы</Label>
+                  <Input
+                    value={pageContent.work_hours || ""}
+                    onChange={(e) => updatePageContent({ work_hours: e.target.value })}
+                    placeholder="Ежедневно 10:00-20:00"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* About */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">О проекте</h3>
+              <div className="space-y-2">
+                <Label>Развёрнутое описание (HTML)</Label>
+                <RichTextEditor
+                  value={pageContent.about_text || ""}
+                  onChange={(value) => updatePageContent({ about_text: value })}
+                  placeholder="Подробное описание проекта..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Дополнительные изображения (URL через Enter)</Label>
+                <Textarea
+                  value={(pageContent.about_images || []).join("\n")}
+                  onChange={(e) =>
+                    updatePageContent({
+                      about_images: e.target.value
+                        .split("\n")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                    })
+                  }
+                  rows={4}
+                  placeholder={"https://example.com/photo1.jpg\nhttps://example.com/photo2.jpg"}
+                />
+              </div>
+            </div>
+
+            {/* Video & Tour */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Видео и виртуальный тур</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>URL видео (YouTube / Vimeo)</Label>
+                  <Input
+                    value={pageContent.video_url || ""}
+                    onChange={(e) => updatePageContent({ video_url: e.target.value })}
+                    placeholder="https://vimeo.com/1017946140"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>URL панорамы (виртуальная прогулка)</Label>
+                  <Input
+                    value={pageContent.panorama_url || ""}
+                    onChange={(e) => updatePageContent({ panorama_url: e.target.value })}
+                    placeholder="https://example.com/tour/tour.html"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Infrastructure */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Инфраструктура</h3>
+              <div className="space-y-2">
+                <Label>Описание инфраструктуры (HTML)</Label>
+                <RichTextEditor
+                  value={pageContent.infrastructure_text || ""}
+                  onChange={(value) => updatePageContent({ infrastructure_text: value })}
+                  placeholder="Описание расположения и инфраструктуры..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Пункты инфраструктуры</Label>
+                {(pageContent.infrastructure_items || []).map((item, idx) => (
+                  <div key={idx} className="flex gap-2 items-start">
+                    <Input
+                      value={item.title}
+                      onChange={(e) => {
+                        const items = [...(pageContent.infrastructure_items || [])];
+                        items[idx] = { ...items[idx], title: e.target.value };
+                        updatePageContent({ infrastructure_items: items });
+                      }}
+                      placeholder="Название"
+                      className="flex-1"
+                    />
+                    <Input
+                      value={item.description}
+                      onChange={(e) => {
+                        const items = [...(pageContent.infrastructure_items || [])];
+                        items[idx] = { ...items[idx], description: e.target.value };
+                        updatePageContent({ infrastructure_items: items });
+                      }}
+                      placeholder="Описание"
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive shrink-0"
+                      onClick={() => {
+                        const items = (pageContent.infrastructure_items || []).filter(
+                          (_, i) => i !== idx,
+                        );
+                        updatePageContent({ infrastructure_items: items });
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    updatePageContent({
+                      infrastructure_items: [
+                        ...(pageContent.infrastructure_items || []),
+                        { title: "", description: "" },
+                      ],
+                    })
+                  }
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Добавить пункт
+                </Button>
+              </div>
+            </div>
+
+            {/* Mortgage */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Ипотека</h3>
+              <div className="space-y-2">
+                <Label>Описание ипотеки (HTML)</Label>
+                <RichTextEditor
+                  value={pageContent.mortgage_text || ""}
+                  onChange={(value) => updatePageContent({ mortgage_text: value })}
+                  placeholder="Условия ипотеки, банки-партнёры..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Условия (параметры)</Label>
+                {(pageContent.mortgage_conditions || []).map((cond, idx) => (
+                  <div key={idx} className="flex gap-2 items-start">
+                    <Input
+                      value={cond.title}
+                      onChange={(e) => {
+                        const list = [...(pageContent.mortgage_conditions || [])];
+                        list[idx] = { ...list[idx], title: e.target.value };
+                        updatePageContent({ mortgage_conditions: list });
+                      }}
+                      placeholder="Параметр (напр. Ставка)"
+                      className="flex-1"
+                    />
+                    <Input
+                      value={cond.value}
+                      onChange={(e) => {
+                        const list = [...(pageContent.mortgage_conditions || [])];
+                        list[idx] = { ...list[idx], value: e.target.value };
+                        updatePageContent({ mortgage_conditions: list });
+                      }}
+                      placeholder="Значение (напр. от 5.9%)"
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive shrink-0"
+                      onClick={() => {
+                        const list = (pageContent.mortgage_conditions || []).filter(
+                          (_, i) => i !== idx,
+                        );
+                        updatePageContent({ mortgage_conditions: list });
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    updatePageContent({
+                      mortgage_conditions: [
+                        ...(pageContent.mortgage_conditions || []),
+                        { title: "", value: "" },
+                      ],
+                    })
+                  }
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Добавить условие
+                </Button>
+              </div>
+            </div>
+
+            {/* FAQ */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">FAQ (Частые вопросы)</h3>
+              {(pageContent.faq || []).map((item, idx) => (
+                <div key={idx} className="border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Вопрос {idx + 1}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive h-7 w-7"
+                      onClick={() => {
+                        const faq = (pageContent.faq || []).filter((_, i) => i !== idx);
+                        updatePageContent({ faq });
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <Input
+                    value={item.question}
+                    onChange={(e) => {
+                      const faq = [...(pageContent.faq || [])];
+                      faq[idx] = { ...faq[idx], question: e.target.value };
+                      updatePageContent({ faq });
+                    }}
+                    placeholder="Вопрос"
+                  />
+                  <Textarea
+                    value={item.answer}
+                    onChange={(e) => {
+                      const faq = [...(pageContent.faq || [])];
+                      faq[idx] = { ...faq[idx], answer: e.target.value };
+                      updatePageContent({ faq });
+                    }}
+                    placeholder="Ответ"
+                    rows={3}
+                  />
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  updatePageContent({
+                    faq: [...(pageContent.faq || []), { question: "", answer: "" }],
+                  })
+                }
+              >
+                <Plus className="h-4 w-4 mr-1" /> Добавить вопрос
+              </Button>
+            </div>
+
+            {/* Contacts */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Контакты (на странице)</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Контактный телефон</Label>
+                  <Input
+                    value={pageContent.contact_phone || ""}
+                    onChange={(e) => updatePageContent({ contact_phone: e.target.value })}
+                    placeholder="+7 (812) 501-1000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Email</Label>
+                  <Input
+                    value={pageContent.contact_email || ""}
+                    onChange={(e) => updatePageContent({ contact_email: e.target.value })}
+                    placeholder="info@example.com"
+                  />
+                </div>
+              </div>
+            </div>
           </TabsContent>
 
           {/* SEO Tab */}
