@@ -342,37 +342,6 @@ export default function AdminComplexEdit() {
     );
   }
 
-  // Initialize form data from complex
-  if (Object.keys(formData).length === 0) {
-    setFormData({
-      name: complex.name,
-      slug: complex.slug,
-      description: complex.description,
-      address: complex.address,
-      district: complex.district,
-      city: complex.city,
-      city_id: complex.city_id,
-      developer: complex.developer,
-      status: complex.status,
-      price_from: complex.price_from,
-      price_to: complex.price_to,
-      area_from: complex.area_from,
-      area_to: complex.area_to,
-      floors_count: complex.floors_count,
-      apartments_count: complex.apartments_count,
-      completion_date: complex.completion_date,
-      main_image: complex.main_image,
-      presentation_url: complex.presentation_url,
-      is_published: complex.is_published,
-      is_featured: complex.is_featured,
-      coordinates: complex.coordinates as Coordinates | null,
-      features: complex.features,
-      infrastructure: complex.infrastructure,
-      seo_title: complex.seo_title,
-      seo_description: complex.seo_description,
-      page_content: (complex as any).page_content || {},
-    });
-  }
 
   const pageContent: PageContent = useMemo(() => {
     const existing = (((formData as any).page_content as PageContent) || {}) as PageContent;
