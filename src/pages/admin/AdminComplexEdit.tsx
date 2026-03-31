@@ -316,39 +316,10 @@ export default function AdminComplexEdit() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <AdminLayout>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </AdminLayout>
-    );
-  }
-
-  if (!complex) {
-    return (
-      <AdminLayout>
-        <div className="text-center py-12">
-          <p className="text-muted-foreground mb-4">ЖК не найден</p>
-          <Button asChild>
-            <Link to="/admin/complexes">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Назад к списку
-            </Link>
-          </Button>
-        </div>
-      </AdminLayout>
-    );
-  }
-
-
   const pageContent: PageContent = useMemo(() => {
     const existing = (((formData as any).page_content as PageContent) || {}) as PageContent;
-    const complexName = (formData.name as string) || complex.name;
+    const complexName = (formData.name as string) || complex?.name || "";
 
-    // Defaults that match the current Tilda template content,
-    // so admin fields are pre-filled even if DB page_content is empty.
     const templateDefaults: PageContent = {
       installments_intro:
         "Беспроцентная рассрочка от застройщика RBI — это стоимость квартиры или апартаментов, разбитая на удобные суммы, которые можно выплачивать через различные промежутки времени.",
@@ -390,13 +361,41 @@ export default function AdminComplexEdit() {
       ...templateDefaults,
       ...existing,
     };
-  }, [formData, complex.name]);
+  }, [formData, complex?.name]);
+
   const updatePageContent = (patch: Partial<PageContent>) => {
     setFormData({
       ...formData,
       page_content: { ...pageContent, ...patch },
     } as any);
   };
+
+  if (isLoading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (!complex) {
+    return (
+      <AdminLayout>
+        <div className="text-center py-12">
+          <p className="text-muted-foreground mb-4">ЖК не найден</p>
+          <Button asChild>
+            <Link to="/admin/complexes">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Назад к списку
+            </Link>
+          </Button>
+        </div>
+      </AdminLayout>
+    );
+  }
+
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("ru-RU").format(price) + " ₽";
