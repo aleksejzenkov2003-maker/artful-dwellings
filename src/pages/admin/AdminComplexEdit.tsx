@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -116,7 +116,7 @@ export default function AdminComplexEdit() {
   const [slideForm, setSlideForm] = useState<Partial<ComplexSlide>>({});
 
   // Initialize form when complex loads
-  useState(() => {
+  useEffect(() => {
     if (complex && Object.keys(formData).length === 0) {
       setFormData({
         name: complex.name,
@@ -147,7 +147,7 @@ export default function AdminComplexEdit() {
         page_content: (complex as any).page_content || {},
       });
     }
-  });
+  }, [complex]);
 
   // Update mutation
   const updateMutation = useMutation({
@@ -316,70 +316,10 @@ export default function AdminComplexEdit() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <AdminLayout>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </AdminLayout>
-    );
-  }
-
-  if (!complex) {
-    return (
-      <AdminLayout>
-        <div className="text-center py-12">
-          <p className="text-muted-foreground mb-4">ЖК не найден</p>
-          <Button asChild>
-            <Link to="/admin/complexes">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Назад к списку
-            </Link>
-          </Button>
-        </div>
-      </AdminLayout>
-    );
-  }
-
-  // Initialize form data from complex
-  if (Object.keys(formData).length === 0) {
-    setFormData({
-      name: complex.name,
-      slug: complex.slug,
-      description: complex.description,
-      address: complex.address,
-      district: complex.district,
-      city: complex.city,
-      city_id: complex.city_id,
-      developer: complex.developer,
-      status: complex.status,
-      price_from: complex.price_from,
-      price_to: complex.price_to,
-      area_from: complex.area_from,
-      area_to: complex.area_to,
-      floors_count: complex.floors_count,
-      apartments_count: complex.apartments_count,
-      completion_date: complex.completion_date,
-      main_image: complex.main_image,
-      presentation_url: complex.presentation_url,
-      is_published: complex.is_published,
-      is_featured: complex.is_featured,
-      coordinates: complex.coordinates as Coordinates | null,
-      features: complex.features,
-      infrastructure: complex.infrastructure,
-      seo_title: complex.seo_title,
-      seo_description: complex.seo_description,
-      page_content: (complex as any).page_content || {},
-    });
-  }
-
   const pageContent: PageContent = useMemo(() => {
     const existing = (((formData as any).page_content as PageContent) || {}) as PageContent;
-    const complexName = (formData.name as string) || complex.name;
+    const complexName = (formData.name as string) || complex?.name || "";
 
-    // Defaults that match the current Tilda template content,
-    // so admin fields are pre-filled even if DB page_content is empty.
     const templateDefaults: PageContent = {
       installments_intro:
         "Беспроцентная рассрочка от застройщика RBI — это стоимость квартиры или апартаментов, разбитая на удобные суммы, которые можно выплачивать через различные промежутки времени.",
@@ -421,13 +361,41 @@ export default function AdminComplexEdit() {
       ...templateDefaults,
       ...existing,
     };
-  }, [formData, complex.name]);
+  }, [formData, complex?.name]);
+
   const updatePageContent = (patch: Partial<PageContent>) => {
     setFormData({
       ...formData,
       page_content: { ...pageContent, ...patch },
     } as any);
   };
+
+  if (isLoading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (!complex) {
+    return (
+      <AdminLayout>
+        <div className="text-center py-12">
+          <p className="text-muted-foreground mb-4">ЖК не найден</p>
+          <Button asChild>
+            <Link to="/admin/complexes">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Назад к списку
+            </Link>
+          </Button>
+        </div>
+      </AdminLayout>
+    );
+  }
+
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("ru-RU").format(price) + " ₽";
