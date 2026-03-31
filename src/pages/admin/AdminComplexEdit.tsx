@@ -116,7 +116,7 @@ export default function AdminComplexEdit() {
   const [slideForm, setSlideForm] = useState<Partial<ComplexSlide>>({});
 
   // Initialize form when complex loads
-  useMemo(() => {
+  useEffect(() => {
     if (complex && Object.keys(formData).length === 0) {
       setFormData({
         name: complex.name,
@@ -147,7 +147,7 @@ export default function AdminComplexEdit() {
         page_content: (complex as any).page_content || {},
       });
     }
-  });
+  }, [complex]);
 
   // Update mutation
   const updateMutation = useMutation({
