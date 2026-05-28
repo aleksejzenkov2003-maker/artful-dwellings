@@ -11,6 +11,7 @@ export interface BlogPost {
   cover_image: string | null;
   author_name: string | null;
   published_at: string | null;
+  is_published?: boolean;
   tags: string[];
   views_count: number | null;
 }
@@ -37,16 +38,22 @@ export const useBlogPosts = (category?: string) => {
   });
 };
 
-export const useBlogPost = (slug: string) => {
+export const useBlogPost = (slug: string, options?: { preview?: boolean }) => {
+  const preview = options?.preview ?? false;
+
   return useQuery({
-    queryKey: ["blog_post", slug],
+    queryKey: ["blog_post", slug, preview],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("blog_posts")
         .select("*")
-        .eq("slug", slug)
-        .eq("is_published", true)
-        .maybeSingle();
+        .eq("slug", slug);
+
+      if (!preview) {
+        query = query.eq("is_published", true);
+      }
+
+      const { data, error } = await query.maybeSingle();
 
       if (error) throw error;
       return data as BlogPost | null;

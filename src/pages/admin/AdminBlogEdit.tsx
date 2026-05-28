@@ -36,6 +36,7 @@ import type { Tables, TablesUpdate, Json } from "@/integrations/supabase/types";
 import { MediaUploader, type MediaItem } from "@/components/admin/MediaUploader";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { cn } from "@/lib/utils";
+import { usePermissions } from "@/hooks/usePermissions";
 
 type BlogPost = Tables<"blog_posts">;
 
@@ -82,6 +83,7 @@ export default function AdminBlogEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { canPublish } = usePermissions();
   const isNew = id === "new";
 
   const [formData, setFormData] = useState<Partial<TablesUpdate<"blog_posts">>>({});
@@ -198,7 +200,8 @@ export default function AdminBlogEdit() {
   });
 
   const handleSave = () => {
-    if (!formData.title || !formData.slug) {
+    const trimmedSlug = formData.slug?.trim();
+    if (!formData.title || !trimmedSlug) {
       toast.error("Заполните обязательные поля");
       return;
     }
@@ -209,11 +212,19 @@ export default function AdminBlogEdit() {
       .map(t => t.trim())
       .filter(t => t.length > 0);
 
-    const saveData = {
+    const isPublished = formData.is_published ?? false;
+    const wasPublished = post?.is_published ?? false;
+
+    const saveData: TablesUpdate<"blog_posts"> = {
       ...formData,
+      slug: trimmedSlug,
       content: JSON.stringify(contentBlocks),
       tags: tags as unknown as Json,
     };
+
+    if (isPublished && !wasPublished) {
+      saveData.published_at = new Date().toISOString();
+    }
 
     setIsSaving(true);
     if (isNew) {
@@ -222,6 +233,12 @@ export default function AdminBlogEdit() {
       updateMutation.mutate(saveData);
     }
   };
+
+  const previewUrl = formData.slug
+    ? formData.is_published
+      ? `/blog/${formData.slug}`
+      : `/blog/${formData.slug}?preview=1`
+    : null;
 
   // Block management
   const addBlock = (type: BlockType) => {
@@ -301,9 +318,9 @@ export default function AdminBlogEdit() {
             </div>
           </div>
           <div className="flex gap-2">
-            {!isNew && (
+            {!isNew && previewUrl && (
               <Button asChild variant="outline">
-                <Link to={`/blog/${formData.slug || post?.slug}`} target="_blank">
+                <Link to={previewUrl} target="_blank">
                   Просмотр
                 </Link>
               </Button>
@@ -314,6 +331,15 @@ export default function AdminBlogEdit() {
             </Button>
           </div>
         </div>
+
+        {!isNew && !formData.is_published && (
+          <div className="rounded-lg border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-900">
+            Статья сохранена как <strong>черновик</strong> и не видна на сайте.
+            {canPublish
+              ? " Включите переключатель «Опубликована» и нажмите «Сохранить», чтобы опубликовать."
+              : " Обратитесь к администратору для публикации."}
+          </div>
+        )}
 
         <Tabs defaultValue="content" className="space-y-6">
           <TabsList>
@@ -374,12 +400,23 @@ export default function AdminBlogEdit() {
                   />
                 </div>
 
-                <div className="flex items-center gap-2 pt-4">
+                <div className={cn(
+                  "flex items-center gap-2 pt-4",
+                  !formData.is_published && "rounded-lg border border-yellow-300 bg-yellow-50 px-3 py-2"
+                )}>
                   <Switch
                     checked={formData.is_published ?? false}
                     onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+                    disabled={!canPublish}
                   />
-                  <Label>Опубликована</Label>
+                  <div>
+                    <Label>Опубликована</Label>
+                    {!formData.is_published && (
+                      <p className="text-xs text-yellow-800 mt-0.5">
+                        Черновик — не отображается на сайте
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
 

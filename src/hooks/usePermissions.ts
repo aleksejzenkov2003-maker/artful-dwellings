@@ -27,7 +27,7 @@ export function usePermissions() {
     canManageUsers: level <= 2,
     canManageRoles: role === "super_admin",
     canViewLogs: level <= 2,
-    canPublish: level <= 2,
+    canPublish: level <= 4,
     canDelete: level <= 2,
     canEdit: level <= 4,
     canCreate: level <= 4,

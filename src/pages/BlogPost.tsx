@@ -1,5 +1,5 @@
 import { Layout } from "@/components/layout/Layout";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBlogPost, useBlogPosts } from "@/hooks/useBlogPosts";
@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { toast } from "sonner";
 import { useState } from "react";
+import { usePermissions } from "@/hooks/usePermissions";
 
 // Content block types matching AdminBlogEdit
 interface ContentBlock {
@@ -144,7 +145,10 @@ const BlockRenderer = ({ block }: { block: ContentBlock }) => {
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const { data: post, isLoading, error } = useBlogPost(slug || "");
+  const [searchParams] = useSearchParams();
+  const { isContent } = usePermissions();
+  const isPreview = searchParams.get("preview") === "1" && isContent;
+  const { data: post, isLoading, error } = useBlogPost(slug || "", { preview: isPreview });
   const { data: allPosts } = useBlogPosts();
 
   // Get current post index for navigation
@@ -257,6 +261,11 @@ const BlogPost = () => {
 
   return (
     <Layout>
+      {isPreview && post && !post.is_published && (
+        <div className="bg-yellow-100 text-yellow-900 text-center py-2 text-sm font-medium">
+          Предпросмотр черновика — статья не видна посетителям сайта
+        </div>
+      )}
       {/* Hero section with background image */}
       <section 
         className="relative h-[60vh] min-h-[400px] flex items-center justify-center"

@@ -118,7 +118,14 @@ export default function AdminBlog() {
                   <TableCell>
                     <div className="flex gap-1">
                       <Button asChild size="icon" variant="ghost">
-                        <Link to={`/blog/${post.slug}`} target="_blank">
+                        <Link
+                          to={
+                            post.is_published
+                              ? `/blog/${post.slug}`
+                              : `/blog/${post.slug}?preview=1`
+                          }
+                          target="_blank"
+                        >
                           <Eye className="h-4 w-4" />
                         </Link>
                       </Button>

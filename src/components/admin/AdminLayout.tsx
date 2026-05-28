@@ -31,7 +31,7 @@ interface AdminLayoutProps {
 const allNavItems = [
   { href: "/admin", label: "Обзор", icon: LayoutDashboard, minRole: "viewer" as const },
   { href: "/admin/homepage", label: "Главная", icon: Home, minRole: "content" as const },
-  { href: "/admin/complexes", label: "ЖК", icon: Building2, minRole: "manager" as const },
+  { href: "/admin/complexes", label: "ЖК", icon: Building2, minRole: "content" as const },
   { href: "/admin/blog", label: "Блог", icon: FileText, minRole: "content" as const },
   { href: "/admin/promotions", label: "Акции", icon: Tag, minRole: "content" as const },
   { href: "/admin/services", label: "Услуги", icon: Briefcase, minRole: "content" as const },
