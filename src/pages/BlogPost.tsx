@@ -67,10 +67,20 @@ const BlockRenderer = ({ block }: { block: ContentBlock }) => {
         </figure>
       );
 
-    case "quote":
+    case "quote": {
+      const stripHtml = (html: string) =>
+        html
+          .split(/<br\s*\/?>/i).join("\n")
+          .replace(/<\/?[^>]+>/g, "")
+          .split("&nbsp;").join(" ")
+          .split("&amp;").join("&")
+          .split("&lt;").join("<")
+          .split("&gt;").join(">")
+          .split("&quot;").join('"')
+          .trim();
       return (
         <blockquote className="border-l-4 border-primary bg-primary/5 py-6 px-8 my-8 font-serif text-lg italic">
-          <p className="mb-2">{block.content}</p>
+          <p className="mb-2 whitespace-pre-line">{stripHtml(block.content || "")}</p>
           {block.quoteAuthor && (
             <cite className="text-sm text-muted-foreground not-italic">
               — {block.quoteAuthor}
@@ -78,6 +88,7 @@ const BlockRenderer = ({ block }: { block: ContentBlock }) => {
           )}
         </blockquote>
       );
+    }
 
     case "colored-block":
       return (
