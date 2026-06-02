@@ -8,14 +8,13 @@ export interface PageContent {
   panorama_url?: string;
   about_text?: string;
   about_images?: string[];
+  about_cards?: Array<{ title: string; description: string }>;
   map_image?: string;
   layouts_background_image?: string;
   documents?: Array<{ title: string; url: string }>;
+  promotions_heading?: string;
   promotions?: Array<{ title: string; text?: string; image_url?: string }>;
-  /**
-   * Рассрочки/ипотека в шаблоне — несколько разных блоков.
-   * Мы храним их максимально приближенно к структуре Tilda.
-   */
+  installments_section_heading?: string;
   installments?: Array<{ title: string; text?: string }>;
   installments_intro?: string;
   installments_subsidy_heading?: string;
@@ -29,21 +28,22 @@ export interface PageContent {
   driver_background_image?: string;
   driver_car_image?: string;
   driver_title?: string;
-  driver_badge?: string; // "БЕСПЛАТНО"
+  driver_badge?: string;
   driver_description?: string;
   driver_right_text?: string;
   driver_wait_time?: string;
   driver_button_text?: string;
   telegram_title?: string;
-  telegram_description?: string; // HTML
+  telegram_description?: string;
   telegram_button_text?: string;
   telegram_button_url?: string;
   telegram_qr_image?: string;
   telegram_phone_image?: string;
-  disclaimer_text?: string; // ипотечный дисклеймер (желтая плашка)
-  forms_success_url?: string; // куда редиректить после отправки форм
+  disclaimer_text?: string;
+  forms_success_url?: string;
   infrastructure_text?: string;
   infrastructure_items?: Array<{ title: string; description: string }>;
+  mortgage_heading?: string;
   mortgage_text?: string;
   mortgage_conditions?: Array<{ title: string; value: string }>;
   faq?: Array<{ question: string; answer: string }>;
@@ -61,10 +61,13 @@ export const EMPTY_PAGE_CONTENT: PageContent = {
   panorama_url: "",
   about_text: "",
   about_images: [],
+  about_cards: [],
   map_image: "",
   layouts_background_image: "",
   documents: [],
+  promotions_heading: "",
   promotions: [],
+  installments_section_heading: "",
   installments: [],
   installments_intro: "",
   installments_subsidy_heading: "",
@@ -93,6 +96,7 @@ export const EMPTY_PAGE_CONTENT: PageContent = {
   forms_success_url: "/thanks",
   infrastructure_text: "",
   infrastructure_items: [],
+  mortgage_heading: "",
   mortgage_text: "",
   mortgage_conditions: [],
   faq: [],

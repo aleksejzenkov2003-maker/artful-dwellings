@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Pencil, Trash2, MapPin, Loader2, Save } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, MapPin, Loader2, Save, Eye, ExternalLink } from "lucide-react";
 import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 import { 
   useAllApartmentsByComplex, 
@@ -54,6 +54,9 @@ import {
   type ComplexSlide,
 } from "@/hooks/useComplexSlides";
 import { EMPTY_PAGE_CONTENT, type PageContent } from "@/types/pageContent";
+import { ComplexPageContentGuide, type ContentGuideSectionId } from "@/components/admin/ComplexPageContentGuide";
+import { ComplexPreviewPanel } from "@/components/admin/ComplexPreviewPanel";
+import { clearComplexPreviewDraft, saveComplexPreviewDraft } from "@/lib/complexPreviewStorage";
 
 type Complex = Tables<"residential_complexes">;
 type Coordinates = { lat: number; lng: number };
@@ -66,6 +69,10 @@ export default function AdminComplexEdit() {
   const [formData, setFormData] = useState<Partial<TablesUpdate<"residential_complexes">> & { page_content?: any }>({});
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [draftVersion, setDraftVersion] = useState(0);
+  const [showPreview, setShowPreview] = useState(true);
+  const [activeGuideSection, setActiveGuideSection] = useState<ContentGuideSectionId>("hero");
+  const draftTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Apartment dialog state
   const [isApartmentDialogOpen, setIsApartmentDialogOpen] = useState(false);
@@ -157,8 +164,10 @@ export default function AdminComplexEdit() {
       if (error) throw error;
     },
     onSuccess: () => {
+      if (id) clearComplexPreviewDraft(id);
       queryClient.invalidateQueries({ queryKey: ["admin-complex", id] });
       queryClient.invalidateQueries({ queryKey: ["admin-complexes"] });
+      queryClient.invalidateQueries({ queryKey: ["residential_complex"] });
       toast.success("ЖК сохранён");
       setIsSaving(false);
     },
@@ -316,8 +325,12 @@ export default function AdminComplexEdit() {
     }
   };
 
+  const rawPageContent = useMemo(
+    () => (((formData as { page_content?: PageContent }).page_content || {}) as PageContent),
+    [formData],
+  );
+
   const pageContent: PageContent = useMemo(() => {
-    const existing = (((formData as any).page_content as PageContent) || {}) as PageContent;
     const complexName = (formData.name as string) || complex?.name || "";
 
     const templateDefaults: PageContent = {
@@ -359,15 +372,38 @@ export default function AdminComplexEdit() {
     return {
       ...EMPTY_PAGE_CONTENT,
       ...templateDefaults,
-      ...existing,
+      ...rawPageContent,
     };
-  }, [formData, complex?.name]);
+  }, [rawPageContent, formData.name, complex?.name]);
 
   const updatePageContent = (patch: Partial<PageContent>) => {
     setFormData({
       ...formData,
-      page_content: { ...pageContent, ...patch },
-    } as any);
+      page_content: { ...rawPageContent, ...patch },
+    } as Partial<TablesUpdate<"residential_complexes">> & { page_content?: PageContent });
+  };
+
+  const pushPreviewDraft = useCallback(() => {
+    if (!id) return;
+    saveComplexPreviewDraft(id, {
+      complex: formData as Record<string, unknown>,
+      slides: slides || [],
+    });
+    setDraftVersion((v) => v + 1);
+  }, [id, formData, slides]);
+
+  useEffect(() => {
+    if (!id || Object.keys(formData).length === 0) return;
+    if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+    draftTimerRef.current = setTimeout(pushPreviewDraft, 400);
+    return () => {
+      if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+    };
+  }, [id, formData, slides, pushPreviewDraft]);
+
+  const scrollToSection = (sectionId: ContentGuideSectionId) => {
+    setActiveGuideSection(sectionId);
+    document.getElementById(`content-section-${sectionId}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   if (isLoading) {
@@ -417,10 +453,23 @@ export default function AdminComplexEdit() {
               <p className="text-muted-foreground text-sm">Редактирование ЖК</p>
             </div>
           </div>
-          <Button onClick={handleSave} disabled={isSaving}>
+          <div className="flex items-center gap-2">
+            {formData.slug && (
+              <>
+                <Button type="button" variant="outline" asChild>
+                  <Link to={`/novostroyki/${formData.slug}?preview=1&draft=1`} target="_blank">
+                    <Eye className="h-4 w-4 mr-2" />
+                    Превью
+                    <ExternalLink className="h-3 w-3 ml-1 opacity-60" />
+                  </Link>
+                </Button>
+              </>
+            )}
+            <Button onClick={handleSave} disabled={isSaving}>
             {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
             Сохранить
           </Button>
+          </div>
         </div>
 
         <Tabs defaultValue="general" className="space-y-6">
@@ -593,6 +642,19 @@ export default function AdminComplexEdit() {
                       onChange={(e) => setFormData({ ...formData, floors_count: Number(e.target.value) })}
                     />
                   </div>
+                  <div className="space-y-2">
+                    <Label>Квартир (цифра на странице)</Label>
+                    <Input
+                      type="number"
+                      value={formData.apartments_count ?? ""}
+                      onChange={(e) =>
+                        setFormData({ ...formData, apartments_count: Number(e.target.value) || null })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Дата сдачи</Label>
                     <Input
@@ -870,8 +932,23 @@ export default function AdminComplexEdit() {
 
           {/* Page Content Tab */}
           <TabsContent value="page-content" className="space-y-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <ComplexPageContentGuide
+                activeSection={activeGuideSection}
+                onSectionSelect={scrollToSection}
+              />
+              {formData.slug && showPreview && (
+                <ComplexPreviewPanel slug={formData.slug} draftVersion={draftVersion} />
+              )}
+            </div>
+            {!showPreview && formData.slug && (
+              <Button type="button" variant="outline" size="sm" onClick={() => setShowPreview(true)}>
+                <Eye className="h-4 w-4 mr-1" /> Показать предпросмотр
+              </Button>
+            )}
+
             {/* Hero */}
-            <div className="space-y-4">
+            <div id="content-section-hero" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Главный экран (Hero)</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="space-y-2 lg:col-span-2">
@@ -919,7 +996,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* About */}
-            <div className="space-y-4">
+            <div id="content-section-about" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">О проекте</h3>
               <div className="space-y-2">
                 <Label>Развёрнутое описание (HTML)</Label>
@@ -930,25 +1007,83 @@ export default function AdminComplexEdit() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Дополнительные изображения (URL через Enter)</Label>
-                <Textarea
-                  value={(pageContent.about_images || []).join("\n")}
-                  onChange={(e) =>
-                    updatePageContent({
-                      about_images: e.target.value
-                        .split("\n")
-                        .map((s) => s.trim())
-                        .filter(Boolean),
-                    })
-                  }
-                  rows={4}
-                  placeholder={"https://example.com/photo1.jpg\nhttps://example.com/photo2.jpg"}
-                />
+                <Label>Дополнительные изображения в блоке «О проекте» (до 2)</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[0, 1].map((idx) => (
+                    <SingleImageUploader
+                      key={idx}
+                      value={(pageContent.about_images || [])[idx] || ""}
+                      onChange={(url) => {
+                        const images = [...(pageContent.about_images || [])];
+                        while (images.length <= idx) images.push("");
+                        images[idx] = url;
+                        updatePageContent({ about_images: images.filter(Boolean) });
+                      }}
+                      folder={id}
+                      placeholder={`Фото ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-3">
+                <Label>Карточки преимуществ (до 4 шт. — как на странице)</Label>
+                {(pageContent.about_cards || []).map((card, idx) => (
+                  <div key={idx} className="border rounded-lg p-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Карточка {idx + 1}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive h-7 w-7"
+                        onClick={() => {
+                          const about_cards = (pageContent.about_cards || []).filter((_, i) => i !== idx);
+                          updatePageContent({ about_cards });
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <Input
+                      value={card.title}
+                      onChange={(e) => {
+                        const about_cards = [...(pageContent.about_cards || [])];
+                        about_cards[idx] = { ...about_cards[idx], title: e.target.value };
+                        updatePageContent({ about_cards });
+                      }}
+                      placeholder="Заголовок карточки"
+                    />
+                    <Textarea
+                      value={card.description}
+                      onChange={(e) => {
+                        const about_cards = [...(pageContent.about_cards || [])];
+                        about_cards[idx] = { ...about_cards[idx], description: e.target.value };
+                        updatePageContent({ about_cards });
+                      }}
+                      rows={3}
+                      placeholder="Описание"
+                    />
+                  </div>
+                ))}
+                {(pageContent.about_cards || []).length < 4 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      updatePageContent({
+                        about_cards: [...(pageContent.about_cards || []), { title: "", description: "" }],
+                      })
+                    }
+                  >
+                    <Plus className="h-4 w-4 mr-1" /> Добавить карточку
+                  </Button>
+                )}
               </div>
             </div>
 
             {/* Video & Tour */}
-            <div className="space-y-4">
+            <div id="content-section-video" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Видео и виртуальный тур</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -971,7 +1106,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Map / Layouts background images */}
-            <div className="space-y-4">
+            <div id="content-section-map" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Изображения блоков</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
@@ -999,7 +1134,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Documents */}
-            <div className="space-y-4">
+            <div id="content-section-documents" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Документация</h3>
               <p className="text-xs text-muted-foreground">
                 Добавляй документы (PDF/DOC/DOCX). На странице они появятся списком.
@@ -1064,8 +1199,16 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Promotions */}
-            <div className="space-y-4">
+            <div id="content-section-promotions" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Акции</h3>
+              <div className="space-y-2">
+                <Label>Заголовок секции на странице</Label>
+                <Input
+                  value={pageContent.promotions_heading || ""}
+                  onChange={(e) => updatePageContent({ promotions_heading: e.target.value })}
+                  placeholder="Акции"
+                />
+              </div>
               <p className="text-xs text-muted-foreground">
                 Эти карточки заменят блок «Акции» в шаблоне.
               </p>
@@ -1137,8 +1280,16 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Installments (template programs) */}
-            <div className="space-y-4">
+            <div id="content-section-installments" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Программы рассрочки (как в шаблоне)</h3>
+              <div className="space-y-2">
+                <Label>Заголовок секции «Программы рассрочки»</Label>
+                <Input
+                  value={pageContent.installments_section_heading || ""}
+                  onChange={(e) => updatePageContent({ installments_section_heading: e.target.value })}
+                  placeholder="Программы рассрочки"
+                />
+              </div>
               <div className="space-y-2">
                 <Label>Вступительный текст (HTML)</Label>
                 <RichTextEditor
@@ -1318,7 +1469,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Driver (template block) */}
-            <div className="space-y-4">
+            <div id="content-section-driver" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Личный водитель (как в шаблоне)</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2 lg:col-span-2">
@@ -1391,7 +1542,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Telegram (template block) */}
-            <div className="space-y-4">
+            <div id="content-section-telegram" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Telegram-канал (как в шаблоне)</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
@@ -1448,7 +1599,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Forms & Disclaimer */}
-            <div className="space-y-4">
+            <div id="content-section-forms" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Формы и дисклеймер</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -1474,7 +1625,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Infrastructure */}
-            <div className="space-y-4">
+            <div id="content-section-infrastructure" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Инфраструктура</h3>
               <div className="space-y-2">
                 <Label>Описание инфраструктуры (HTML)</Label>
@@ -1543,8 +1694,16 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Mortgage */}
-            <div className="space-y-4">
+            <div id="content-section-mortgage" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Ипотека</h3>
+              <div className="space-y-2">
+                <Label>Заголовок секции на странице</Label>
+                <Input
+                  value={pageContent.mortgage_heading || ""}
+                  onChange={(e) => updatePageContent({ mortgage_heading: e.target.value })}
+                  placeholder="Условия ипотеки"
+                />
+              </div>
               <div className="space-y-2">
                 <Label>Описание ипотеки (HTML)</Label>
                 <RichTextEditor
@@ -1612,7 +1771,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* FAQ */}
-            <div className="space-y-4">
+            <div id="content-section-faq" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">FAQ (Частые вопросы)</h3>
               {(pageContent.faq || []).map((item, idx) => (
                 <div key={idx} className="border rounded-lg p-4 space-y-3">
@@ -1669,7 +1828,7 @@ export default function AdminComplexEdit() {
             </div>
 
             {/* Contacts */}
-            <div className="space-y-4">
+            <div id="content-section-contacts" className="space-y-4 scroll-mt-24">
               <h3 className="text-lg font-semibold border-b pb-2">Контакты (на странице)</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -1693,7 +1852,7 @@ export default function AdminComplexEdit() {
           </TabsContent>
 
           {/* SEO Tab */}
-          <TabsContent value="seo" className="space-y-6">
+          <TabsContent value="seo" className="space-y-6" id="content-section-seo">
             <div className="space-y-4 max-w-2xl">
               <div className="space-y-2">
                 <Label>SEO Заголовок</Label>

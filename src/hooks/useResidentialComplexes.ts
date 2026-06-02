@@ -49,16 +49,17 @@ export function useResidentialComplexes(options?: {
   });
 }
 
-export function useResidentialComplex(slug: string) {
+export function useResidentialComplex(slug: string, options?: { preview?: boolean }) {
+  const preview = options?.preview ?? false;
+
   return useQuery({
-    queryKey: ["residential_complex", slug],
+    queryKey: ["residential_complex", slug, preview],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("residential_complexes")
-        .select("*")
-        .eq("slug", slug)
-        .eq("is_published", true)
-        .maybeSingle();
+      let query = supabase.from("residential_complexes").select("*").eq("slug", slug);
+      if (!preview) {
+        query = query.eq("is_published", true);
+      }
+      const { data, error } = await query.maybeSingle();
 
       if (error) throw error;
       return data as ResidentialComplex | null;
