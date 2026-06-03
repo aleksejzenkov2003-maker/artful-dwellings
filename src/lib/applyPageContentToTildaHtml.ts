@@ -3,6 +3,7 @@ import type { ComplexBuilding } from "@/hooks/useComplexBuildings";
 import type { ComplexSlide } from "@/hooks/useComplexSlides";
 import { SLIDE_TYPES } from "@/hooks/useComplexSlides";
 import type { PageContent } from "@/types/pageContent";
+import { sanitizeTildaHtml } from "@/lib/sanitizeTildaHtml";
 
 function formatQuarter(date: string | null): string {
   if (!date) return "Уточняйте";
@@ -35,6 +36,22 @@ function setImgField(root: ParentNode, imgfield: string, url: string) {
 }
 
 const ABOUT_MAIN_TEXT_FIELD = "tn_text_1470210011265";
+const ABOUT_MAIN_TEXT_ELEM_ID = "1470210011265";
+
+/** Статистика «О проекте» — только эти field, без pickAtom (иначе дублируется «2 корпуса» у видео). */
+const ABOUT_STATS_FIELDS = {
+  corpsHeader: "tn_text_1616954518493",
+  corpsList: "tn_text_175749789165940690",
+  apartments: "tn_text_1616953983343",
+  areaValue: "tn_text_1617298629804",
+} as const;
+
+function setAboutField(root: ParentNode, field: string, text: string, asHtml = false) {
+  root.querySelectorAll(`.tn-atom[field='${field}']`).forEach((el) => {
+    if (asHtml) setHtml(el, text);
+    else setText(el, text);
+  });
+}
 
 const ABOUT_CARD_FIELDS = [
   {
@@ -170,8 +187,15 @@ export function applyPageContentToTildaHtml(args: {
   // About section
   const aboutRec = doc.querySelector("#rec1289837621");
   if (aboutRec) {
-    if (content.about_text) {
-      setAllAboutTextAtoms(aboutRec, ABOUT_MAIN_TEXT_FIELD, "1470209944682", content.about_text, true);
+    if (content.about_text?.trim()) {
+      const safeAbout = sanitizeTildaHtml(content.about_text);
+      setAllAboutTextAtoms(
+        aboutRec,
+        ABOUT_MAIN_TEXT_FIELD,
+        ABOUT_MAIN_TEXT_ELEM_ID,
+        safeAbout,
+        true,
+      );
     }
 
     // Карточки: перезаписываем слоты, если в админке есть хотя бы одна заполненная карточка
@@ -185,7 +209,13 @@ export function applyPageContentToTildaHtml(args: {
         const title = card?.title?.trim() ?? "";
         const description = card?.description?.trim() ?? "";
         setAllAboutTextAtoms(aboutRec, fields.title, fields.titleElemId, title, false);
-        setAllAboutTextAtoms(aboutRec, fields.descr, fields.descrElemId, description, true);
+        setAllAboutTextAtoms(
+          aboutRec,
+          fields.descr,
+          fields.descrElemId,
+          description ? sanitizeTildaHtml(description) : "",
+          true,
+        );
       });
     }
 
@@ -199,66 +229,33 @@ export function applyPageContentToTildaHtml(args: {
     const apartmentsCount = complex.apartments_count;
     const areaFrom = complex.area_from;
     const areaTo = complex.area_to;
-    const aboutAtoms = Array.from(aboutRec.querySelectorAll(".tn-atom")) as HTMLElement[];
-
-    const pickAtom = (pred: (t: string) => boolean, score?: (t: string) => number) => {
-      let best: HTMLElement | null = null;
-      let bestScore = -Infinity;
-      for (const el of aboutAtoms) {
-        const t = (el.textContent || "").trim();
-        if (!t) continue;
-        if (!pred(t)) continue;
-        const s = score ? score(t) : t.length;
-        if (s > bestScore) {
-          bestScore = s;
-          best = el;
-        }
-      }
-      return best;
-    };
 
     if (corpCount > 0) {
-      const corpsHeaderEl = pickAtom(
-        (t) => /^\d+\s+корпус/i.test(t) || /^\d+\s+корпуса/i.test(t),
-        (t) => 1000 - t.length,
-      );
-      if (corpsHeaderEl) corpsHeaderEl.textContent = `${corpCount} корпуса`;
+      const label =
+        corpCount === 1 ? "1 КОРПУС" : corpCount >= 2 && corpCount <= 4 ? `${corpCount} КОРПУСА` : `${corpCount} КОРПУСОВ`;
+      setAboutField(aboutRec, ABOUT_STATS_FIELDS.corpsHeader, label);
 
-      const corpsListEl = pickAtom(
-        (t) =>
-          (/корпус/i.test(t) && /этаж/i.test(t)) ||
-          /Большой\s+корпус/i.test(t) ||
-          /Малый\s+корпус/i.test(t) ||
-          (/корпус/i.test(t) && /—/.test(t)),
-        (t) => 1000 + t.length,
-      );
-      if (corpsListEl) {
-        const lines = buildings
-          .slice(0, 6)
-          .map(
-            (b, i) =>
-              `${b.name || `Корпус ${i + 1}`}${b.floors_count ? ` — ${b.floors_count} этажей` : ""}`,
-          );
-        corpsListEl.innerHTML = lines.join("<br>");
-      }
+      const lines = buildings
+        .slice(0, 6)
+        .map(
+          (b, i) =>
+            `${b.name || `Корпус ${i + 1}`}${b.floors_count ? ` — ${b.floors_count} этажей` : ""}`,
+        );
+      setAboutField(aboutRec, ABOUT_STATS_FIELDS.corpsList, lines.join("<br>"), true);
     }
 
-    if (typeof apartmentsCount === "number") {
-      const aptsEl = pickAtom(
-        (t) => /\b\d+\s*(квартир|квартиры)\b/i.test(t) && t.length < 60,
-        (t) => 500 - t.length,
-      );
-      if (aptsEl) aptsEl.textContent = `${apartmentsCount} КВАРТИРЫ`;
+    if (typeof apartmentsCount === "number" && apartmentsCount > 0) {
+      setAboutField(aboutRec, ABOUT_STATS_FIELDS.apartments, `${apartmentsCount} КВАРТИРЫ`);
     }
 
     if (areaFrom || areaTo) {
       const from = areaFrom ? Math.round(areaFrom) : null;
       const to = areaTo ? Math.round(areaTo) : null;
-      const areaEl = pickAtom(
-        (t) => /\bОТ\b/i.test(t) && /\bДО\b/i.test(t) && /кв/i.test(t) && t.length < 80,
-        (t) => 500 - t.length,
+      setAboutField(
+        aboutRec,
+        ABOUT_STATS_FIELDS.areaValue,
+        `от ${from ?? "—"} до ${to ?? "—"} кв. м`,
       );
-      if (areaEl) areaEl.textContent = `ОТ ${from ?? "—"} ДО ${to ?? "—"} КВ. М`;
     }
 
     aboutRec.querySelectorAll(".tn-atom").forEach((el) => {

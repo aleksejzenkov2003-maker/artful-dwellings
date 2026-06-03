@@ -16,4 +16,8 @@ export default defineConfig(({ mode }) => ({
     },
     dedupe: ["react", "react-dom"],
   },
+  test: {
+    environment: "happy-dom",
+    include: ["src/**/*.test.ts"],
+  },
 }));
