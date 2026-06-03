@@ -34,12 +34,50 @@ function setImgField(root: ParentNode, imgfield: string, url: string) {
   }
 }
 
+const ABOUT_MAIN_TEXT_FIELD = "tn_text_1470210011265";
+
 const ABOUT_CARD_FIELDS = [
-  { title: "tn_text_1616964401750", descr: "tn_text_1616964401718" },
-  { title: "tn_text_1616964723201", descr: "tn_text_1616964723179" },
-  { title: "tn_text_1616964789804", descr: "tn_text_1616964789783" },
-  { title: "tn_text_1616964789849", descr: "tn_text_1616964789835" },
+  {
+    title: "tn_text_1616964401750",
+    descr: "tn_text_1616964401718",
+    titleElemId: "1616964401750",
+    descrElemId: "1616964401718",
+  },
+  {
+    title: "tn_text_1616964723201",
+    descr: "tn_text_1616964723179",
+    titleElemId: "1616964723201",
+    descrElemId: "1616964723179",
+  },
+  {
+    title: "tn_text_1616964789804",
+    descr: "tn_text_1616964789783",
+    titleElemId: "1616964789804",
+    descrElemId: "1616964789783",
+  },
+  {
+    title: "tn_text_1616964789849",
+    descr: "tn_text_1616964789835",
+    titleElemId: "1616964789849",
+    descrElemId: "1616964789835",
+  },
 ] as const;
+
+function setAllAboutTextAtoms(root: ParentNode, field: string, elemId: string, text: string, asHtml = false) {
+  const seen = new Set<Element>();
+  const nodes: Element[] = [];
+  root.querySelectorAll(`.tn-atom[field='${field}']`).forEach((el) => nodes.push(el));
+  root.querySelectorAll(`[data-elem-id='${elemId}'] .tn-atom`).forEach((el) => nodes.push(el));
+  const fallback = root.querySelector(`[data-elem-id='${elemId}']`);
+  if (fallback) nodes.push(fallback);
+
+  for (const el of nodes) {
+    if (seen.has(el)) continue;
+    seen.add(el);
+    if (asHtml) setHtml(el, text);
+    else setText(el, text);
+  }
+}
 
 const ABOUT_IMAGE_FIELDS = ["tn_img_1617102823641", "tn_img_1617787290646"] as const;
 
@@ -133,31 +171,21 @@ export function applyPageContentToTildaHtml(args: {
   const aboutRec = doc.querySelector("#rec1289837621");
   if (aboutRec) {
     if (content.about_text) {
-      const textAtoms = Array.from(
-        aboutRec.querySelectorAll(".tn-atom[field^='tn_text_']"),
-      ) as HTMLElement[];
-      let best: HTMLElement | null = null;
-      let bestScore = 0;
-      for (const el of textAtoms) {
-        const t = (el.textContent || "").trim();
-        if (!t) continue;
-        if (t.length > bestScore) {
-          bestScore = t.length;
-          best = el;
-        }
-      }
-      if (best) setHtml(best, content.about_text);
+      setAllAboutTextAtoms(aboutRec, ABOUT_MAIN_TEXT_FIELD, "1470209944682", content.about_text, true);
     }
 
-    if (content.about_cards?.length) {
-      content.about_cards.slice(0, ABOUT_CARD_FIELDS.length).forEach((card, idx) => {
-        const fields = ABOUT_CARD_FIELDS[idx];
-        if (card.title) {
-          setText(aboutRec.querySelector(`.tn-atom[field='${fields.title}']`), card.title);
-        }
-        if (card.description) {
-          setHtml(aboutRec.querySelector(`.tn-atom[field='${fields.descr}']`), card.description);
-        }
+    // Карточки: перезаписываем слоты, если в админке есть хотя бы одна заполненная карточка
+    const hasAboutCards =
+      Array.isArray(content.about_cards) &&
+      content.about_cards.some((c) => (c.title || "").trim() || (c.description || "").trim());
+
+    if (hasAboutCards) {
+      ABOUT_CARD_FIELDS.forEach((fields, idx) => {
+        const card = content.about_cards?.[idx];
+        const title = card?.title?.trim() ?? "";
+        const description = card?.description?.trim() ?? "";
+        setAllAboutTextAtoms(aboutRec, fields.title, fields.titleElemId, title, false);
+        setAllAboutTextAtoms(aboutRec, fields.descr, fields.descrElemId, description, true);
       });
     }
 

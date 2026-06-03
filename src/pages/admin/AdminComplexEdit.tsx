@@ -160,11 +160,28 @@ export default function AdminComplexEdit() {
   const updateMutation = useMutation({
     mutationFn: async (data: TablesUpdate<"residential_complexes">) => {
       if (!id) throw new Error("No ID");
-      const { error } = await supabase.from("residential_complexes").update(data).eq("id", id);
+      const pageContentPayload = (data as { page_content?: PageContent }).page_content;
+      const payload = {
+        ...data,
+        page_content: pageContentPayload ?? {},
+      };
+      const { data: updated, error } = await supabase
+        .from("residential_complexes")
+        .update(payload)
+        .eq("id", id)
+        .select("page_content")
+        .single();
       if (error) throw error;
+      return updated;
     },
-    onSuccess: () => {
+    onSuccess: (updated) => {
       if (id) clearComplexPreviewDraft(id);
+      if (updated?.page_content) {
+        setFormData((prev) => ({
+          ...prev,
+          page_content: updated.page_content as PageContent,
+        }));
+      }
       queryClient.invalidateQueries({ queryKey: ["admin-complex", id] });
       queryClient.invalidateQueries({ queryKey: ["admin-complexes"] });
       queryClient.invalidateQueries({ queryKey: ["residential_complex"] });
@@ -257,8 +274,19 @@ export default function AdminComplexEdit() {
       toast.error("Заполните обязательные поля");
       return;
     }
+    const pc = ((formData as { page_content?: PageContent }).page_content || {}) as PageContent;
+    const normalizedCards = (pc.about_cards || []).map((c) => ({
+      title: c.title?.trim() ?? "",
+      description: c.description?.trim() ?? "",
+    }));
     setIsSaving(true);
-    updateMutation.mutate(formData);
+    updateMutation.mutate({
+      ...formData,
+      page_content: {
+        ...pc,
+        about_cards: normalizedCards,
+      },
+    });
   };
 
   // Apartment handlers
@@ -377,10 +405,16 @@ export default function AdminComplexEdit() {
   }, [rawPageContent, formData.name, complex?.name]);
 
   const updatePageContent = (patch: Partial<PageContent>) => {
-    setFormData({
-      ...formData,
-      page_content: { ...rawPageContent, ...patch },
-    } as Partial<TablesUpdate<"residential_complexes">> & { page_content?: PageContent });
+    setFormData(
+      (prev) =>
+        ({
+          ...prev,
+          page_content: {
+            ...(((prev as { page_content?: PageContent }).page_content || {}) as PageContent),
+            ...patch,
+          },
+        }) as Partial<TablesUpdate<"residential_complexes">> & { page_content?: PageContent },
+    );
   };
 
   const pushPreviewDraft = useCallback(() => {
@@ -1037,7 +1071,7 @@ export default function AdminComplexEdit() {
                         size="icon"
                         className="text-destructive h-7 w-7"
                         onClick={() => {
-                          const about_cards = (pageContent.about_cards || []).filter((_, i) => i !== idx);
+                          const about_cards = (rawPageContent.about_cards || []).filter((_, i) => i !== idx);
                           updatePageContent({ about_cards });
                         }}
                       >
@@ -1047,7 +1081,7 @@ export default function AdminComplexEdit() {
                     <Input
                       value={card.title}
                       onChange={(e) => {
-                        const about_cards = [...(pageContent.about_cards || [])];
+                        const about_cards = [...(rawPageContent.about_cards || [])];
                         about_cards[idx] = { ...about_cards[idx], title: e.target.value };
                         updatePageContent({ about_cards });
                       }}
@@ -1056,7 +1090,7 @@ export default function AdminComplexEdit() {
                     <Textarea
                       value={card.description}
                       onChange={(e) => {
-                        const about_cards = [...(pageContent.about_cards || [])];
+                        const about_cards = [...(rawPageContent.about_cards || [])];
                         about_cards[idx] = { ...about_cards[idx], description: e.target.value };
                         updatePageContent({ about_cards });
                       }}
@@ -1072,7 +1106,7 @@ export default function AdminComplexEdit() {
                     size="sm"
                     onClick={() =>
                       updatePageContent({
-                        about_cards: [...(pageContent.about_cards || []), { title: "", description: "" }],
+                        about_cards: [...(rawPageContent.about_cards || []), { title: "", description: "" }],
                       })
                     }
                   >
